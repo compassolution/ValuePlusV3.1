@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{76D34675-4DBF-4246-9577-1D825313128E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Com.ValuePlus.Flow</RootNamespace>
+    <AssemblyName>Com.ValuePlus.Flow</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BLL\DicDealBll.cs" />
+    <Compile Include="BLL\Flow\FlowDefineBll.cs" />
+    <Compile Include="BLL\Flow\FlowInstanceBll.cs" />
+    <Compile Include="BLL\Flow\FlowPostBll.cs" />
+    <Compile Include="BLL\Flow\FlowTransferBll.cs" />
+    <Compile Include="BLL\Form\FormDefineBll.cs" />
+    <Compile Include="BLL\Form\FormFieldBll.cs" />
+    <Compile Include="Config\FlowConfig.cs" />
+    <Compile Include="Config\FlowSqlConfig.cs" />
+    <Compile Include="DAL\DALFactory.cs" />
+    <Compile Include="DAL\Flow\FlowDefineDao.cs" />
+    <Compile Include="DAL\Flow\FlowDetailDao.cs" />
+    <Compile Include="DAL\Flow\FlowInstanceDao.cs" />
+    <Compile Include="DAL\Flow\FlowPostDao.cs" />
+    <Compile Include="DAL\Form\FormDefineDao.cs" />
+    <Compile Include="DAL\Form\FormFieldDao.cs" />
+    <Compile Include="DAL\SqlParamDao.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_DEFINE.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_ENTITY.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_PATH.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_POST_ACTION.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_POST_ACTOR.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_POST_DEFINE.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_POST_GROUP.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_POST_GROUP_DETAIL.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_RESERVED_MEMO.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_WORKFLOW_DETAIL.cs" />
+    <Compile Include="Entity\Entity_TB_FLOW_WORK_INSTANCE.cs" />
+    <Compile Include="Interface\IWorkFlow.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Com.ValuePlus.Common\Com.ValuePlus.Common.csproj">
+      <Project>{AB169A8B-104A-4ED5-9B75-871CF2C9A654}</Project>
+      <Name>Com.ValuePlus.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Config\Com.ValuePlus.Config.csproj">
+      <Project>{B7C73649-C462-453B-84AA-6FE1389F015A}</Project>
+      <Name>Com.ValuePlus.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Database\Com.ValuePlus.Database.csproj">
+      <Project>{7358970A-8BF6-4182-B9F9-68DBF921C6E7}</Project>
+      <Name>Com.ValuePlus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Entity\Com.ValuePlus.Entity.csproj">
+      <Project>{1D6C17CF-7C93-4980-9637-9635498E23BE}</Project>
+      <Name>Com.ValuePlus.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Log\Com.ValuePlus.Log.csproj">
+      <Project>{EBA12249-1413-4354-A324-0B6ED7B33B30}</Project>
+      <Name>Com.ValuePlus.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.SysParams\Com.ValuePlus.SysParams.csproj">
+      <Project>{DB7A54CE-A851-41C0-BEB3-5E126E6CF9B9}</Project>
+      <Name>Com.ValuePlus.SysParams</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Utils\Com.ValuePlus.Utils.csproj">
+      <Project>{D7DEB6B8-77CF-45C7-8172-30B728E17733}</Project>
+      <Name>Com.ValuePlus.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

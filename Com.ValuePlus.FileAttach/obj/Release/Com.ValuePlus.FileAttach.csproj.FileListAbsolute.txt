@@ -1,0 +1,11 @@
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\bin\Release\Com.ValuePlus.FileAttach.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\bin\Release\Com.ValuePlus.FileAttach.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Release\Com.ValuePlus.FileAttach.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Release\Com.ValuePlus.FileAttach.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Release\Com.ValuePlus.FileAttach.csprojResolveAssemblyReference.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.FileAttach\bin\Release\Com.ValuePlus.FileAttach.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.FileAttach\bin\Release\Com.ValuePlus.FileAttach.pdb
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Release\Com.ValuePlus.FileAttach.csproj.CoreCompileInputs.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Release\Com.ValuePlus.FileAttach.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Release\Com.ValuePlus.FileAttach.pdb
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Release\Com.ValuePlus.FileAttach.csproj.AssemblyReference.cache

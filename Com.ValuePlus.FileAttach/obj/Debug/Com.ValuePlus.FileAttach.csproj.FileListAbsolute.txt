@@ -1,0 +1,10 @@
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.FileAttach\bin\Debug\Com.ValuePlus.FileAttach.dll
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.FileAttach\bin\Debug\Com.ValuePlus.FileAttach.pdb
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.FileAttach\obj\Debug\ResolveAssemblyReference.cache
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.FileAttach\obj\Debug\Com.ValuePlus.FileAttach.dll
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.FileAttach\obj\Debug\Com.ValuePlus.FileAttach.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\bin\Debug\Com.ValuePlus.FileAttach.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\bin\Debug\Com.ValuePlus.FileAttach.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Debug\Com.ValuePlus.FileAttach.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Debug\Com.ValuePlus.FileAttach.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.FileAttach\obj\Debug\Com.ValuePlus.FileAttach.csprojResolveAssemblyReference.cache

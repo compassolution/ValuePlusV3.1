@@ -1,0 +1,11 @@
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Entity\bin\Release\Com.ValuePlus.Entity.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Entity\bin\Release\Com.ValuePlus.Entity.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Entity\obj\Release\Com.ValuePlus.Entity.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Entity\obj\Release\Com.ValuePlus.Entity.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Entity\obj\Release\Com.ValuePlus.Entity.csprojResolveAssemblyReference.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Entity\bin\Release\Com.ValuePlus.Entity.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Entity\bin\Release\Com.ValuePlus.Entity.pdb
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Entity\obj\Release\Com.ValuePlus.Entity.csproj.CoreCompileInputs.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Entity\obj\Release\Com.ValuePlus.Entity.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Entity\obj\Release\Com.ValuePlus.Entity.pdb
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Entity\obj\Release\Com.ValuePlus.Entity.csproj.AssemblyReference.cache

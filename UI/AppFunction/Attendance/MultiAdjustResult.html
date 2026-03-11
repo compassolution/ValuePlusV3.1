@@ -1,0 +1,436 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>批量调整异常考勤结果Multi. Adjust Attendance Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+    <link href="../../common/plugins/jqueryEject/css/Eject.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../common/plugins/jspreadsheet-ce/jsuites.css" type="text/css" />
+    <link rel="stylesheet" href="../../common/plugins/jspreadsheet-ce/jexcel.css" type="text/css" />
+
+    <style>
+        /*jexcel控件行样式定义奇偶数行北京色变换*/
+        .jexcel tbody tr:nth-child(even) {
+            background-color: #EEE9F1 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/plugins/jqueryEject/js/index.js" type="text/javascript"></script>
+    <script src="../../common/plugins/jspreadsheet-ce/jexcel.js"></script>
+    <script src="../../common/plugins/jspreadsheet-ce/jsuites.js"></script>
+    <script src="../../common/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../common/js/MainUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/stringUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/customObject.js" type="text/javascript"></script>
+
+    <div class="row-fluid" style="margin-top:0px" id="lb_Tips">
+        <div class="span12">
+            <div id="divArea_MultiAdjustResult" class="panel panel-success text-center" >
+                <div class="panel-heading" style="margin-bottom:3px">
+                    可批量修改异常考勤结果&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-danger">编辑后鼠标离开点击后即可完成保存！</span>
+                </div>
+                <div id="divSheet_ResultList" class="jspreadsheet"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false" style="top: 60px">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>-->
+                    <button id="btnCloseWaittingModal" type="button" class="close">
+                        <span class="text-danger h4">关闭</span>
+                    </button>
+                    <h4 class="modal-title" id="myWaittingModalTitle">
+                        正在处理中,请稍候.....
+                    </h4>
+                </div>
+                <div id="myWaittingModalContent" class="modal-body">
+
+                </div>
+                <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>-->
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+
+    <script type="text/javascript">
+        //全局变量
+        var screenWidth = screen.availWidth;
+        var screenHeight = screen.availHeight;
+
+        function ShowWaitting() {
+            $('#myWaittingModalTitle').html('正在处理中,请稍候.....');
+            $('#myWaittingModalContent').html('');
+            $('#myWaittingModal').modal();
+            $('#btnCloseWaittingModal').hide();
+        }
+        function HideWaitting() {
+            $('#myWaittingModal').modal('hide');
+        }
+
+        function ShowWaittingAndTips() {
+            $('#myWaittingModal').modal();
+            $('#btnCloseWaittingModal').hide();
+        }
+    </script>
+    <script type="text/javascript">
+        //弹出框的实例化
+        var Ealt = new Eject();
+        var varLoginUserId = "";//当前的登录账号
+        var varSelectSectionUserId = "";//当前选择的考勤员账号
+        //页面传递参数
+        var varPostYearMonth = GetUrlQueryString("yearmonth");
+        var varPostSectionUserId = GetUrlQueryString("sectionuserid");
+        var varPostIsCanDealData = GetUrlQueryString("iscandealdata");
+        var varPostLockedDateList = GetUrlQueryString("lockeddatelist");
+        //console.log('varPostLockedDateList', varPostLockedDateList);
+
+        //员工列表行数据
+        var data_Row_ResultList_IsShowList = [];
+        var curCellOldValue = "";
+
+        //某员工某天被锁定的字符串数组
+        var lockedStaffDateArrary = []; //staffNo+'#'+date
+
+        $(function () {
+            if (!(varPostYearMonth == null || varPostYearMonth == 'null')
+                && !(varPostYearMonth == null || varPostYearMonth == 'null')) {
+
+                ///获取某月份某管辖用户下被锁定的人天【取KQRSSZ_2中的IsAttLocked=1的数据】
+                GetAttLockedStaffDays()
+                //获取某个月某个考勤员管辖下处于异常或者调整为正常的考勤结果列表
+                BuildResultDataSheet();
+            }
+
+        })
+
+        ///获取某月份某管辖用户下被锁定的人天【取KQRSSZ_2中的IsAttLocked=1的数据】
+        function GetAttLockedStaffDays() {
+            var urlQuery = "M=" + Math.random() + "&param=getattlockedstaffdays&userid=" + varPostSectionUserId + "&yearmonth=" + varPostYearMonth;
+            urlQuery = escape(urlQuery);
+            var url = "AttLockedHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('GetAttLockedStaffDays.data',data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+
+                    //KQRSSZ_2中标记为锁定的员工工号#日期的数组
+                    lockedStaffDateArrary = dataJson.ReturnRowData;
+                }
+            });
+        }
+
+        //获取某个月某个考勤员管辖下处于异常或者调整为正常的考勤结果列表
+        function BuildResultDataSheet() {
+            var yearMonth = $("#sel_YearMonth").val();
+            var totalWidth = $("#lb_Tips").width();
+            var urlQuery = "M=" + Math.random() + "&param=getexceptionresultdatalist";
+            urlQuery = urlQuery + "&sectionuserid=" + varPostSectionUserId + "&yearmonth=" + varPostYearMonth + "&totalwidth=" + totalWidth;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "MultiAdjustResultHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //console.log('The BuildResultDataSheet --data:' + data);
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //var dataJson = JSON.parse(data);
+                    //alert(dataJson.ReturnCode);
+                    data_DataJson_ResultList = dataJson
+                    //console.log('data_DataJson_ResultList', data_DataJson_ResultList);
+
+                    //console.log('dataJson.ReturnRowData', dataJson.ReturnRowData);
+                    //console.log('dataJson.ReturnColumnData', dataJson.ReturnColumnData);
+
+                    //获取某个月某个考勤员管辖下处于异常或者调整为正常的考勤结果列表到Sheet
+                    BuildResultDataToSheet()
+                }
+            });
+        }
+
+        //获取某个月某个考勤员管辖下处于异常或者调整为正常的考勤结果列表到Sheet
+        function BuildResultDataToSheet() {
+            var isModify = '1'
+            var yearMonth = $("#sel_YearMonth").val();
+            var rowCount = data_DataJson_ResultList.ReturnRowCount;
+            var colCount = data_DataJson_ResultList.ReturnColCount;
+            var colCount_ListShow = data_DataJson_ResultList.ReturnColCountListShow;
+            data_Row_ResultList = data_DataJson_ResultList.ReturnRowData;
+            data_Column_ResultList = data_DataJson_ResultList.ReturnColumnData;
+
+            //////###加载考勤结果的JExcel控件
+            $('#divArea_ResultList').show();
+
+            var style_ResultList = {};
+            for (var i = 0; i < colCount; i++) {
+                var colChar = createCellPos(i);
+
+                var cellStyle = 'font-size:xx-small;'
+                if (isModify == '1') {
+                    cellStyle = cellStyle + 'color: black;'
+                } else {
+                    cellStyle = cellStyle + 'color: red;'
+                }
+                for (var j = 1; j <= rowCount; j++) {
+                    style_ResultList[colChar + j.toString()] = cellStyle;
+                }
+            }
+            //console.log('data_Row_ResultList：', data_Row_ResultList);
+            //console.log('data_Column_ResultList：', data_Column_ResultList);
+
+            //设置各列宽度
+            var totalWidth = $("#lb_Tips").width();//总宽度
+            var widthRemark = 350;//备注列宽度
+            var widthExceptionChs = 150;//异常描述列宽度
+            var otherColTotalWidth = parseFloat(totalWidth) - widthRemark - widthExceptionChs;
+            var otherColWidth = (otherColTotalWidth - 60) / (colCount_ListShow - 2);//其他列宽度
+
+            //遍历列数据，考虑到宽度有限只保留主显示列的显示
+            var onlyShowColumnName = []
+            var onlyShowColumnTitle = []
+            data_Column_ResultList_IsShowList = []
+            data_Column_ResultList.forEach(function (item, index) {
+                //console.log('item.colName:', item.colName)
+                if (item.isListShow == '1') {
+                    switch (item.colName.toUpperCase()) {
+                        case 'SREMARK':
+                            item.width = parseFloat(widthRemark);
+                            break;
+                        case 'EXCEPTIONCHS':
+                            item.width = parseFloat(widthExceptionChs);
+                            break;
+                        default:
+                            item.width = parseFloat(otherColWidth);
+                            break;
+                    }
+                    data_Column_ResultList_IsShowList.push(item);
+                    onlyShowColumnTitle.push(item.title)
+                    onlyShowColumnName.push(item.colName);
+                }
+            })
+            //console.log('onlyShowColumnTitle：', onlyShowColumnTitle);
+            //console.log('onlyShowColumnName：', onlyShowColumnName);
+
+            //遍历行数据进行unescape处理以及去掉不显示列的行数据
+            data_Row_ResultList_IsShowList = []
+            if (data_Row_ResultList.length > 0) {
+                for (let i = 0; i < data_Row_ResultList.length; i++) {
+                    let curRowData = data_Row_ResultList[i];
+                    //console.log('curRowData：', curRowData);
+                    var tempShow_data_Row_ResultList_Title_Json = {};
+                    var tempShow_data_Row_ResultList_ColName_Json = {}; 
+                    for (var keyColumn in curRowData) {
+                        if (onlyShowColumnTitle.includes(keyColumn)) {
+                            tempShow_data_Row_ResultList_Title_Json[keyColumn] = unescape(curRowData[keyColumn]);
+                            tempShow_data_Row_ResultList_ColName_Json[onlyShowColumnName[i]] = unescape(curRowData[keyColumn]);
+
+                            //console.log('tempShow_data_Row_ResultList_Title_Json：', tempShow_data_Row_ResultList_Title_Json);
+                        }
+                    }
+                    data_Row_ResultList_IsShowList.push(tempShow_data_Row_ResultList_Title_Json);
+                }
+            }
+
+            //组成json对象中key为字段名的数据数组
+            data_Row_ResultList_ColumnName_IsShowList = []
+            data_Row_ResultList_ColumnName_IsShowList.push(tempShow_data_Row_ResultList_ColName_Json);
+
+            //You can destroy the table, all data and events related to an existing table by using the method destroy as shown below.
+            jexcel.destroy(document.getElementById('divSheet_ResultList'), false);
+            table_ResultList = jspreadsheet(document.getElementById('divSheet_ResultList'), {
+                data: data_Row_ResultList_IsShowList,
+                columns: data_Column_ResultList_IsShowList,
+                tableOverflow: true,
+                tableHeight: $("#lb_Tips").height(),
+                insertRow: false,
+                style: style_ResultList,
+                onbeforechange: event_BeforeChange_ResultList,
+                onchange: event_Changed_ResultList,
+                contextMenu: [],
+            });
+            //////###加载考勤结果的JExcel控件
+        }
+
+        var event_BeforeChange_ResultList = function (instance, cell, x, y, value) {
+            var cellName = jexcel.getColumnNameFromId([x, y]);
+            var oldValue = table_ResultList.getValue(cellName);
+            curCellOldValue = oldValue;
+
+            //console.log('event_BeforeChange_ResultList.data_Column_ResultList_IsShowList:', data_Column_ResultList_IsShowList);
+            var colName = data_Column_ResultList_IsShowList[x].colName;
+            //console.log('event_BeforeChange_ResultList.colName:', colName);
+            //console.log('event_BeforeChange_ResultList.value:', value);
+            //console.log('event_BeforeChange_ResultList.oldValue:', oldValue);
+
+            if (colName.toUpperCase() == 'BISTONORMAL' && value == '0') {
+                Ealt.Ealert({
+                    title: '操作失败',
+                    message: '禁止调整为"考勤正常"状态',
+                    confirmText: "知道了",
+                })
+                return oldValue;
+            } else {
+                var oneDay = table_ResultList.getValue("A" + (parseInt(y) + 1).toString());
+                var staffNo = table_ResultList.getValue("B" + (parseInt(y) + 1).toString());
+                //判断某人某天是否可修改
+                var varIsModify = JudgeColIsModify(staffNo, oneDay);
+                if (varIsModify != '1') {
+                    return oldValue;
+                }
+            }
+
+        }
+        var event_Changed_ResultList = function (instance, cell, x, y, value) {
+            //注意xy都是从0开始计数
+            //console.log('instance', instance);
+            //console.log('cell', cell);
+            //console.log('x', x);
+            //console.log('y', y);
+            //console.log('data_Column_ResultList_IsShowList', data_Column_ResultList_IsShowList);
+            //console.log('data_Row_ResultList_IsShowList', data_Row_ResultList_IsShowList);
+            var cellName = jexcel.getColumnNameFromId([x, y]);
+            var tableName = data_Column_ResultList_IsShowList[x].tableName;
+            var colName = data_Column_ResultList_IsShowList[x].colName;
+            var colTitle = data_Column_ResultList_IsShowList[x].title; 
+            //var staffNo = data_Row_ResultList_IsShowList[x]["员工编号"];
+            //var oneDay = data_Row_ResultList_IsShowList[x]["日期"];
+            //var origValue = data_Row_ResultList_IsShowList[x][colTitle]; 
+
+            var oneDay = table_ResultList.getValue("A" + (parseInt(y) + 1).toString());//日期必须在第一列A列
+            var staffNo = table_ResultList.getValue("B" + (parseInt(y) + 1).toString());//员工编号必须在第二列B列
+            var origValue = curCellOldValue;
+            //alert(staffNo);
+            //alert(oneDay);
+            //alert(origValue);
+
+            //console.log('event_Changed_ResultList.staffNo', staffNo);
+            //console.log('event_Changed_ResultList.oneDay', oneDay);
+            //console.log('event_Changed_ResultList.tableName', tableName);
+            //console.log('event_Changed_ResultList.colName', colName);
+            //console.log('event_Changed_ResultList.value', value);
+            //console.log('event_Changed_ResultList.origValue', origValue);
+
+            if (origValue.toUpperCase() != value.toUpperCase()) {
+                SaveResultData(varPostYearMonth, staffNo, oneDay, tableName, colName, colTitle, origValue, value);
+            }
+        }
+
+        //判断某人某天是否可修改考勤结果
+        function JudgeColIsModify(varStaffNo, varOneDay) {
+            //console.log('lockedStaffDateArrary', lockedStaffDateArrary);
+            //console.log('varPostLockedDateList', varPostLockedDateList);
+            //console.log('varStaffNo', varStaffNo);
+            //console.log('varOneDay', varOneDay);
+            var indexStaffOneDateLocked = $.inArray(varStaffNo + '#' + varOneDay, lockedStaffDateArrary);
+            var indexDateLocked = $.inArray(varOneDay, JSON.parse(varPostLockedDateList))
+
+            //console.log('indexStaffOneDateLocked:', indexStaffOneDateLocked);
+            //console.log('indexDateLocked:', indexDateLocked);
+            var varIsModify = '1';
+            if (varPostIsCanDealData != '1') {
+                varIsModify = '0';
+                Ealt.Ealert({
+                    title: '操作失败',
+                    message: '期间锁定或者审核状态时无法操作',
+                    confirmText: "知道了",
+                })
+            }else if (indexDateLocked > -1 ) {
+                varIsModify = '0';
+                Ealt.Ealert({
+                    title: '操作失败',
+                    message: '当前日期' + varOneDay + '被锁定',
+                    confirmText: "知道了",
+                })
+            }else if (indexStaffOneDateLocked > -1) {
+                varIsModify = '0';
+                Ealt.Ealert({
+                    title: '操作失败',
+                    message: '当前员工' + varStaffNo + '的当前日期' + varOneDay + '被锁定',
+                    confirmText: "知道了",
+                })
+            }
+            return varIsModify;
+        }
+
+        ///保存结果
+        function SaveResultData(yearMonth, staffNo, oneDay, tableName, colName, colTitle, origValue, value) {
+            var tips = "【列'" + colTitle + "'的值从'" + origValue + "'修改成'" + value +"'】"
+            var urlQuery = "M=" + Math.random() + "&param=savestaffresultdata&userid=" + varPostSectionUserId;
+            urlQuery = urlQuery + "&yearmonth=" + yearMonth + "&staffno=" + staffNo + "&oneday=" + oneDay;
+            urlQuery = urlQuery + "&tablename=" + tableName + "&colname=" + colName + "&colvalue=" + value;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "ArrangeShiftHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ReturnMsg);
+                    if (dataJson.ReturnCode == '1') {
+                        ////重新加载
+                        BuildResultDataSheet();
+                        Ealt.Etoast(dataJson.ReturnMsg + ":" + tips, 1)   //默认2秒
+                    } else {
+                        Ealt.Ealert({
+                            title: '操作失败',
+                            message: dataJson.ReturnMsg + ":" + tips,
+                            confirmText: "知道了",
+                        })
+                    }
+                }
+            });
+        }
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,616 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>考勤审核Attendance Verify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+    <link href="../../common/plugins/jqueryEject/css/Eject.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../common/plugins/jspreadsheet-ce/jsuites.css" type="text/css" />
+    <link rel="stylesheet" href="../../common/plugins/jspreadsheet-ce/jexcel.css" type="text/css" />
+
+    <style>
+        /*jexcel控件行样式定义奇偶数行北京色变换*/
+        .jexcel tbody tr:nth-child(even) {
+            background-color: #EEE9F1 !important;
+        }
+
+        /*侧边栏modal样式*/
+        .modalSidebar.left .modal-dialog, .modal.right .modal-dialog {
+            position: fixed;
+            margin: auto;
+            width: 320px;
+            height: 100%;
+            -webkit-transform: translate3d(0,0,0);
+            -ms-transform: translate3d(0,0,0);
+            -o-transform: translate3d(0,0,0);
+            transform: translate3d(0,0,0)
+        }
+        .modalSidebar.left .modal-content, .modal.right .modal-content {
+            height: 100%;
+            overflow-y: auto
+        }
+        .modalSidebar.left .modal-body, .modal.right .modal-body {
+            padding: 15px 15px 80px
+        }
+        .modalSidebar.left.fade .modal-dialog {
+            left: -320px;
+            -webkit-transition: opacity .3s linear,left .3s ease-out;
+            -moz-transition: opacity .3s linear,left .3s ease-out;
+            -o-transition: opacity .3s linear,left .3s ease-out;
+            transition: opacity .3s linear,left .3s ease-out
+        }
+        .modalSidebar.left.fade.in .modal-dialog {
+            left: 0
+        }
+        .modalSidebar.right.fade .modal-dialog {
+            right: -320px;
+            -webkit-transition: opacity .3s linear,right .3s ease-out;
+            -moz-transition: opacity .3s linear,right .3s ease-out;
+            -o-transition: opacity .3s linear,right .3s ease-out;
+            transition: opacity .3s linear,right .3s ease-out
+        }
+        .modalSidebar.right.fade.in .modal-dialog {
+            right: 0
+        }
+        .modalSidebar .modal-content {
+            border-radius: 0;
+            border: none
+        }
+        .modalSidebar .modal-header {
+            border-bottom-color: #eee;
+            background-color: #fafafa
+        }
+        /*侧边栏modal样式*/
+
+        /*全屏modal样式*/
+        .modalFullScreen .modal-dialog {
+            position: fixed;
+            margin: auto;
+            width: 100%;
+            height: 100%;
+        }
+        .modalFullScreen .modal-content {
+            height: 100%;
+            overflow-y: auto
+        }
+        .modalFullScreen .modal-content {
+            border-radius: 0;
+            border: none
+        }
+        /*全屏modal样式*/
+    </style>
+</head>
+
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/plugins/jqueryEject/js/index.js" type="text/javascript"></script>
+    <script src="../../common/plugins/jspreadsheet-ce/jexcel.js"></script>
+    <script src="../../common/plugins/jspreadsheet-ce/jsuites.js"></script>
+    <script src="../../common/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../common/js/MainUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/stringUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/customObject.js" type="text/javascript"></script>
+
+    <div id="divMaxArea" class="container-fluid">
+        <nav id="navTop" class="navbar navbar-default navbar-fixed-top">
+            <div class="container-fluid bg-info">
+                <div class="row-fluid" style="margin-top:5px;margin-bottom:5px">
+                    <div class="span12">
+                        <span class="label label-info h4">考勤期间</span>
+                        <select id="sel_YearMonth" name="sel_YearMonth" class="selectpicker" data-width="22%" data-live-search="false">
+                            <option>选择考勤期间</option>
+                        </select>&nbsp;&nbsp;
+                        <button id="btnLockYearMonth" type="button" class="btn btn-xs text-danger">
+                            <span id="spanLockYearMonth" class="glyphicon glyphicon-lock" aria-hidden="true">&nbsp;锁定期间</span>
+                        </button>
+                        <span class="label label-info h4">本期间周列表</span>
+                        <select id="sel_MonthWeek" name="sel_MonthWeek" class="selectpicker" data-width="22%" data-live-search="false">
+                        </select>&nbsp;&nbsp;
+                    </div>
+                    <div class="span12" style="margin-top:5px;">
+                        <span class="label label-info h4">考勤账号</span>
+                        <select id="sel_SectionUserId" name="sel_SectionUserId" class="selectpicker" data-width="22%" data-live-search="true">
+                        </select>&nbsp;&nbsp;
+                        <button id="btnVerify" optype="verify" type="button" class="btn btn-xs text-danger verfiy-attendance" style="display: none">
+                            <span class="glyphicon glyphicon-lock" aria-hidden="true">&nbsp;审核此部门</span>
+                        </button>
+                        <button id="btnFinish" optype="finish" type="button" class="btn btn-xs text-success verfiy-attendance" style="display: none; margin-left: 5px">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;此部门审核完毕</span>
+                        </button>
+                        <button id="btnReturn" optype="return" type="button" class="btn btn-xs text-warning verfiy-attendance" style="display: none; margin-left: 5px">
+                            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true">&nbsp;退回此部门</span>
+                        </button>
+                        <button id="btnReturnAll" optype="returnall" type="button" class="btn btn-xs pull-right text-warning verfiy-attendance" style="margin-left:5px">
+                            <span class="glyphicon glyphicon-arrow-left" aria-hidden="true">&nbsp;退回所有部门</span>
+                        </button>
+                        <button id="btnFinishAll" optype="finishall" type="button" class="btn btn-xs pull-right text-success verfiy-attendance" style="margin-left:5px">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true">&nbsp;所有部门审核完毕</span>
+                        </button>
+                        <button id="btnVerifyAll" optype="verifyall" type="button" class="btn btn-xs pull-right text-danger verfiy-attendance" style="margin-left:5px">
+                            <span class="glyphicon glyphicon-lock" aria-hidden="true">&nbsp;审核所有部门</span>
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </nav>
+
+    </div>
+    <div class="row-fluid" style="margin-top:90px">
+        <iframe id="framePage" name="framePage" width="100%" src="" style="border: 0px solid #cecece;" scrolling="auto"></iframe>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>-->
+                    <button id="btnCloseWaittingModal" type="button" class="close">
+                        <span class="text-danger h4">关闭</span>
+                    </button>
+                    <h4 class="modal-title" id="myWaittingModalTitle">
+                        正在处理中,请稍候.....
+                    </h4>
+                </div>
+                <div id="myWaittingModalContent" class="modal-body">
+
+                </div>
+                <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>-->
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+
+    <!-- 模态框（侧边栏） -->
+    <div class="modal left fade modalSidebar" id="myResultDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">弹窗标题</h4>
+                </div>
+                <div class="modal-body">
+                    弹窗内容
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（全屏显示） -->
+    <div class="modal fade modalFullScreen" id="myFullModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close sm" data-dismiss="modal" aria-hidden="true"><span class="text-sm sm">关闭</span>&times;</button>
+                    <span class="modal-title text-danger" id="myFullModalHeaderLabel"></span>
+                </div>
+                <div class="modal-body">
+                    <iframe id="frameFullScreenPage" name="frameFullScreenPage" width="100%" src="" style="border: 0px solid #cecece;" scrolling="auto"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        //全局变量
+        var screenWidth = screen.availWidth;
+        var screenHeight = screen.availHeight;
+
+        function ShowWaitting() {
+            $('#myWaittingModalTitle').html('正在处理中,请稍候.....');
+            $('#myWaittingModalContent').html('');
+            $('#myWaittingModal').modal();
+            $('#btnCloseWaittingModal').hide();
+        }
+        function HideWaitting() {
+            $('#myWaittingModal').modal('hide');
+        }
+
+        function ShowWaittingAndTips() {
+            $('#myWaittingModal').modal();
+            $('#btnCloseWaittingModal').hide();
+        }
+
+
+    </script>
+    <script type="text/javascript">
+        //弹出框的实例化
+        var Ealt = new Eject();
+        var varLoginUserId = "";//当前的登录账号
+        var varSelectSectionUserId = "";//当前选择的考勤员账号
+
+        $(function () {
+            //$(".verfiy-attendance").hide();
+
+            //加载考勤期间列表信息
+            LoadYearMonthToSelect("");
+            ///获取考勤员账号列表
+            LoadSectionUserList(varSelectSectionUserId);
+
+            $("#sel_SectionUserId").change(function () {
+                varSelectSectionUserId = $("#sel_SectionUserId").val();
+                LoadDeptInfoByUserId($("#sel_SectionUserId").val());
+                LoadArrangeShiftPage();
+
+                ///加载考勤期间月份的周列表信息
+                LoadMonthWeekToSelect();
+            });
+            $("#btnLockYearMonth").click(function () {
+                LockByYearMonth();
+            });
+            $("#sel_MonthWeek").change(function () {
+                ///根据月度期间的周数锁定及解锁操作
+                LockByMonthWeek();
+            });
+            $(".verfiy-attendance").click(function () {
+                var opType = $(this).attr("optype");
+                //alert(opType);
+                VerifyDeptAttendance(opType);
+            })
+        })
+
+        //加载排班页面
+        function LoadArrangeShiftPage() {
+            var varYearMonth = $("#sel_YearMonth").val();
+            var varSectionUserId = $("#sel_SectionUserId").val();
+            if (varYearMonth != '' && varYearMonth != null && varSectionUserId != '' && varSectionUserId != null) {
+                var url = "ArrangeShift.html?M = " + Math.random() + " &sectionuserid=" + varSectionUserId + "&yearmonth=" + varYearMonth+"&usertype=1";
+                $('#framePage').attr("src", url);
+                $('#framePage').height($('.modalFullScreen').height() + 30);
+                //$('#framePage').width(screenWidth);
+            } else {
+                $('#framePage').attr("src", "");
+            }
+        }
+    </script>
+
+    <!--获取考勤员账号列表-->
+    <script type="text/javascript">
+        ///获取考勤员账号列表
+        function LoadSectionUserList(selectUserId) {
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=getinchargeuserlist&yearmonth=" + yearMonth;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //$("#txt_ResultText").val(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //console.log('LoadSectionUserList():',dataJson.ResultData);
+
+                    //加载下拉列表sel_SectionUserId
+                    $("#sel_SectionUserId").empty();
+                    $("#sel_SectionUserId").append("<option value=''>请选择考勤员</option>");
+                    $.each(dataJson.ResultData, function (idx, item) {
+                        var showName = unescape(item.DCNO) + unescape(item.DCNAMECHS);
+
+                        var selectOption = "<option value='" + item.DCNO + "'";
+                        //var selectOption = selectOption + "' plock = '" + unescape(item.PLOCK) + "'";
+                        selectOption = selectOption + ">" + showName + "</option>";
+                        $("#sel_SectionUserId").append(selectOption);
+                    });
+                    $("#sel_SectionUserId").val(selectUserId);
+                    $("#sel_SectionUserId").find("option[value='" + selectUserId + "']").attr("selected", true);
+                    $("#sel_SectionUserId").change();
+                    $("#sel_SectionUserId").selectpicker('refresh');
+                }
+            });
+        }
+
+        ///根据考勤员账号获取管辖的部门及其考勤状态信息
+        function LoadDeptInfoByUserId(userId) {
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=getdeptlistbyuserid&userid=" + userId + "&yearmonth=" + yearMonth;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //$("#txt_ResultText").val(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ReturnRowData);
+
+                    var varKQSTATUS = dataJson.ReturnRowData[0].KQSTATUS;
+                    switch (varKQSTATUS) {
+                        case "1":
+                            $('#btnVerify').show();//审核该部门
+                            $('#btnFinish').hide();//该部门审核完毕
+                            $('#btnReturn').hide();//退回该部门
+                            break;
+                        case "2":
+                            $('#btnVerify').hide();//审核该部门
+                            $('#btnFinish').show();//该部门审核完毕
+                            $('#btnReturn').show();//退回该部门
+                            break;
+                        case "3":
+                            $('#btnVerify').hide();//审核该部门
+                            $('#btnFinish').hide();//该部门审核完毕
+                            $('#btnReturn').show();//退回该部门
+                            break;
+                        default:
+                            $('#btnVerify').hide();//审核该部门
+                            $('#btnFinish').hide();//该部门审核完毕
+                            $('#btnReturn').hide();//退回该部门
+                            break;
+                    }
+                }
+            });
+        }
+
+    </script>
+
+    <!--加载考勤期间下拉框-->
+    <script type="text/javascript">
+        ///加载考勤期间列表信息
+        function LoadYearMonthToSelect(selectYearMonth) {
+            var urlQuery = "M=" + Math.random() + "&param=getyearmonthlist";
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //$("#txt_ResultText").val(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ResultData);
+
+                    varLoginUserId = dataJson.ReturnLoginUserId;
+                    if (varLoginUserId == '') {
+                        return false
+                    }
+
+                    //console.log('LoadYearMonthToSelect():',dataJson.ResultData);
+                    //加载下拉列表sel_YearMonth
+                    var varCurYearMonth = "";
+                    $("#sel_YearMonth").empty();
+                    $.each(dataJson.ResultData, function (idx, item) {
+                        var showName = unescape(item.PID) + "(" + unescape(item.PSTART) + "----" + unescape(item.PEND) + ")";
+                        showName = showName + (unescape(item.PLOCK) == '1' ? "(期间已锁定)" : "");
+                        showName = showName + (unescape(item.IsCurYearMonth) == '1' ? "(当前期间)" : "");
+
+                        if (unescape(item.IsCurYearMonth) == '1') {
+                            varCurYearMonth = item.PID;
+                        }
+                        var selectOption = "<option value='" + item.PID + "'";
+                        var selectOption = selectOption + "' pstart = '" + unescape(item.PSTART) + "' pend = '" + unescape(item.PEND) + "'";
+                        var selectOption = selectOption + "' plock = '" + unescape(item.PLOCK) + "'";
+                        selectOption = selectOption + ">" + showName + "</option>";
+                        $("#sel_YearMonth").append(selectOption);
+                    });
+                    if (selectYearMonth != '') { varCurYearMonth = selectYearMonth;}
+                    $("#sel_YearMonth").val(varCurYearMonth);
+                    $("#sel_YearMonth").find("option[value='" + varCurYearMonth + "']").attr("selected", true);
+                    $("#sel_YearMonth").selectpicker('refresh');
+
+                    $("#sel_YearMonth").change(function () {
+                        //var lockStatus = $("#sel_YearMonth").attr("plock");
+                        var lockStatus = $("#sel_YearMonth").find("option[value='" + $("#sel_YearMonth").val() + "']").attr("plock");
+                        if (lockStatus == '1') {
+                            $("#spanLockYearMonth").html("&nbsp;解锁期间");
+                        } else {
+                            $("#spanLockYearMonth").html("&nbsp;锁定期间");
+                        }
+                        LoadArrangeShiftPage();
+                    });
+                    $("#sel_YearMonth").change();
+                    ///加载考勤期间月份的周列表信息
+                    LoadMonthWeekToSelect();
+
+                }
+            });
+        }
+
+        ///加载考勤期间月份的周列表信息
+        function LoadMonthWeekToSelect() {
+            var userId = $("#sel_SectionUserId").val();
+            var varCurYearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=getmonthweeklist&yearmonth=" + varCurYearMonth + "&userid=" + userId;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //$("#txt_ResultText").val(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ResultData);
+
+                    //加载下拉列表sel_MonthWeek
+                    $("#sel_MonthWeek").empty();
+                    $("#sel_MonthWeek").append("<option value=''>本期间周操作</option>");
+                    $.each(dataJson.ResultData, function (idx, item) {
+                        var strPID = unescape(item.PID);
+                        var strMonthlyWeekNo = unescape(item.MonthlyWeekNo);
+                        var strPLOCK = unescape(item.PLOCK);
+                        var strPLOCKShowDesc = strPLOCK == "1" ? "【点击可解锁】" : "【点击可锁定本周】";
+                        var showName = "本期间" + varCurYearMonth + "第" + strMonthlyWeekNo + "周" + strPLOCKShowDesc;
+
+                        var selectOption = "<option value='" + strPID + '-' + strMonthlyWeekNo + "'";
+                        var selectOption = selectOption + "' yearmonth = '" + strPID + "'";
+                        var selectOption = selectOption + "' weekno = '" + strMonthlyWeekNo + "'";
+                        var selectOption = selectOption + "' plock = '" + strPLOCK + "'";
+                        selectOption = selectOption + ">" + showName + "</option>";
+                        $("#sel_MonthWeek").append(selectOption);
+                    });
+                    $("#sel_MonthWeek").selectpicker('refresh');
+
+                }
+            });
+        }
+    </script>
+
+    <!--锁定及解锁操作-->
+    <script type="text/javascript">
+        ///根据月度期间锁定及解锁操作
+        function LockByYearMonth() {
+            var userId = $("#sel_SectionUserId").val();
+            var yearMonth = $("#sel_YearMonth").val();
+            var lockStatus = $("#sel_YearMonth").find("option[value='" + yearMonth + "']").attr("plock");
+            var urlQuery = "M=" + Math.random() + "&param=lockbyyearmonth&yearmonth=" + yearMonth + "&lockstatus=" + lockStatus;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //$("#txt_ResultText").val(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //console.log('LockByYearMonth():',dataJson.ResultData);
+                    if (dataJson.ReturnCode == '1') {
+                        Ealt.Etoast(dataJson.ReturnMsg, 1)   //默认1秒
+                        //加载考勤期间列表信息
+                        LoadYearMonthToSelect(yearMonth);
+
+                    } else {
+                        Ealt.Etoast(dataJson.ReturnMsg, 3)   //默认三秒
+                    }
+                }
+            });
+        }
+
+        ///根据月度期间的周数锁定及解锁操作
+        function LockByMonthWeek() {
+            var userId = $("#sel_SectionUserId").val();
+            var yearMonth = $("#sel_YearMonth").val();
+            if (yearMonth != '' && yearMonth != null && userId != '' && userId != null) {
+                var monthWeekSelectedValue = $("#sel_MonthWeek").val();
+                var monthWeek = $("#sel_MonthWeek").find("option[value='" + monthWeekSelectedValue + "']").attr("weekno");
+                var lockStatus = $("#sel_MonthWeek").find("option[value='" + monthWeekSelectedValue + "']").attr("plock");
+                var urlQuery = "M=" + Math.random() + "&param=lockbymonthweek&yearmonth=" + yearMonth + "&weekno=" + monthWeek + "&lockstatus=" + lockStatus + "&userid=" + userId;
+                //alert(urlQuery);
+                urlQuery = escape(urlQuery);
+                var url = "CommonHandler.ashx?" + urlQuery;
+                $.ajax({
+                    cache: false,
+                    url: url,
+                    async: false,
+                    error: function (request) {
+                        HideWaitting();
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        //$("#txt_ResultText").val(data);
+                        if (data == "") return false;
+                        var dataJson = eval("(" + data + ")");
+                        //console.log('LockByYearMonth():',dataJson.ResultData);
+                        Ealt.Etoast(dataJson.ReturnMsg, 3)   //默认三秒
+                        if (dataJson.ReturnCode == '1') {
+                            //加载考勤期间列表信息
+                            LoadYearMonthToSelect(yearMonth);
+                        }
+                    }
+                });
+            } else {
+                Ealt.Etoast('请先选择期间及考勤账号', 3)   //默认三秒
+            }
+        }
+    </script>
+
+    <!--针对部门审核考勤操作-->
+    <script type="text/javascript">
+        ///针对部门审核考勤操作
+        function VerifyDeptAttendance(opType) {
+            var yearMonth = $("#sel_YearMonth").val();
+            var userId = $("#sel_SectionUserId").val();
+            if (yearMonth != '' && yearMonth != null && userId != '' && userId != null) {
+                var urlQuery = "M=" + Math.random() + "&param=verifydeptattendance&yearmonth=" + yearMonth + "&userid=" + userId + "&optype=" + opType;
+                //alert(urlQuery);
+                urlQuery = escape(urlQuery);
+                var url = "CommonHandler.ashx?" + urlQuery;
+                $.ajax({
+                    cache: false,
+                    url: url,
+                    async: false,
+                    error: function (request) {
+                        HideWaitting();
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        //$("#txt_ResultText").val(data);
+                        if (data == "") return false;
+                        var dataJson = eval("(" + data + ")");
+                        //console.log('LockByYearMonth():',dataJson.ResultData);
+                        Ealt.Etoast(dataJson.ReturnMsg, 1)   //默认三秒
+                        if (dataJson.ReturnCode == '1') {
+                            ///获取考勤员账号列表
+                            LoadSectionUserList(varSelectSectionUserId);
+                        }
+                    }
+                });
+            } else {
+                Ealt.Etoast('请先选择期间及考勤账号', 1)   //默认三秒
+            }
+
+        }
+    </script>
+
+    <!--页面初始化区域-->
+    <script type="text/javascript">
+        $(function () {
+
+
+        })
+    </script>
+
+</body>
+</html>

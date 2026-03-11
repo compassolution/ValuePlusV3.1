@@ -1,0 +1,2264 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>部门排班Arrange Shift</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+    <link href="../../common/plugins/jqueryEject/css/Eject.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../common/plugins/jspreadsheet-ce/jsuites.css" type="text/css" />
+    <link rel="stylesheet" href="../../common/plugins/jspreadsheet-ce/jexcel.css" type="text/css" />
+
+    <style>
+        /*jexcel控件行样式定义奇偶数行北京色变换*/
+        .jexcel tbody tr:nth-child(even) {
+            background-color: #EEE9F1 !important;
+        }
+
+        /*侧边栏modal样式*/
+        .modalSidebar.left .modal-dialog, .modal.right .modal-dialog {
+            position: fixed;
+            margin: auto;
+            width: 410px;
+            height: 100%;
+            -webkit-transform: translate3d(0,0,0);
+            -ms-transform: translate3d(0,0,0);
+            -o-transform: translate3d(0,0,0);
+            transform: translate3d(0,0,0)
+        }
+        .modalSidebar.left .modal-content, .modal.right .modal-content {
+            height: 100%;
+            overflow-y: auto
+        }
+        .modalSidebar.left .modal-body, .modal.right .modal-body {
+            padding: 15px 15px 80px
+        }
+        .modalSidebar.left.fade .modal-dialog {
+            left: -410px;
+            -webkit-transition: opacity .3s linear,left .3s ease-out;
+            -moz-transition: opacity .3s linear,left .3s ease-out;
+            -o-transition: opacity .3s linear,left .3s ease-out;
+            transition: opacity .3s linear,left .3s ease-out
+        }
+        .modalSidebar.left.fade.in .modal-dialog {
+            left: 0
+        }
+        .modalSidebar.right.fade .modal-dialog {
+            right: -410px;
+            -webkit-transition: opacity .3s linear,right .3s ease-out;
+            -moz-transition: opacity .3s linear,right .3s ease-out;
+            -o-transition: opacity .3s linear,right .3s ease-out;
+            transition: opacity .3s linear,right .3s ease-out
+        }
+        .modalSidebar.right.fade.in .modal-dialog {
+            right: 0
+        }
+        .modalSidebar .modal-content {
+            border-radius: 0;
+            border: none
+        }
+        .modalSidebar .modal-header {
+            border-bottom-color: #eee;
+            background-color: #fafafa
+        }
+        /*侧边栏modal样式*/
+
+        /*全屏modal样式*/
+        .modalFullScreen .modal-dialog {
+            position: fixed;
+            margin: auto;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+        .modalFullScreen .modal-content {
+            height: 100%;
+            overflow-y: auto
+        }
+        .modalFullScreen .modal-content {
+            border-radius: 0;
+            border: none
+        }
+        /*全屏modal样式*/
+    </style>
+</head>
+
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/plugins/jqueryEject/js/index.js" type="text/javascript"></script>
+    <script src="../../common/plugins/jspreadsheet-ce/jexcel.js"></script>
+    <script src="../../common/plugins/jspreadsheet-ce/jsuites.js"></script>
+    <script src="../../common/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../common/js/MainUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/stringUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/customObject.js" type="text/javascript"></script>
+
+    <div id="divMaxArea" class="container-fluid">
+        <div class="row-fluid" style="margin-bottom:5px">
+            <div class="span12">
+                <div class="alert alert-info text-left" id="lb_Tips">
+                    <span class="h4">部门排班考勤</span>&nbsp;&nbsp;
+                    <span>
+                        您可此部门下的员工进行<font color="black">考勤排班</font>
+                        、<font color="black">考勤分析</font>
+                        、<font color="black">异常调整</font>
+                        、<font color="black">考勤报表打印</font>等操作
+                    </span>
+                    <span>
+                        如有操作疑问可点击
+                        <a id="aViewHelp" href="#" class="alert-link text-danger">操作指引</a>
+                    </span>
+                    <button type="button" class="close" aria-label="Close">
+                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div id="divYearMonth" class="span12">
+                <select id="sel_YearMonth" name="sel_YearMonth" class="selectpicker" data-width="22%" data-live-search="false" style="display:none">
+                    <option>选择考勤期间</option>
+                </select>&nbsp;&nbsp;
+                <button id="btnLoadStaffList" type="button" class="btn btn-sm">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;&nbsp;重新刷新排班表
+                </button>
+                <button id="btnSwitchException" type="button" class="btn btn-sm">
+                    <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>&nbsp;&nbsp;切换显示考勤异常
+                </button>
+                <button id="btnSaveShift" type="button" class="btn btn-sm text-danger">
+                    <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>&nbsp;&nbsp;保存排班结果&nbsp;&nbsp;
+                    <span id="spanChangedCellValue" class="label label-danger"></span>
+                </button>
+                <button id="btnViewAnalyseHistory" type="button" class="close pull-right" aria-label="Close" style="margin-left: 10px; margin-right: 5px" title="查看分析历史记录">
+                    <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                </button>
+                <button id="btnAnalyseResult" type="button" class="btn btn-sm text-success pull-right">
+                    <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>&nbsp;&nbsp;分析考勤结果
+                </button>
+                <button id="btnMultiAdjustResult" type="button" class="btn btn-sm pull-right" style="margin-left: 10px; margin-right: 20px">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&nbsp;&nbsp;批量调整异常考勤结果
+                </button>
+            </div>
+        </div>
+
+        <div class="row-fluid" style="margin-top:10px">
+            <div class="span12">
+                <div id="divArea_ShiftList" class="panel panel-warning">
+                    <div class="panel-heading">可进行排班的班次列表&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-danger">Ctrl+C复制班次代码后,Ctrl+V粘贴到排班表中，完成排班</span></div>
+                    <div id="divSheet_ShiftList" class="jspreadsheet"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="divArea_StaffList" class="panel panel-success">
+                    <div class="panel-heading">
+                        <span id="spanStatus" class="label label-info">当前状态:部门排班中</span>
+                        管辖部门：
+                        <span id="spanDeptDesc" class="h5" style="font-weight:800"></span>
+
+                        <button id="btnViewShiftHistory" type="button" class="close pull-right" aria-label="Close" style="margin-left: 10px; margin-right: 5px" title="查看排班修改记录">
+                            <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                        </button>
+
+                        <label class="checkbox-inline pull-right">
+                            <input type="checkbox" id="ckBox_IsScroll_StaffList" checked value=""> 允许列表左右滚动
+                        </label>
+                    </div>
+                    <div id="divSheet_StaffList" class="jspreadsheet"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid" style="margin-top:10px;margin-bottom:20px">
+            <div class="span12">
+                <div id="divArea_ResultList" class="panel panel-info" style="display:none">
+                    <div class="panel-heading">
+                        <span id="spanIsModify" class="h5 text-danger" style="font-weight:500;display:none"></span>
+                        员工<span id="spanCurStaffNo" class="h5 text-danger" style="font-weight:500"></span>
+                        在<span id="spanCurDay" class="h5 text-danger" style="font-weight:500"></span>
+                        的员工考勤结果
+
+
+                        <button id="btnViewResultHistory" type="button" class="close pull-right" aria-label="Close" style="margin-left: 10px; margin-right: 5px" title="查看考勤结果修改记录">
+                            <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+                        </button>
+                        <button id="btnShowResultDataModal" type="button" class="close" aria-label="Close" data-toggle="tooltip" data-placement="left" title="更多考勤结果明细/More Detail">
+                            <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>
+                        </button>
+                        <span class="checkbox-inline pull-right text-danger" style="font-weight:500">更多员工考勤结果信息请点击：</span>
+
+                    </div>
+                    <div id="divSheet_ResultList" class="jspreadsheet"></div>
+                </div>
+            </div>
+        </div>
+
+        <!--<div id="divSheet_StaffList" style="margin:0px;padding:0px;position:absolute;width:100%;height:100%;left: 0px;top: 0px;"></div>-->
+    </div>
+
+
+    <form id="frmPostData" method="post">
+        <textarea type="text" id="txt_SaveShiftData" name="txt_SaveShiftData" class="form-control text-info" style="display:none"></textarea>
+    </form>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false" style="top: 60px">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>-->
+                    <button id="btnCloseWaittingModal" type="button" class="close">
+                        <span class="text-danger h4">关闭</span>
+                    </button>
+                    <h4 class="modal-title" id="myWaittingModalTitle">
+                        正在处理中,请稍候.....
+                    </h4>
+                </div>
+                <div id="myWaittingModalContent" class="modal-body">
+
+                </div>
+                <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>-->
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal -->
+    </div>
+
+    <!-- 模态框（侧边栏） -->
+    <div class="modal left fade modalSidebar" id="myResultDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel"></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid text-center ">
+                        <h4 id="myModalBodyTitle" class="h4">考勤结果明细</h4>
+                    </div>
+                    <hr />
+                    <div id="divShowStaffOneDayResult" class="container-fluid">
+                    </div>
+                    <div class="container-fluid" style="display:none">
+                        <hr />
+                        <div class="form-group">
+                            <div class="col-sm-12 text-center">
+                                <button type="button" id="btn_SaveAttendanceResult" class="btn btn-danger">修改考勤结果</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（全屏显示） -->
+    <div class="modal fade modalFullScreen" id="myFullModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close sm" data-dismiss="modal" aria-hidden="true"><span class="text-sm sm">关闭</span>&times;</button>
+                    <span class="modal-title text-danger" id="myFullModalHeaderLabel"></span>
+                </div>
+                <div class="modal-body">
+                    <iframe id="frameFullScreenPage" name="frameFullScreenPage" width="100%" src="" style="border: 0px solid #cecece;" scrolling="auto"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="close sm" data-dismiss="modal" aria-hidden="true"><span class="text-sm sm">关闭</span>&times;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end 弹出层 moda -->
+    <script type="text/javascript">
+        //全局变量
+        var screenWidth = screen.availWidth;
+        var screenHeight = screen.availHeight;
+
+        function ShowWaitting() {
+            $('#myWaittingModalTitle').html('正在处理中,请稍候.....');
+            $('#myWaittingModalContent').html('');
+            $('#myWaittingModal').modal();
+            $('#btnCloseWaittingModal').hide();
+        }
+        function HideWaitting() {
+            $('#myWaittingModal').modal('hide');
+        }
+
+        function ShowWaittingAndTips() {
+            $('#myWaittingModal').modal();
+            $('#btnCloseWaittingModal').hide();
+        }
+
+        function ShowOpenFullDialog(url, name) {
+            //var varWidth = screen.availWidth;
+            //var varHeight = screen.availHeight;
+            //window.open(url, url, 'width=' + varWidth + ',height=' + varHeight + ',top=0,left=0, center:1, toolbar=no, menubar=no, scrollbars=yes,resizable=yes,location=no, status=no');
+            //alert($('.modalFullScreen').height());
+            //alert(screenHeight);
+
+            //判断是否有parent窗口，即是否从审核窗口进入，如果是则全屏modal框在parent窗口打开，否则在本月modal框打开
+            if ($("#sel_InchargeUserId", window.parent.document).attr("id") == 'sel_InchargeUserId') {
+                $('#frameFullScreenPage', window.parent.document).attr("src", url);
+                $('#frameFullScreenPage', window.parent.document).height($('.modalFullScreen', window.parent.document).height() - 90);
+                $('#myFullModalHeaderLabel', window.parent.document).html(name);
+                $(".modalFullScreen", window.parent.document).modal();
+            } else {
+                $('#frameFullScreenPage').attr("src", url);
+                $('#frameFullScreenPage').height($('.modalFullScreen').height() - 90);
+                $('#myFullModalHeaderLabel').html(name);
+                $(".modalFullScreen").modal();
+            }
+        }
+        function OpenOrigWindow(url, flag, isReresh, IsAnalyse) {
+            var varWidth = screen.availWidth - 60;
+            var varHeight = screen.availHeight - 200;
+            var newPage = window.open(url, flag, 'width=' + varWidth + ',height=' + varHeight + ',top=100,left=20, center:1, toolbar=no, menubar=no, scrollbars=yes,resizable=yes,location=no, status=no');
+
+            ////监听弹窗页面的关闭事件
+            var loop = setInterval(() => {
+                if (newPage.closed) {
+                    clearInterval(loop);
+                    if (IsAnalyse) {//如果需要分析考勤
+                        $("#btnAnalyseResult").click();
+                    }else if (isReresh) {//如果需要刷新页面
+                        $("#btnLoadStaffList").click();
+                    }
+                }
+            });
+        }
+
+        $('.modalFullScreen').on('hide.bs.modal', function () {
+            if ($("#sel_InchargeUserId", window.parent.document).attr("id") == 'sel_InchargeUserId') {
+                $('#frameFullScreenPage', window.parent.document).attr("src", "");
+                $('#myFullModalHeaderLabel', window.parent.document).html("");
+            } else {
+                $('#frameFullScreenPage').attr("src", "");
+                $('#myFullModalHeaderLabel').html("");
+            }
+        });
+
+
+    </script>
+    <script type="text/javascript">
+        //弹出框的实例化
+        var Ealt = new Eject();
+        //页面传递参数
+        var varPostSectionUserId = GetUrlQueryString("sectionuserid");
+        var varPostYearMonth = GetUrlQueryString("yearmonth");
+        var varPostUserType = GetUrlQueryString("usertype");//0或者空为小部门用户,1为人事部审核
+        if (varPostSectionUserId == null || varPostSectionUserId == 'null') { varPostSectionUserId = ''; }
+        if (varPostYearMonth == null || varPostYearMonth == 'null') { varPostYearMonth = ''; }
+        if (varPostUserType == null || varPostUserType == 'null') { varPostUserType = ''; }
+
+        var varLoginUserId = "";//当前的登录账号
+
+
+        //当前考勤期间信息
+        var varCurYearMonth = "";
+        var varCurYearMonthDateFrom = "";
+        var varCurYearMonthDateTo = "";
+        var varCurYearMonthIsLock = "";
+        //班次表对象
+        var table_ShiftList;
+        //员工每日排班表对象
+        var table_StaffList;
+        //员工某天考勤结果表
+        var table_ResultList;
+        //员工每日排班表固定列的个数
+        var fixedColumnCount_StaffList;
+        //当前期间当前考勤员的排班状态编码
+        var varKQSTATUS = "1";
+        //当前期间当前考勤员的排班状态描述
+        var varKQSTATUSDesc = "";
+        //是否可操作页面数据[0不可操作，1可操作]--不可操作时不能保存排班不能分析，不能修改考勤结果
+        var IsCanDealData = "1";
+        //员工号与行号的对应关系json
+        var jsonData_DCNO_RowIndex = new Hashtable();
+        //员工列表行数据
+        var data_Row_StaffList = [];
+        var data_Row_StaffList_DCNO = [];//仅DCNO的数组
+        //员工列表列数据
+        var data_Column_StaffList = [];
+        var data_LockedDateList = [];
+        //周锁定时是否锁定当前部门（1为是，0为否针对所有部门） add by sammen 20260209
+        var IsLockWeekForCurSection = "0";
+
+        ////【某员工某日考勤结果获取对象】
+        //某员工某日考勤结行数据
+        var data_DataJson_ResultList = {};
+        //某员工某日考勤结行数据
+        var data_Row_ResultList = [];
+        //某员工某日考勤结行数据【主显示列-json对象中key为列显示Title的数据数组】
+        var data_Row_ResultList_IsShowList = [];
+        //某员工某日考勤结行数据【主显示列-json对象中key为字段名ColName的数据数组】
+        var data_Row_ResultList_ColumnName_IsShowList = [];
+        //某员工某日考勤结列数据
+        var data_Column_ResultList = [];
+        //某员工某日考勤结列数据【主显示列】
+        var data_Column_ResultList_IsShowList = [];
+        ////【某员工某日考勤结果获取对象】
+
+        //IsShowStillUnNormal是否显示依然为异常的，否则显示调整为正常的【1/0】
+        var IsShowStillUnNormal = '1';
+        //当前也可选择的班次数组
+        var validShiftArrary = []
+        //当前页面Cell数据改变的个数
+        var iChangedCellValue = 0;
+        //当前页面Cell数据改变的数据hashtable
+        var changedCellHashTable = new Hashtable();
+        //当前页面Cell数据改变的数据Json
+        var changedCellJsonData = [];
+        var origValuedata_Row_StaffList = {};
+
+        //当前期间被锁定的人天 add by sammen 20210914
+        var lockedStaffDateArrary = []
+
+        //所有被锁定的年月期间 add by sammen 20221122
+        var yearMonthLockedArrary = [];
+        //当前期间所有被锁定的日期 add by sammen 20221122
+        var dateLockedArrary = []
+
+        $(function () {
+            ShowWaitting();
+            $("#sel_YearMonth").hide();
+            //加载考勤期间列表信息
+            LoadYearMonthToSelect();
+            //加班班次列表
+            LoadShiftListToSheet();
+            setTimeout(function () {
+                //根据期间更新本月需做考勤的人员列表并加载员工列表sheet表格信息
+                UpdateStaffListByYearMonth();
+                HideWaitting();
+            }, 100);
+            ///期间下拉框切换事件
+            $('#sel_YearMonth').change(function () {
+                ShowWaitting();
+                //切换选择某月份期间
+                ChangeYearMonth();
+
+                setTimeout(function () {
+                    //根据期间更新本月需做考勤的人员列表并加载员工列表sheet表格信息
+                    UpdateStaffListByYearMonth();
+                    HideWaitting();
+                }, 100);
+            });
+
+            $("#btnSwitchException").click(function () {
+                ///切换显示异常考勤结果信息数据
+                LoadUnNormalData();
+            });
+            $("#btnLoadStaffList").click(function () {
+                $('#divArea_ResultList').hide();
+                $('#spanCurStaffNo').html('');
+                $('#spanCurDay').html('');
+                $('#spanIsModify').html('0')
+
+                ///重新加载排班数据
+                ShowWaitting();
+                LoadStaffListToSheet("");
+            });
+            $("#btnSaveShift").click(function () {
+                ShowWaitting(); 
+                ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取被锁定的年月期间
+                GetLockedYearMonth();
+                ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取是否可以分析的状态
+                LoadDeptListAndLockFlag();
+                if (IsCanDealData == '0') {
+                    Ealt.Etoast('期间锁定或者审核状态时无法操作', 2)   //默认三秒
+                    HideWaitting();
+                } else {
+                    if (changedCellHashTable.count() <= 0) {
+                        HideWaitting();
+                        Ealt.Etoast('未变更排班，无需保存', 1)   //默认三秒
+                        //alert("未变更排班，无需保存");
+                        return false
+                    } else {
+                        setTimeout(function () {
+                            ///保存排班数据
+                            SaveStaffShiftData();
+                        }, 200)
+                    }
+                }
+            });
+            $("#btnAnalyseResult").click(function () {
+                ShowWaitting(); 
+                ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取被锁定的年月期间
+                GetLockedYearMonth();
+                ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取是否可以分析的状态
+                LoadDeptListAndLockFlag();
+                setTimeout(function () {
+                    //console.log('考勤分析时IsCanDealData=', IsCanDealData);
+                    if (IsCanDealData == '0') {
+                        Ealt.Etoast('期间锁定或者审核状态时无法操作', 2)   //默认三秒
+                        HideWaitting();
+                    } else {
+                        ///分析考勤结果
+                        DoAnalyseInit();
+                    }
+                }, 200)
+            });
+            $('#btnCloseWaittingModal').click(function () {
+                //重新加载排班表
+                $("#btnLoadStaffList").click();
+                HideWaitting();
+            })
+            $("#btnMultiAdjustResult").click(function () {
+                if (IsCanDealData == '0') {
+                    Ealt.Etoast('期间锁定或者审核状态时无法操作', 2)   //默认三秒
+                } else {
+                    var url = "MultiAdjustResult.html?SP=USP_HR_QRY_KQ_AnalyseRecord&yearmonth=" + $("#sel_YearMonth").val()
+                        + "&sectionuserid=" + varPostSectionUserId
+                        + "&iscandealdata=" + IsCanDealData
+                        //+ "&stafflist=" + encodeURIComponent(JSON.stringify(data_Row_StaffList_DCNO))
+                        + "&lockeddatelist=" + encodeURIComponent(JSON.stringify(data_LockedDateList));
+                    OpenOrigWindow(url, '批量调整异常考勤结果', false, false);
+                }
+            });
+
+            $("#btnViewAnalyseHistory").click(function () {
+                var url = "../../Query/SPQuery.aspx?SP=USP_HR_QRY_KQ_AnalyseRecord&P0=" + $("#sel_YearMonth").val() + "&P1=" + varPostSectionUserId;
+                OpenOrigWindow(url, '查看分析历史记录', false, false);
+            });
+
+            $("#btnViewShiftHistory").click(function () {
+                var url = "../../Query/SPQuery.aspx?SP=USP_HR_QRY_KQ_ModifyShiftRecord&P0=" + varPostSectionUserId + "&P1=" + $('#sel_YearMonth').val() + "&P2=";
+                OpenOrigWindow(url, '查看排班修改记录', false, false);
+            });
+
+            $("#btnViewResultHistory").click(function () {
+                var url = "../../Query/SPQuery.aspx?SP=USP_HR_QRY_KQ_ModifyResultRecord&P0=" + varPostSectionUserId + "&P1=" + $('#sel_YearMonth').val() + "&P2=";
+                OpenOrigWindow(url, '查看考勤结果修改记录', false, false);
+            });
+            $("#ckBox_IsScroll_StaffList").click(function () {
+                //alert(this.checked);
+                LoadStaffListToSheet("");
+            });
+
+
+            $("#aViewHelp").click(function () {
+                var url = "../../UserFile/Doctool/兼容Edge浏览器新排班页面说明.pdf";
+                ShowOpenFullDialog(url, '排班界面操作指引');
+            });
+
+            //左侧模态框显示考勤结果
+            $("#btnShowResultDataModal").click(function () {
+                var staffNo = $("#spanCurStaffNo").html();
+                var oneDay = $("#spanCurDay").html();
+                var isModify = $("#spanIsModify").html();
+                if (staffNo != '' && staffNo != '') {
+                    //加载某员工某天考勤结果数据到侧边栏
+                    BuildResultDataToLeftModal(staffNo, oneDay, isModify);
+                }
+            });
+
+
+            //$(".showhelp").hover(function () {
+            //    $("#myResultDetailModal").modal();
+            //})
+        })
+
+    </script>
+
+    <!--加载考勤期间下拉框-->
+    <script type="text/javascript">
+        ///加载考勤期间列表信息
+        function LoadYearMonthToSelect() {
+            var urlQuery = "M=" + Math.random() + "&param=getyearmonthlist&usertype=" + varPostUserType;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('LoadYearMonthToSelect.data', data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ResultData);
+
+                    if (varPostSectionUserId == '') { varPostSectionUserId = dataJson.ReturnPostUserId; }
+                    if (varPostUserType == '') { varPostUserType = dataJson.ReturnUserType; }
+                    varLoginUserId = dataJson.ReturnLoginUserId;
+
+                    //加载下拉列表sel_YearMonth
+                    $("#sel_YearMonth").empty();
+                    $.each(dataJson.ResultData, function (idx, item) {
+                        var showName = unescape(item.PID) + "(" + unescape(item.PSTART) + "----" + unescape(item.PEND) + ")";
+                        showName = showName + (unescape(item.PLOCK) == '1' ? "(期间已锁定)" : "");
+                        showName = showName + (unescape(item.IsCurYearMonth) == '1' ? "(当前期间)" : "");
+
+                        if (unescape(item.IsCurYearMonth) == '1') {
+                            varCurYearMonth = item.PID;
+                        }
+                        var selectOption = "<option value='" + item.PID + "'";
+                        var selectOption = selectOption + "' pstart = '" + unescape(item.PSTART) + "' pend = '" + unescape(item.PEND) + "'";
+                        var selectOption = selectOption + "' plock = '" + unescape(item.PLOCK) + "'";
+                        selectOption = selectOption + ">" + showName + "</option>";
+                        $("#sel_YearMonth").append(selectOption);
+                    });
+
+                    if (varPostYearMonth == '') {
+                        $("#sel_YearMonth").find("option[value='" + varCurYearMonth + "']").attr("selected", true);
+                        $("#sel_YearMonth").selectpicker('show');
+                    } else {
+                        $("#sel_YearMonth").find("option[value='" + varPostYearMonth + "']").attr("selected", true);
+                        $("#sel_YearMonth").selectpicker('hide');
+                    }
+                    //切换选择某月份期间
+                    ChangeYearMonth();
+
+                }
+            });
+        }
+
+    </script>
+
+    <!--根据考勤员账号获取管辖的部门列表-->
+    <script type="text/javascript">
+        ///根据考勤员账号获取管辖的部门列表
+        function LoadDeptListAndLockFlag() {
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=getdeptlistbyuserid&userid=" + varPostSectionUserId + "&yearmonth=" + yearMonth;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('LoadDeptListAndLockFlag.data', data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ReturnRowData);
+
+                    var showName = "";
+                    $.each(dataJson.ReturnRowData, function (idx, item) {
+                        varKQSTATUS = unescape(item.KQSTATUS)
+                        varKQSTATUSDesc = unescape(item.KQSTATUSDesc)
+                        var deptName = unescape(item.ODESCCHS)
+                        showName = showName + (idx == 0 ? deptName : ";" + deptName);
+                    });
+                    $("#spanDeptDesc").html(showName);
+
+                    $("#spanStatus").removeClass("label-info").removeClass("label-warning").removeClass("label-danger");
+                    if (varKQSTATUS == '1') {
+                        $("#spanStatus").addClass("label-info");
+                        $("#spanStatus").html("部门可操作");
+                    } else if (varKQSTATUS == '2') {
+                        $("#spanStatus").addClass("label-warning");
+                        $("#spanStatus").html("人事部审核中,部门暂不可操作");
+                    } else if (varKQSTATUS == '3') {
+                        $("#spanStatus").addClass("label-danger");
+                        $("#spanStatus").html("人事部审核完毕,部门暂不可操作");
+                    }
+
+                    //当前状态下不可进行操作[期间被锁定已经部门审核或审核完毕状态]
+                    IsCanDealData = "1";//默认可编辑
+                    ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取被锁定的年月期间
+                    var indexYearMonthLockFlag = $.inArray(yearMonth, yearMonthLockedArrary);
+                    varCurYearMonthIsLock = (indexYearMonthLockFlag > -1) ? "1" : "2";                    
+
+                    //varPostUserType=1为人事审核界面入口
+                    if (varPostUserType == '1') {
+                        if ((varCurYearMonthIsLock == '1') || (varKQSTATUS == '3')) {
+                            IsCanDealData = "0";
+                        }
+                    } else {
+                        //非人事审核即部门排班时
+                        if ((varCurYearMonthIsLock == '1') || (varKQSTATUS != '1')) {
+                            IsCanDealData = "0";
+                        }
+                    }
+                    //console.log('LoadDeptListAndLockFlag.IsCanDealData', IsCanDealData);
+                }
+            });
+        }
+
+    </script>
+
+    <!--根据期间更新本月需做考勤的人员列表-->
+    <script type="text/javascript">
+        ///根据期间更新本月需做考勤的人员列表
+        function UpdateStaffListByYearMonth() {
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=updatestafflistbyyearmonth&yearmonth=" + yearMonth;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('UpdateStaffListByYearMonth.data', data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+
+                    ///加载员工列表sheet表格信息
+                    LoadStaffListToSheet("");
+
+                    //console.log('UpdateStaffListByYearMonth.dataJson.ReturnCode', dataJson.ReturnCode);
+
+                }
+            });
+        }
+
+        //切换选择某月份期间
+        function ChangeYearMonth() {
+            varCurYearMonth = $("#sel_YearMonth").val()
+            varCurYearMonthDateFrom = $("#sel_YearMonth").find("option[value='" + $("#sel_YearMonth").val() + "']").attr("pstart");
+            varCurYearMonthDateTo = $("#sel_YearMonth").find("option[value='" + $("#sel_YearMonth").val() + "']").attr("pend");
+            varCurYearMonthIsLock = $("#sel_YearMonth").find("option[value='" + $("#sel_YearMonth").val() + "']").attr("plock");
+            ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取被锁定的年月期间
+            GetLockedYearMonth();
+            ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取某月份下在表KQPERD_3中被锁定的日期
+            GetDayLockedByYearMonth();
+            ///根据考勤员账号获取管辖的部门列表
+            LoadDeptListAndLockFlag();
+        }
+    </script>
+
+    <!--班次列表sheet表格区域-->
+    <script type="text/javascript">
+        //定义右键
+        var contextMenu_ShiftList = function (obj, x, y, e) {
+            var items = [];
+            return items;
+        };
+        ///加载排班班次信息
+        function LoadShiftListToSheet() {
+            var totalWidth = $("#lb_Tips").width();
+            var urlQuery = "M=" + Math.random() + "&param=getshiftlist&userid=" + varPostSectionUserId + "&totalwidth=" + totalWidth;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //var dataJson = JSON.parse(data);
+                    //alert(dataJson.ReturnCode);
+                    var rowCount = dataJson.ReturnRowCount;
+                    var colCount = dataJson.ReturnColCount;
+                    var data_ShiftList = dataJson.ReturnRowData;
+                    var column_ShiftList = dataJson.ReturnColumnData;
+                    var style_ShiftList = {};
+                    for (var i = 0; i < colCount; i++) {
+                        var colChar = createCellPos(i);
+                        for (var j = 1; j <= rowCount; j++) {
+                            if (colChar == 'A') {
+                                style_ShiftList[colChar + j.toString()] = 'color: red;';
+                            } else {
+                                style_ShiftList[colChar + j.toString()] = 'color: black;';
+                            }
+                        }
+                    }
+
+                    //You can destroy the table, all data and events related to an existing table by using the method destroy as shown below.
+                    jexcel.destroy(document.getElementById('divSheet_ShiftList'), false);
+                    table_ShiftList = jspreadsheet(document.getElementById('divSheet_ShiftList'), {
+                        data: data_ShiftList,
+                        columns: column_ShiftList,
+                        tableOverflow: true,
+                        search: true,
+                        tableHeight: '210px',
+                        insertRow: false,
+                        style: style_ShiftList,
+                        contextMenu: contextMenu_ShiftList,
+                    });
+
+                    //本页面可进行排班的班次数组
+                    for (var j = 0; j < rowCount; j++) {
+                        var cellName = "A" + (j + 1).toString();
+                        validShiftArrary.push(table_ShiftList.getValue(cellName));
+                    }
+                }
+            });
+        }
+
+    </script>
+
+    <!--员工列表sheet表格区域-->
+    <script type="text/javascript">
+        //定义事件
+        var event_SelectionActive_StaffList = function (instance, x1, y1, x2, y2, origin) {
+            //console.log('The event_SelectionActive_StaffList ');
+            var cellName1 = jexcel.getColumnNameFromId([x1, y1]);
+            var cellName2 = jexcel.getColumnNameFromId([x2, y2]);
+            if (cellName1 == cellName2) {
+                //获取对应行工号列
+                var cellNameDCNO = jexcel.getColumnNameFromId([0, y1]);
+                var varStaffNo = table_StaffList.getValue("A" + (parseInt(y1) + 1).toString());
+                if (x1 > fixedColumnCount_StaffList) {
+                    var varOneDay = data_Column_StaffList[x1].date;
+                    var varColLockFlag = data_Column_StaffList[x1].plock;
+
+                    //console.log('The event_SelectionActive_StaffList --varStaffNo' + varStaffNo);
+                    //console.log('The event_SelectionActive_StaffList --varOneDay' + varOneDay);
+
+                    ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取被锁定的年月期间
+                    GetLockedYearMonth();
+
+                    ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取是否可以分析的状态
+                    LoadDeptListAndLockFlag();
+
+                    ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取某月份下在表KQPERD_3中被锁定的日期
+                    GetDayLockedByYearMonth();
+
+                }
+            }
+        }
+        var event_Focus_StaffList = function (instance) {
+            //console.log('The table_StaffList ' + $(instance).prop('id') + ' is event_Focus_StaffList');
+        }
+        //开始编辑事件，模拟双击事件
+        var event_EditionStart_StaffList = function (instance, cell, x, y) {
+            //console.log('The event_EditionStart_StaffList --instance' + instance);
+            //console.log('The event_EditionStart_StaffList --x' + x);
+            //console.log('The event_EditionStart_StaffList --y' + y);
+
+            var varStaffNo = table_StaffList.getValue("A" + (parseInt(y) + 1).toString());
+            var varOneDay = data_Column_StaffList[x].date;
+            var varColLockFlag = data_Column_StaffList[x].plock;
+
+            ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时某天是否被锁定
+            var indexDateLockFlag = $.inArray(varOneDay, dateLockedArrary);
+            //add by sammen 20260209 兼顾到周锁定是否可以针对特定部门而不是全部部门
+            //varColLockFlag = (indexDateLockFlag > -1) ? "1" : "2";
+            if (IsLockWeekForCurSection == "1" && varColLockFlag != "1") {
+                varColLockFlag = varColLockFlag
+            } else {
+                varColLockFlag = (indexDateLockFlag > -1) ? "1" : "2";
+            }
+
+            //console.log('The event_EditionStart_StaffList --varStaffNo' + varStaffNo);
+            //console.log('The event_EditionStart_StaffList --varOneDay' + varOneDay);
+
+            //判断某人某天是否可修改
+            var varIsModify = JudgeColIsModify(varStaffNo, varOneDay, varColLockFlag);
+
+            //设置某人某天可修改的全局变量【双击和右键时都设置】
+            $("#spanCurStaffNo").html(varStaffNo);
+            $("#spanCurDay").html(varOneDay);
+            $("#spanIsModify").html(varIsModify);
+
+            //console.log('【selection_StaffList】 dcno: ' + varStaffNo + ', date: ' + varOneDay + ', isModify: ' + varIsModify);
+            //点击后加载某人某天的考勤结果数据
+            setTimeout(function () {
+                BuildResultDataSheet(varStaffNo, varOneDay, varIsModify, false);
+            }, 100)
+
+        }
+        var event_BeforeChange_StaffList = function (instance, cell, x, y, value) {
+            //console.log('The event_BeforeChange_StaffList ');
+            //console.log('event_BeforeChange_StaffList.X：', x);
+            //console.log('event_BeforeChange_StaffList.Y：', y);
+            var cellName = jexcel.getColumnNameFromId([x, y]);
+            var oldValue = table_StaffList.getValue(cellName);
+
+            //记录当前页面刷新后的第一次原始记录
+            if (origValuedata_Row_StaffList[cellName] == undefined) {
+                origValuedata_Row_StaffList[cellName] = oldValue;
+            }
+
+            var varStaffNo = table_StaffList.getValue("A" + (parseInt(y) + 1).toString());
+            var varOneDay = data_Column_StaffList[x].date;
+            var varColLockFlag = data_Column_StaffList[x].plock;
+
+            ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时某天是否被锁定
+            var indexDateLockFlag = $.inArray(varOneDay, dateLockedArrary);
+            //add by sammen 20260209 兼顾到周锁定是否可以针对特定部门而不是全部部门
+            //varColLockFlag = (indexDateLockFlag > -1) ? "1" : "2";
+            if (IsLockWeekForCurSection == "1" && varColLockFlag != "1") {
+                varColLockFlag = varColLockFlag
+            } else {
+                varColLockFlag = (indexDateLockFlag > -1) ? "1" : "2";
+            }
+            
+
+            //console.log('The event_SelectionActive_StaffList --IsCanDealData', IsCanDealData);
+            if (IsCanDealData != '1') {
+                Ealt.Etoast('期间被锁定或已审核完毕', 2)   //默认三秒
+                return oldValue;
+            } else if (varColLockFlag == '1') {
+                Ealt.Etoast('日期' + varOneDay + '已锁定', 2)   //默认三秒
+                return oldValue;
+            } else {
+
+                ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时获取某月份某管辖用户下被锁定的人天
+                GetAttLockedStaffDays(false);
+                //console.log('修改班次时获取lockedStaffDateArrary=', lockedStaffDateArrary);
+                //首先判断该员工这一天排班是否被锁定 add by sammen 20210914
+                var indexStaffOneDateLocked = $.inArray(varStaffNo +'#'+ varOneDay, lockedStaffDateArrary);
+                if (indexStaffOneDateLocked > -1) {
+                    Ealt.Etoast('员工' + varStaffNo + '在日期' + varOneDay + '排班已锁定', 2)   //默认三秒
+                    return oldValue;
+                } else {
+                    var index = $.inArray(value, validShiftArrary);
+                    //alert(value);
+                    //alert(index);
+                    if (index < 0 && value != '') {
+                        Ealt.Etoast('输入班次无效', 2)   //默认三秒
+                        //alert('输入班次无效');
+                        return oldValue;
+                    } else {
+                    }
+                }
+            }
+        }
+        var event_Changed_StaffList = function (instance, cell, x, y, value) {
+            //注意xy都是从0开始计数
+            //console.log('instance', instance);
+            //console.log('cell', cell);
+            //console.log('x', x);
+            //console.log('y', y);
+            var cellName = jexcel.getColumnNameFromId([x, y]);
+            //console.log('New change on cell ' + cellName + ' to: ' + value + '');
+
+            var origValue = origValuedata_Row_StaffList[cellName];
+            origValue = origValue.ReplaceAll(' ', '');
+            value = value.ReplaceAll(' ', '');
+
+            //console.log('event_Changed_StaffList. origValue:', origValue);
+            //console.log('event_Changed_StaffList. value:', value);
+            setTimeout(function () {
+                if (origValue.toUpperCase() != value.toUpperCase()) {
+                    //console.log('event_Changed_StaffList.value different:');
+                    var cellName_StaffNo = "A" + (parseInt(y) + 1).toString();
+                    var varChangedStaffNo = table_StaffList.getValue(cellName_StaffNo);
+                    var varChangedDayNum = (parseInt(x) + 1) - fixedColumnCount_StaffList;
+                    var varChangedCellValue = value;
+
+                    var StaffNoDayNum = varChangedStaffNo + '#' + varChangedDayNum
+                    if (changedCellHashTable.contains(StaffNoDayNum)) {
+                        changedCellHashTable.remove(StaffNoDayNum);
+                    }
+                    changedCellHashTable.add(StaffNoDayNum, varChangedCellValue);
+                    //console.log('event_Changed_StaffList. changedCellHashTable:', changedCellHashTable);
+
+                    iChangedCellValue = iChangedCellValue + 1;
+                    $("#spanChangedCellValue").html(iChangedCellValue.toString() + "个排班待保存");
+                    //console.log('event_Changed_StaffList. iChangedCellValue:', iChangedCellValue);
+
+                    //修改编辑后的样式
+                    table_StaffList.setStyle(cellName, 'font-weight', 'bold');
+                    table_StaffList.setStyle(cellName, 'font-style', 'italic');
+                    table_StaffList.setStyle(cellName, 'text-decoration', 'underline');
+                    table_StaffList.setStyle(cellName, 'border-bottom', '2px dashed red');
+                    //table_StaffList.setStyle(cellName, 'color', 'yellow');
+                }
+            }, 100)
+        }
+        var event_InsertedRow_StaffList = function (instance) {
+            //console.log('instance', instance);
+            //console.log('Row added');
+        }
+        //定义右键
+        var contextMenu_StaffList = function (obj, x, y, e) {
+            //alert('x:'+x+";y:"+y);
+            var items = [];
+            if (y && (parseInt(x) >= fixedColumnCount_StaffList)) {
+                //获取对应行工号列
+                var varStaffNo = table_StaffList.getValue("A" + (parseInt(y) + 1).toString());
+                var varOneDay = data_Column_StaffList[x].date;
+                var varColLockFlag = data_Column_StaffList[x].plock;
+                //console.log('contextMenu_StaffList.varStaffNo + varOneDay：', varStaffNo + varOneDay);
+
+                ///add by sammen 20221122 防止HR审核后考勤员未及时刷新，实时某天是否被锁定
+                var indexDateLockFlag = $.inArray(varOneDay, dateLockedArrary);
+                //add by sammen 20260209 兼顾到周锁定是否可以针对特定部门而不是全部部门
+                //varColLockFlag = (indexDateLockFlag > -1) ? "1" : "2";
+                if (IsLockWeekForCurSection == "1" && varColLockFlag != "1") {
+                    varColLockFlag = varColLockFlag
+                } else {
+                    varColLockFlag = (indexDateLockFlag > -1) ? "1" : "2";
+                }
+
+                //判断某人某天是否可修改
+                var varIsModify = JudgeColIsModify(varStaffNo, varOneDay, varColLockFlag);
+
+                //设置某人某天可修改的全局变量【双击和右键时都设置】
+                $("#spanCurStaffNo").html(varStaffNo);
+                $("#spanCurDay").html(varOneDay);
+                $("#spanIsModify").html(varIsModify);
+
+                //判断人员日期是否在KQRSSZ_2中被锁定的人员日期数组中
+                var indexStaffOneDateLocked = $.inArray(varStaffNo + '#' + varOneDay, lockedStaffDateArrary);
+                if (indexStaffOneDateLocked > -1) {
+                    items.push({ type: 'line' });
+                    items.push({
+                        //title: "执行:申请解锁" + varStaffNo + "在" + varOneDay + "的排班",
+                        title: "申请解锁" + varStaffNo + "在" + varOneDay + "的排班",
+                        onclick: function () {
+                            var url = "../../Archive/Action/DoAction.aspx?SP=USP_HR_KQLockApply_New&P0=" + varStaffNo + "&P1=" + varOneDay + "&P2=1&P3=" + varPostSectionUserId + "";
+                            OpenOrigWindow(url, 'USP_HR_KQLockApply_New', false, false);
+                        }
+                    });
+                }
+
+                var urlQuery = "M=" + Math.random() + "&param=getcontextmenulist&usertype=" + varPostUserType
+                //alert(urlQuery);
+                urlQuery = escape(urlQuery);
+                var url = "ArrangeShiftHandler.ashx?" + urlQuery;
+                $.ajax({
+                    cache: false,
+                    url: url,
+                    async: false,
+                    error: function (request) {
+                        HideWaitting();
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        //console.log('getcontextmenulist.data', data);
+                        if (data == "") return false;
+                        var dataJson = eval("(" + data + ")");
+                        //alert(dataJson.ReturnRowData);
+                        $.each(dataJson.ReturnRowData, function (idx, item) {
+                            var varShowName = unescape(item.ShowName);
+                            var varShowNameChs = unescape(item.ShowNameChs);
+                            var varLinkDetail = unescape(item.LinkDetail);
+                            var varIsPreLine = unescape(item.IsPreLine);
+                            var varIsNewWindow = unescape(item.IsNewWindow);
+                            //关闭弹窗后是否刷新
+                            var varIsRefreshAfterClose = unescape(item.IsRefreshAfterClose);
+                            //关闭弹窗后是否分析
+                            var varIsAnalyseAfterClose = unescape(item.IsAnalyseAfterClose);
+
+
+                            //替换固定参数
+                            varShowName = ReplaceFixedParams(varShowName, x, y)
+                            varShowNameChs = ReplaceFixedParams(varShowNameChs, x, y)
+                            varLinkDetail = ReplaceFixedParams(varLinkDetail, x, y)
+                            if (varIsPreLine == '1') {
+                                items.push({ type: 'line' });
+                            }
+
+                            items.push({
+                                title: varShowNameChs,
+                                onclick: function () {
+                                    var url = varLinkDetail;
+                                    var isRefresh = varIsRefreshAfterClose == '1' ? true : false;
+                                    var IsAnalyse = varIsAnalyseAfterClose == '1' ? true : false;
+                                    OpenOrigWindow(url, varShowNameChs, isRefresh,IsAnalyse);
+                                    //if (varIsNewWindow == '1') {
+                                    //    ShowOpenFullDialog(url, varShowNameChs);
+                                    //} else {
+                                    //    OpenOrigWindow(url, varShowNameChs);
+                                    //}
+                                }
+                            });
+                        });
+                    }
+                });
+
+                items.push({ type: 'line' });
+                items.push({
+                    //title: "执行:申请解锁" + varStaffNo + "在" + varOneDay + "的排班",
+                    title: "Excel:查看排班修改记录",
+                    onclick: function () {
+                        var url = "../../Query/SPQuery.aspx?SP=USP_HR_QRY_KQ_ModifyShiftRecord&P0=" + varPostSectionUserId + "&P1=" + $('#sel_YearMonth').val() + "&P2=";
+                        OpenOrigWindow(url, '查看排班修改记录', false,false);
+                    }
+                });
+                items.push({ type: 'line' });
+
+                //######针对某人某天的考勤锁定操作 add by sammen 20230117
+                //varPostUserType=1为人事审核界面入口
+                //IsCanDealData == '1'表示本月可编辑即未被锁定且未审核
+                //varColLockFlag !='1'表示本天未被锁定
+                if (varPostUserType == '1' && IsCanDealData == '1' && varColLockFlag !='1') {
+                    var statusDesc = '';
+                    var todoDesc = '';
+                    var isToLock = '';
+                    if (varIsModify == '1' && indexStaffOneDateLocked < 0) {
+                        //表示该员工当天的考勤未锁定
+                        statusDesc = '未锁定';
+                        todoDesc = '锁定';
+                        isToLock = '1';
+                    } else {
+                        //表示该员工当天的考勤被锁定
+                        statusDesc = '已锁定';
+                        todoDesc = '解锁';
+                        isToLock = '2';
+                    }
+                    items.push({
+                        title: todoDesc + "员工" + varStaffNo+"在" + varOneDay + "的日考勤",
+                        onclick: function () {
+                            var gridData = obj.options.data;
+
+                            //弹出框的实例化
+                            var Ealt_LockOneStafDay = new Eject();
+                            Ealt_LockOneStafDay.Econfirm({
+                                title: todoDesc + "当天考勤",
+                                message: varStaffNo + "在" + varOneDay + "的当天考勤状态为：" + statusDesc + "，现在需执行“" + todoDesc + "”操作,是否确定？",
+                                confirmText: "确定",
+                                cancelText: "取消",
+                                define: function () {
+                                    //确定
+                                    //alert('确定');
+                                    ///锁定/解锁某员工某一天排班锁定
+                                    LockStaffOneDay(varStaffNo, varOneDay, isToLock);
+                                },
+                                cancel: function () {
+                                    Ealt_LockOneStafDay = null;
+                                }
+                            })
+                            //setTimeout(function () {
+                            //    //点击后加载某人某天的考勤结果数据
+                            //    BuildResultDataSheet(varStaffNo, varOneDay, varIsModify, true);
+                            //}, 100)
+                        }
+                    });
+                    items.push({
+                        title: "锁定员工" + varStaffNo + "在" + varCurYearMonth + "的整月考勤",
+                        onclick: function () {
+                            var gridData = obj.options.data; 
+
+                            //弹出框的实例化
+                            var Ealt_LockOneStafMonth = new Eject();
+                            Ealt_LockOneStafMonth.Econfirm({
+                                title: "锁定员工整月考勤",
+                                message: "锁定" + varStaffNo + "在期间" + varCurYearMonth + "的整月考勤，是否确定？",
+                                confirmText: "确定",
+                                cancelText: "取消",
+                                define: function () {
+                                    ///锁定/解锁某员工某一月排班锁定
+                                    LockStaffOneMonth(varStaffNo, varCurYearMonth, '1');
+                                },
+                                cancel: function () {
+                                    Ealt_LockOneStafMonth = null;
+                                }
+                            })
+                        }
+                    });
+                    items.push({
+                        title: "解锁员工" + varStaffNo + "在" + varCurYearMonth + "的整月考勤",
+                        onclick: function () {
+                            var gridData = obj.options.data;
+
+                            //弹出框的实例化
+                            var Ealt_LockOneStafMonth = new Eject();
+                            Ealt_LockOneStafMonth.Econfirm({
+                                title: "解锁员工整月考勤",
+                                message: "解锁" + varStaffNo + "在期间" + varCurYearMonth + "的整月考勤，是否确定？",
+                                confirmText: "确定",
+                                cancelText: "取消",
+                                define: function () {
+                                    ///锁定/解锁某员工某一月排班锁定
+                                    LockStaffOneMonth(varStaffNo, varCurYearMonth, '0');
+                                },
+                                cancel: function () {
+                                    Ealt_LockOneStafMonth = null;
+                                }
+                            })
+                            //setTimeout(function () {
+                            //    //点击后加载某人某天的考勤结果数据
+                            //    BuildResultDataSheet(varStaffNo, varOneDay, varIsModify, true);
+                            //}, 100)
+                        }
+                    });
+                    items.push({ type: 'line' });
+                }
+                //######针对某人某天的考勤锁定操作
+
+                items.push({
+                    title: "查看" + varStaffNo + "在" + varOneDay + "的考勤结果",
+                    onclick: function () {
+                        var gridData = obj.options.data;
+                        setTimeout(function () {
+                            //点击后加载某人某天的考勤结果数据
+                            BuildResultDataSheet(varStaffNo, varOneDay, varIsModify, true);
+                        }, 100)
+                    }
+                });
+            }
+            return items;
+        };
+
+        //判断某人某天是否可修改考勤结果
+        function JudgeColIsModify(varStaffNo, varOneDay, varColLockFlag) {
+            var indexStaffOneDateLocked = $.inArray(varStaffNo + '#'+ varOneDay, lockedStaffDateArrary);
+            var varIsModify = '1';
+            if (IsCanDealData != '1' || varColLockFlag == '1' || (indexStaffOneDateLocked > -1)) {
+                varIsModify = '0';
+            }
+            return varIsModify;
+        }
+        //替换链接地址中的固定参数并返回
+        function ReplaceFixedParams(input, x, y) {
+            //获取对应行工号列
+            var varStaffNo = table_StaffList.getValue("A" + (parseInt(y) + 1).toString());
+            var varOneDay = data_Column_StaffList[x].date;
+            var varYearMonth = $("#sel_YearMonth").val();
+            var varDayNum = (parseInt(x) + 1) - fixedColumnCount_StaffList;
+
+            //console.log('varStaffNo:', varStaffNo);
+            //console.log('varYearMonth:', varYearMonth);
+            //console.log('varOneDay:', varOneDay);
+            //console.log('varDayNum:', varDayNum);
+            //console.log('varLoginUserId:', varLoginUserId);
+            //console.log('varPostSectionUserId:', varPostSectionUserId);
+            //console.log('varPostUserType:', varPostUserType);
+
+            var output = input;
+            //var output = "@StaffNo@-@YearMonth@-@SectionUserId@-@LoginUserId@-@UserType@-@DayNum@-@Date@**@Date@"
+            //console.log('input:', output);
+            output = output.ReplaceAll("@StaffNo@", varStaffNo);//员工编号
+            output = output.ReplaceAll("@YearMonth@", varYearMonth);//考勤期间
+            output = output.ReplaceAll("@SectionUserId@", varPostSectionUserId);//考勤员账号
+            output = output.ReplaceAll("@LoginUserId@", varLoginUserId);//登录账号
+            output = output.ReplaceAll("@UserType@", varPostUserType);//用户类型
+            output = output.ReplaceAll("@DayNum@", varDayNum);//期间内的第几天(1/2/3/4........)
+            output = output.ReplaceAll("@Date@", varOneDay);//考勤日期yyyy-MM-dd
+
+            //console.log('output:', output);
+            return output;
+        }
+
+        ///加载员工列表sheet表格信息
+        function LoadStaffListToSheet(after) {
+            var totalWidth = $("#lb_Tips").width();
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=getstafflist&userid=" + varPostSectionUserId + "&yearmonth=" + yearMonth + "&totalwidth=" + totalWidth;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "ArrangeShiftHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //var dataJson = JSON.parse(data);
+                    //alert(dataJson.ReturnCode);
+                    //console.log('dataJson:', dataJson);
+                    var rowCount = dataJson.ReturnRowCount;
+                    var colCount = dataJson.ReturnColCount;
+                    IsLockWeekForCurSection = dataJson.IsLockWeekForCurSection
+                    data_Row_StaffList = dataJson.ReturnRowData;
+                    data_Column_StaffList = dataJson.ReturnColumnData;
+                    fixedColumnCount_StaffList = dataJson.ReturnFixedColumnCount;
+                    //console.log('data_Column_StaffList:', data_Column_StaffList);
+
+                    //仅DCNO列的字符串数组
+                    data_Row_StaffList_DCNO = data_Row_StaffList.map(item => item.DCNO);
+                    //console.log('data_Row_StaffList_DCNO:', data_Row_StaffList_DCNO);
+
+                    //仅plock=1的日期列数组
+                    data_LockedDateList = data_Column_StaffList.filter((item) => {
+                        return item.plock === '1';
+                    })
+                    data_LockedDateList = data_LockedDateList.map(item => item.date)
+                    //console.log('data_LockedDateList:', data_LockedDateList);
+
+                    ///在客户端设置日期列的宽度，以满足全屏显示不用往右拖 add by sammen 20211222
+                    var totalFixedColumnWidth = dataJson.ReturnTotalFixedColumnWidth
+                    var dateColCount = colCount - fixedColumnCount_StaffList;
+                    var dateColTotalWidth = parseFloat(totalWidth) - parseFloat(totalFixedColumnWidth);
+                    var dateColWidth = (dateColTotalWidth - 60) / dateColCount;
+
+                    var isCanScrollList = ($("#ckBox_IsScroll_StaffList").prop('checked'));
+                    if (!isCanScrollList) {
+                        data_Column_StaffList = data_Column_StaffList.map(function (item) {
+                            if (item.title.substring(0, 1).toUpperCase() == 'D') {
+                                item.width = parseFloat(dateColWidth);
+                            }
+                            return item
+                        });
+                    }
+                    ///在客户端设置日期列的宽度，以满足全屏显示不用往右拖 add by sammen 20211222
+
+
+                    var style_StaffList = {};
+                    for (var i = 0; i < colCount; i++) {
+                        var colChar = createCellPos(i);
+                        for (var j = 1; j <= rowCount; j++) {
+                            var cellStyle = 'font-size:xx-small;'
+                            if (i < fixedColumnCount_StaffList) {
+                                cellStyle = cellStyle + 'color: gray;'
+                            } else {//日期排班cell
+                                var varColLockFlag = data_Column_StaffList[i].plock;
+                                var varColDate = data_Column_StaffList[i].date;
+
+                                if (IsCanDealData != '1' || varColLockFlag == '1') {
+                                    //只读时
+                                    cellStyle = cellStyle + 'color: red;'
+                                } else {
+                                    //可编辑时
+                                    cellStyle = cellStyle + 'color: black;'
+                                }
+
+                                //设置周末列的格式
+                                var varWeek = new Date(varColDate).getDay();
+                                if (varWeek == 6) {
+                                    //周六左边框设置颜色
+                                    cellStyle = cellStyle + 'border-left: 2px dashed grey;'
+                                } else if (varWeek == 0) {
+                                    //周日右边框设置颜色
+                                    cellStyle = cellStyle + 'border-right: 2px dashed grey;'
+                                }
+                            }
+                            style_StaffList[colChar + j.toString()] = cellStyle;
+                        }
+                    }
+
+                    //You can destroy the table, all data and events related to an existing table by using the method destroy as shown below.
+                    jexcel.destroy(document.getElementById('divSheet_StaffList'), false);
+                    table_StaffList = jspreadsheet(document.getElementById('divSheet_StaffList'), {
+                        data: data_Row_StaffList,
+                        columns: data_Column_StaffList,
+                        freezeColumns: fixedColumnCount_StaffList,//冻结列数
+                        tableOverflow: true,
+                        tableHeight: '580px',
+                        tableWidth: totalWidth.toString() + 'px',//设置总宽度后，可以左右滚动
+                        insertRow: false,
+                        stripHTML: true,
+                        search: true,
+                        wordWrap: true,
+                        includeHeadersOnDownload: true,
+                        style: style_StaffList,
+                        onselection: event_SelectionActive_StaffList,
+                        onfocus: event_Focus_StaffList,
+                        oneditionstart: event_EditionStart_StaffList,
+                        onbeforechange: event_BeforeChange_StaffList,
+                        onchange: event_Changed_StaffList,
+                        oninsertrow: event_InsertedRow_StaffList,
+                        contextMenu: contextMenu_StaffList,
+                    });
+
+                    //jsonData_DCNO_RowIndex员工号与行号的对应关系json数组
+                    jsonData_DCNO_RowIndex = new Hashtable();
+                    for (var j = 0; j < rowCount; j++) {
+                        var tempDCNO = table_StaffList.getValue("A" + (parseInt(j) + 1).toString());
+                        jsonData_DCNO_RowIndex.add(tempDCNO, j);
+                        //if (tempDCNO=='00037'){
+                        //alert(tempDCNO+'  '+j);
+                        //alert(j)
+                        //}
+                    }
+
+                    ///显示异常考勤结果信息数据
+                    IsShowStillUnNormal = '1';
+                    LoadUnNormalData();
+
+                    ///获取某月份某管辖用户下被锁定的人天 add by sammen 20210914
+                    GetAttLockedStaffDays(true);
+
+                    //重置已保存排班的cell数据个数
+                    ResetChangedCellValueCount();
+
+                    HideWaitting();
+
+                    //加载完成的后续的动作
+                    if (after == 'analyse') {
+                        setTimeout(function () {
+                            //弹出框的实例化
+                            var Ealt_AnalyseAfterSave = new Eject();
+                            Ealt_AnalyseAfterSave.Econfirm({
+                                title: "保存排班",
+                                message: "本次排班数据已成功保存<br />需进行考勤分析才能查看最新考勤结果及异常？",
+                                confirmText: "现在就分析",
+                                cancelText: "下次再分析",
+                                define: function () {
+                                    ///分析考勤结果
+                                    $("#btnAnalyseResult").click();
+                                },
+                                cancel: function () {
+                                    Ealt_AnalyseAfterSave = null;
+                                }
+                            })
+                        }, 2000)
+                    }
+                }
+            });
+        }
+        ///显示异常考勤结果信息数据
+        function LoadUnNormalData() {
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=getunnormaldata&userid=" + varPostSectionUserId + "&yearmonth=" + yearMonth;
+            urlQuery = escape(urlQuery);
+            var url = "ArrangeShiftHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    $("#console").val(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ResultData);
+                    var resultArray = dataJson.ReturnRowData;
+
+                    //console.log('LoadUnNormalData。resultArray:', resultArray);
+
+                    //遍历数组
+                    $.each(resultArray, function (n, value) {
+                        var varSSTAFFNO = value.SSTAFFNO;
+                        var varDay = value.SDAY;//本周期第几天
+                        var unNormalStateStr = value.SSTATE;
+                        //console.log('value:', value);
+
+                        //根据工号获取行号x
+                        var x = jsonData_DCNO_RowIndex.items(varSSTAFFNO);
+                        //根据异常日期index获取列码
+                        var colChar = createCellPos(parseInt(varDay) - 1 + parseInt(fixedColumnCount_StaffList));
+                        //获取sheet中cell的位置
+                        var cellName = colChar + (x + 1).toString();
+
+                        //if (varSSTAFFNO == '30203210') {
+                        //    console.log('varSSTAFFNO:', varSSTAFFNO + "--" + cellName);
+                        //}
+
+                        var uIndex = unNormalStateStr.indexOf('@');
+                        var unNormalState = unNormalStateStr.substring(0, 1);
+                        var unNormalStatetype = unNormalStateStr.substring(uIndex + 1, unNormalStateStr.length);
+
+                        /*//unNormalState = [2异常 / 1调整为正常]*/
+                        if (unNormalState == '2'
+                            || (unNormalState == '1' && IsShowStillUnNormal == "1")) {
+                            //    //异常状态,或者调整成正常后想切换显示异常状态时
+                            //    //用不同的颜色显示考勤异常
+                            //if (varSSTAFFNO=='00037'){
+                            //alert(varSSTAFFNO+' U '+x);
+                            //alert(unNormalStatetype.indexOf('#'))
+                            //}
+                            if (unNormalStatetype == '*') {
+                                table_StaffList.setStyle(cellName, 'background-color', '#009900');
+                            } else if (unNormalStatetype == 'LE') {
+                                table_StaffList.setStyle(cellName, 'background-color', '#ff00ff');
+                            } else if (unNormalStatetype == 'LELE') {
+                                table_StaffList.setStyle(cellName, 'background-color', '#ff00ff');
+                            } else if (unNormalStatetype == '!AW') {
+                                table_StaffList.setStyle(cellName, 'background-color', '#00ee99');
+                            } else if (unNormalStatetype == '!?') {
+                                table_StaffList.setStyle(cellName, 'background-color', '#0099ff');
+                            } else if (unNormalStatetype == '*LE') {
+                                table_StaffList.setStyle(cellName, 'background-color', '#ffaa22');
+                            } else if (unNormalStatetype.indexOf('#') > 0) {
+                                table_StaffList.setStyle(cellName, 'background-color', '#9aacd2');
+                            } else {
+                                table_StaffList.setStyle(cellName, 'background-color', '#ff0000');
+                            }
+                        } else {
+                            //调整成正常后显示黄色
+                            table_StaffList.setStyle(cellName, 'background-color', 'yellow');
+                        }
+                        //alert(table_StaffList.getStyle("AJ3"));
+                    });
+                    //切换标志位
+                    IsShowStillUnNormal = IsShowStillUnNormal == '1' ? '0' : '1';
+
+                }
+            });
+        }
+
+        //重置已保存排班的cell数据个数
+        function ResetChangedCellValueCount() {
+            iChangedCellValue = 0;
+            changedCellHashTable = new Hashtable();
+            changedCellJsonData = [];
+            $("#spanChangedCellValue").html("");
+            origValuedata_Row_StaffList = {};
+        }
+
+    </script>
+
+    <!--员工考勤结果sheet表格区域-->
+    <script type="text/javascript">
+        function SaveResultData(yearMonth, staffNo, oneDay, tableName, colName, value) {
+            var urlQuery = "M=" + Math.random() + "&param=savestaffresultdata&userid=" + varPostSectionUserId;
+            urlQuery = urlQuery + "&yearmonth=" + yearMonth + "&staffno=" + staffNo + "&oneday=" + oneDay;
+            urlQuery = urlQuery + "&tablename=" + tableName + "&colname=" + colName + "&colvalue=" + value;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "ArrangeShiftHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ReturnMsg);
+                    if (dataJson.ReturnCode == '1') {
+                        ////重新加载排班表
+                        var isModify = $("#spanIsModify").html();
+                        BuildResultDataSheet(staffNo, oneDay, isModify, false);
+                        Ealt.Etoast(dataJson.ReturnMsg, 2)   //默认2秒
+                    } else {
+                        Ealt.Etoast(dataJson.ReturnMsg, 3)   //默认三秒
+                    }
+                }
+            });
+        }
+        var event_BeforeChange_ResultList = function (instance, cell, x, y, value) {
+            var cellName = jexcel.getColumnNameFromId([x, y]);
+            var oldValue = table_ResultList.getValue(cellName);
+
+            //console.log('event_BeforeChange_ResultList.data_Column_ResultList_IsShowList:', data_Column_ResultList_IsShowList);
+            var colName = data_Column_ResultList_IsShowList[x].colName;
+            //console.log('event_BeforeChange_ResultList.colName:', colName);
+            //console.log('event_BeforeChange_ResultList.value:', value);
+            //console.log('event_BeforeChange_ResultList.oldValue:', oldValue);
+
+
+            if (colName.toUpperCase() == 'BISTONORMAL' && value == '0') {
+                Ealt.Etoast('禁止调整为"考勤正常"状态', 2)   //默认三秒
+                return oldValue;
+            }
+        }
+        var event_Changed_ResultList = function (instance, cell, x, y, value) {
+            //注意xy都是从0开始计数
+            //console.log('instance', instance);
+            //console.log('cell', cell);
+            //console.log('x', x);
+            //console.log('y', y);
+            //console.log('data_Column_ResultList_IsShowList', data_Column_ResultList_IsShowList);
+            var cellName = jexcel.getColumnNameFromId([x, y]);
+            var tableName = data_Column_ResultList_IsShowList[x].tableName;
+            var colName = data_Column_ResultList_IsShowList[x].colName;
+            var yearMonth = $("#sel_YearMonth").val();
+            var staffNo = $("#spanCurStaffNo").html();
+            var oneDay = $("#spanCurDay").html();
+
+            var origValue = "";
+            //console.log('event_Changed_ResultList.data_Row_ResultList_ColumnName_IsShowList:', data_Row_ResultList_ColumnName_IsShowList);
+            if (data_Row_ResultList_ColumnName_IsShowList.length == 1) {
+                origValue = data_Row_ResultList_ColumnName_IsShowList[0][colName]
+            }
+
+            //console.log('event_Changed_ResultList.staffNo', staffNo);
+            //console.log('event_Changed_ResultList.oneDay', oneDay);
+            //console.log('event_Changed_ResultList.tableName', tableName);
+            //console.log('event_Changed_ResultList.colName', colName);
+            //console.log('event_Changed_ResultList.value', value);
+            //console.log('event_Changed_ResultList.origValue', origValue);
+
+            if (origValue.toUpperCase() != value.toUpperCase()) {
+                SaveResultData(yearMonth, staffNo, oneDay, tableName, colName, value);
+            }
+        }
+        //加载某员工某天考勤结果数据
+        function BuildResultDataSheet(staffNo, oneDay, isModify, isShowLeft) {
+            //alert(staffNo);
+            //alert(oneDay);
+            var yearMonth = $("#sel_YearMonth").val();
+            var totalWidth = $("#lb_Tips").width();
+            var urlQuery = "M=" + Math.random() + "&param=getonedayresultdata&userid=" + varPostSectionUserId + "&totalwidth=" + totalWidth + "&ismodify=" + isModify;
+            urlQuery = urlQuery + "&yearmonth=" + yearMonth + "&staffno=" + staffNo + "&oneday=" + oneDay;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "ArrangeShiftHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    console.log('The BuildResultDataSheet --data:' + data);
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //var dataJson = JSON.parse(data);
+                    //alert(dataJson.ReturnCode);
+                    data_DataJson_ResultList = dataJson
+                    //console.log('data_DataJson_ResultList', data_DataJson_ResultList);
+
+                    //console.log('dataJson.ReturnRowData', dataJson.ReturnRowData);
+                    //console.log('dataJson.ReturnColumnData', dataJson.ReturnColumnData);
+
+                    if (!isShowLeft) {
+                        //加载某员工某天考勤结果数据到Sheet
+                        BuildResultDataToSheet(staffNo, oneDay, isModify)
+                    } else {
+                        //加载某员工某天考勤结果数据到侧边栏
+                        BuildResultDataToLeftModal(staffNo, oneDay, isModify)
+                    }
+
+                }
+            });
+        }
+
+        //加载某员工某天考勤结果数据到Sheet
+        function BuildResultDataToSheet(staffNo, oneDay, isModify) {
+            var yearMonth = $("#sel_YearMonth").val();
+            var rowCount = data_DataJson_ResultList.ReturnRowCount;
+            var colCount = data_DataJson_ResultList.ReturnColCount;
+            var colCount_ListShow = data_DataJson_ResultList.ReturnColCountListShow;
+            data_Row_ResultList = data_DataJson_ResultList.ReturnRowData;
+            data_Column_ResultList = data_DataJson_ResultList.ReturnColumnData;
+
+            //////###加载考勤结果的JExcel控件
+            $('#divArea_ResultList').show();
+
+            var style_ResultList = {};
+            for (var i = 0; i < colCount; i++) {
+                var colChar = createCellPos(i);
+
+                var cellStyle = 'font-size:xx-small;'
+                if (isModify == '1') {
+                    cellStyle = cellStyle + 'color: black;'
+                } else {
+                    cellStyle = cellStyle + 'color: red;'
+                }
+                for (var j = 1; j <= rowCount; j++) {
+                    style_ResultList[colChar + j.toString()] = cellStyle;
+                }
+            }
+            //console.log('data_Row_ResultList：', data_Row_ResultList);
+            //console.log('data_Column_ResultList：', data_Column_ResultList);
+
+            //设置各列宽度
+            var totalWidth = $("#lb_Tips").width();//总宽度
+            var widthRemark = 350;//备注列宽度
+            var widthExceptionChs = 150;//异常描述列宽度
+            var otherColTotalWidth = parseFloat(totalWidth) - widthRemark - widthExceptionChs;
+            var otherColWidth = (otherColTotalWidth - 60) / (colCount_ListShow - 2);//其他列宽度
+
+            //遍历列数据，考虑到宽度有限只保留主显示列的显示
+            var onlyShowColumnName = []
+            var onlyShowColumnTitle = []
+            data_Column_ResultList_IsShowList = []
+            data_Column_ResultList.forEach(function (item, index) {
+                //console.log('item.colName:', item.colName)
+                if (item.isListShow == '1') {
+                    switch (item.colName.toUpperCase()) {
+                        case 'SREMARK':
+                            item.width = parseFloat(widthRemark);
+                            break;
+                        case 'EXCEPTIONCHS':
+                            item.width = parseFloat(widthExceptionChs);
+                            break;
+                        default:
+                            item.width = parseFloat(otherColWidth);
+                            break;
+                    }
+                    data_Column_ResultList_IsShowList.push(item);
+                    onlyShowColumnTitle.push(item.title)
+                    onlyShowColumnName.push(item.colName);
+                }
+            })
+
+            //遍历行数据进行unescape处理以及去掉不显示列的行数据
+            var tempShow_data_Row_ResultList_Title_Json = {};
+            var tempShow_data_Row_ResultList_ColName_Json = {};
+            var tempIndex = 0
+            if (data_Row_ResultList.length == 1) {
+                for (var key in data_Row_ResultList[0]) {
+                    if (onlyShowColumnTitle.includes(key)) {
+                        tempShow_data_Row_ResultList_Title_Json[key] = unescape(data_Row_ResultList[0][key]);
+
+                        tempShow_data_Row_ResultList_ColName_Json[onlyShowColumnName[tempIndex]] = unescape(data_Row_ResultList[0][key]);
+                        tempIndex++
+                    }
+                }
+            }
+            data_Row_ResultList_IsShowList = []
+            data_Row_ResultList_IsShowList.push(tempShow_data_Row_ResultList_Title_Json);
+
+            //console.log('tempShow_data_Row_ResultList_ColName_Json：', tempShow_data_Row_ResultList_ColName_Json);
+            //组成json对象中key为字段名的数据数组
+            data_Row_ResultList_ColumnName_IsShowList = []
+            data_Row_ResultList_ColumnName_IsShowList.push(tempShow_data_Row_ResultList_ColName_Json);
+
+            //You can destroy the table, all data and events related to an existing table by using the method destroy as shown below.
+            jexcel.destroy(document.getElementById('divSheet_ResultList'), false);
+            table_ResultList = jspreadsheet(document.getElementById('divSheet_ResultList'), {
+                data: data_Row_ResultList_IsShowList,
+                columns: data_Column_ResultList_IsShowList,
+                tableOverflow: true,
+                tableHeight: '180px',
+                insertRow: false,
+                style: style_ResultList,
+                onbeforechange: event_BeforeChange_ResultList,
+                onchange: event_Changed_ResultList,
+                contextMenu: [],
+            });
+            //////###加载考勤结果的JExcel控件
+        }
+
+        //加载某员工某天考勤结果数据到侧边栏
+        function BuildResultDataToLeftModal(staffNo, oneDay, isModify) {
+            var yearMonth = $("#sel_YearMonth").val();
+            var rowCount = data_DataJson_ResultList.ReturnRowCount;
+            var colCount = data_DataJson_ResultList.ReturnColCount;
+            data_Row_ResultList = data_DataJson_ResultList.ReturnRowData;
+            data_Column_ResultList = data_DataJson_ResultList.ReturnColumnData;
+            ////###加载考勤结果到侧边栏
+            $("#divShowStaffOneDayResult").empty();
+            $.each(data_DataJson_ResultList.ReturnColumnData, function (idx, item) {
+                //console.log('data_DataJson_ResultList.ReturnColumnData', idx);
+                //console.log('data_DataJson_ResultList.ReturnColumnData', item);
+                var varColType = item.type;
+                var varColName = item.colName;
+                var varColTitle = unescape(item.title);
+                var varColTableName = item.tableName;
+                var varColValue = unescape(data_Row_ResultList[0][varColTitle]);
+                var varColReadOnly = unescape(item.readOnly.toString()) == 'true' ? "readOnly" : "";
+                var varColDisabled = unescape(item.readOnly.toString()) == 'true' ? "disabled" : "";
+                var ctrlId = "ctrl_" + varColName;
+
+                var varHtml = '<div class="row" style = "margin-bottom:0px;">';
+                varHtml = varHtml + '<span class="h5 col-sm-4">' + varColTitle + '</span>';
+                varHtml = varHtml + '<div class="col-sm-8">';
+                if (varColType == 'text') {
+                    if (varColName == 'SREMARK') {
+                        varHtml = varHtml + '<textarea id="' + ctrlId + '" colName="' + varColName + '" tableName = "' + varColTableName + '" class="form-control text-sm sm resultColumn" ' + varColReadOnly +'>' + varColValue + '</textarea >';
+                    } else {
+                        varHtml = varHtml + '<input type="text" id="' + ctrlId + '" colName="' + varColName + '" tableName = "' + varColTableName + '" value="' + varColValue + '" class="form-control text-sm sm resultColumn" ' + varColReadOnly +'>';
+                    }
+                }
+                else if (varColType == 'dropdown') {
+                    varHtml = varHtml + '<select id="' + ctrlId + '" colName="' + varColName + '" tableName = "' + varColTableName + '"  class="selectpicker resultColumn" data-live-search="false" ' + varColDisabled +'>';
+
+                    $.each(item.source, function (idxOption, itemOption) {
+                        var isDisabled = itemOption.id == "0" ? "disabled" : "";
+                        var isChecked = itemOption.id == varColValue ? "selected" : "";
+                        varHtml = varHtml + '<option value="' + itemOption.id + '" ' + isDisabled + ' ' + isChecked + '>' + itemOption.name + '</option>';
+                    })
+                    varHtml = varHtml + '</select>';
+                }
+                varHtml = varHtml + '</div>';
+                varHtml = varHtml + '</div>';
+                varHtml = varHtml + '<br\>';
+
+                $("#divShowStaffOneDayResult").append(varHtml);
+
+                $("#" + ctrlId).selectpicker('refresh');
+                $("#" + ctrlId).find("option[value ='" + varColValue + "']").attr("selected", true);
+                $("#" + ctrlId).selectpicker('refresh');
+                $("#" + ctrlId).change(function () {
+                    SaveResultData(yearMonth, staffNo, oneDay, varColTableName, varColName, $(this).val());
+                });
+            })
+            $("#myResultDetailModal").modal();
+
+
+            //首先判断该员工这一天排班是否被锁定 add by sammen 20210914
+            $("#btn_SaveAttendanceResult").removeAttr("disabled");
+            $(".resultColumn").removeAttr("disabled");
+            var indexStaffOneDateLocked = $.inArray(staffNo +'#'+ oneDay, lockedStaffDateArrary);
+            if (indexStaffOneDateLocked > -1 || isModify != '1') {
+                $(".resultColumn").attr("disabled", true);
+                $("#btn_SaveAttendanceResult").attr("disabled", true);
+            }
+            ////###加载考勤结果到侧边栏
+        }
+
+
+    </script>
+
+    <!--保存排班信息数据-->
+    <script type="text/javascript">
+        ///保存排班信息数据
+        function SaveStaffShiftData() {
+            $.each(changedCellHashTable._hash, function (key, item) {
+                //console.log('changedCellHashTable.key', key);
+                //console.log('changedCellHashTable.item', item);
+                var StaffNoDayNum = key.split(':')[0];
+                var tempArray = StaffNoDayNum.split('#');
+                var varChangedStaffNo = tempArray[0];
+                var varChangedDayNum = tempArray[1];
+                var varSHCODE = item;
+                var jsonTemp = {};
+                jsonTemp["DCNO"] = varChangedStaffNo;
+                jsonTemp["DNUM"] = varChangedDayNum;
+                jsonTemp["SHCODE"] = varSHCODE;
+                //console.log('jsonTemp', jsonTemp);
+                changedCellJsonData.push(jsonTemp);
+            })
+            //console.log('changedCellJsonData', changedCellJsonData);
+            $('#txt_SaveShiftData').val(JSON.stringify(changedCellJsonData));
+            //console.log('txt_SaveShiftData.val:', $('#txt_SaveShiftData').val());
+
+
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=savestaffshiftdata&userid=" + varPostSectionUserId + "&yearmonth=" + yearMonth;
+            //由于这个url会有时超长，不用get方式，改用ajax的post方式
+            //urlQuery = urlQuery + "&saveshiftdata=" + JSON.stringify(changedCellJsonData);
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "ArrangeShiftHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                data: $('#frmPostData').serialize(),
+                async: false,
+                type: "post",
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    Ealt.Etoast(dataJson.ReturnMsg, 2)   //默认三秒
+                    //alert(dataJson.ReturnMsg);
+                    if (dataJson.ReturnCode == '1') {
+                        //重新加载排班表且执行考勤分析
+                        LoadStaffListToSheet("analyse");
+                        //LoadStaffListToSheet("");
+
+                    }
+                    //var dataJson = JSON.parse(data);
+                    //alert(dataJson.ReturnCode);
+
+                }
+            });
+        }
+
+
+    </script>
+
+    <!--执行考勤分析-->
+    <script type="text/javascript">
+        function GetNowHtml() {
+            return "<span class='label label-info'>" + new Date().format("yyyy-MM-dd hh:mm:ss") + "</span> &nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+        ///执行考勤分析
+        function DoAnalyseInit() {
+            ShowWaittingAndTips();
+            $("#myWaittingModalTitle").html("考勤分析中.....");
+            $("#myWaittingModalContent").html(GetNowHtml() + "<span class='glyphicon glyphicon-info-sign text-success'></span>&nbsp;&nbsp;<span class='text-info'>正在初始化考勤分析...</span></br>");
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=analyse_doinit&userid=" + varPostSectionUserId + "&yearmonth=" + yearMonth;
+            urlQuery = urlQuery + "&startday=" + varCurYearMonthDateFrom + "&endday=" + varCurYearMonthDateTo;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "AnalyseHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                data: JSON.stringify(changedCellJsonData),
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    var tempHtml = "";
+                    //alert(dataJson.ReturnMsg);
+                    if (dataJson.ReturnCode == '1') {
+                        //console.log('data_Row_StaffList:', data_Row_StaffList);
+                        //console.log('dataJson:', dataJson);
+
+                        //add by sammen 20220303 如果新月份从未分析过，月度员工清单为空，所以在分析初始化时，同时先获取员工清单
+                        var staffList = dataJson.ReturnStaffListData;
+                        tempHtml = GetNowHtml() + "<span class='glyphicon glyphicon-ok text-success'></span>&nbsp;&nbsp;"
+                            + "<span class='text-success'>初始化成功,准备依次对员工进行考勤分析...</span></br>";
+                        $("#myWaittingModalContent").append(tempHtml);
+
+                        setTimeout(function () {
+                            //遍历员工进行分析
+                            DoAnalyseByStaff(staffList, 0, dataJson.ReturnBatchNo);
+                        }, 10)
+
+                    } else {
+                        tempHtml = GetNowHtml() + "<span class='glyphicon glyphicon-remove text-danger'></span>&nbsp;&nbsp;"
+                            + "<span class='text-danger'>初始化失败,请重新刷新排班表后重试!</span></br>";
+                        $("#myWaittingModalContent").append(tempHtml);
+                        $('#btnCloseWaittingModal').show();
+                    }
+                }
+            });
+        }
+
+        //考勤分析某个员工
+        function DoAnalyseByStaff(allStaffItems, idxStaff, batchNo) {
+            //console.log("DoAnalyseByStaff.idxStaff", idxStaff);
+            if (idxStaff < allStaffItems.length) {
+                var staffItem = allStaffItems[idxStaff];
+                var staffNo = staffItem.DCNO;
+                var staffName = staffItem.DCNAMECHS;
+                var yearMonth = $("#sel_YearMonth").val();
+                var urlQuery = "M=" + Math.random() + "&param=analyse_dobystaff&userid=" + varPostSectionUserId + "&yearmonth=" + yearMonth;
+                urlQuery = urlQuery + "&startday=" + varCurYearMonthDateFrom + "&endday=" + varCurYearMonthDateTo + "&staffno=" + staffNo + "&batchno=" + batchNo;
+                urlQuery = escape(urlQuery);
+                var url = "AnalyseHandler.ashx?" + urlQuery;
+                $.ajax({
+                    cache: false,
+                    url: url,
+                    data: JSON.stringify(changedCellJsonData),
+                    async: false,
+                    error: function (request) {
+                        HideWaitting();
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        //console.log("DoAnalyseByStaff.data", data);
+                        if (data == "") return false;
+                        var dataJson = eval("(" + data + ")");
+                        var tempHtml = "";
+                        //alert(dataJson.ReturnMsg);
+                        if (dataJson.ReturnCode == '1') {
+                            tempHtml = GetNowHtml()
+                                + "<span class='glyphicon glyphicon-ok text-success'></span>&nbsp;&nbsp;"
+                                + (idxStaff + 1).toString() + "、"
+                                + "<span class='text-success'>完成员工考勤分析：" + staffNo + staffName + "</span></br>";
+                            $("#myWaittingModalContent").append(tempHtml);
+                        } else {
+                            tempHtml = GetNowHtml()
+                                + "<span class='glyphicon glyphicon-remove text-danger'></span>&nbsp;&nbsp;"
+                                + (idxStaff + 1).toString() + "、"
+                                + "<span class='text-danger' > 员工考勤分析失败：" + staffNo + staffName + "</span></br > ";
+                            $("#myWaittingModalContent").append(tempHtml);
+                        }
+                        setTimeout(function () {
+                            //执行当前员工后继续执行下个员工的分析
+                            DoAnalyseByStaff(allStaffItems, idxStaff + 1, batchNo);
+                        }, 10)
+                    }
+                });
+            } else {
+                setTimeout(function () {
+                    //单个分析结束后，进行分析汇总
+                    DoAnalyseSummary(allStaffItems, batchNo);
+                }, 10)
+            }
+        }
+
+        //考勤分析汇总
+        function DoAnalyseSummary(allStaffItems, batchNo) {
+            var tempHtml = GetNowHtml() + "<span class='glyphicon glyphicon-info-sign text-success'></span>&nbsp;&nbsp;"
+                + "<span class='text-info'>正在进行考勤分析汇总...</span></br>";
+            $("#myWaittingModalContent").append(tempHtml);
+            var yearMonth = $("#sel_YearMonth").val();
+            var urlQuery = "M=" + Math.random() + "&param=analyse_dosummary&userid=" + varPostSectionUserId + "&yearmonth=" + yearMonth;
+            urlQuery = urlQuery + "&startday=" + varCurYearMonthDateFrom + "&endday=" + varCurYearMonthDateTo + "&batchno=" + batchNo;
+            urlQuery = escape(urlQuery);
+            var url = "AnalyseHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                data: JSON.stringify(changedCellJsonData),
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log("DoAnalyseByStaff.data", data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson.ReturnMsg);
+                    var showMsg = "";
+                    if (dataJson.ReturnCode == '1') {
+                        showMsg = "<span class='glyphicon glyphicon-ok text-success'></span>&nbsp;&nbsp;"
+                            + "<span class='text-success'>成功完成" + allStaffItems.length.toString() + "个员工的考勤分析!</span>";
+                        tempHtml = GetNowHtml() + showMsg + "</br>";
+                        $("#myWaittingModalContent").append(tempHtml);
+
+                    } else {
+                        showMsg = "<span class='glyphicon glyphicon-remove text-danger'></span>&nbsp;&nbsp;"
+                            + "<span class='text-danger'>考勤分析汇总失败,请重新刷新排班表后重试!</span>";
+                        tempHtml = GetNowHtml() + showMsg + "</br>";
+                        $("#myWaittingModalContent").append(tempHtml);
+                    }
+                    $("#myWaittingModalTitle").html(showMsg);
+                    $('#btnCloseWaittingModal').show();
+                }
+            });
+        }
+
+
+
+    </script>
+
+    <!--获取某月份某管辖用户下被锁定的人天 add by sammen 20210914-->
+    <script type="text/javascript">
+        ///获取某月份某管辖用户下被锁定的人天【取KQRSSZ_2中的IsAttLocked=1的数据】
+        function GetAttLockedStaffDays(isRefreshCell) {
+            lockedStaffDateArrary = [];
+            var urlQuery = "M=" + Math.random() + "&param=getattlockedstaffdays&userid=" + varPostSectionUserId + "&yearmonth=" + $("#sel_YearMonth").val();
+            urlQuery = escape(urlQuery);
+            var url = "AttLockedHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('GetAttLockedStaffDays.data',data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+
+                    //KQRSSZ_2中标记为锁定的员工工号#日期的数组
+                    lockedStaffDateArrary = dataJson.ReturnRowData;
+                    //console.log('lockedStaffDateArrary：', lockedStaffDateArrary);
+
+                    //遍历数组，如果某人某天已被锁定，则设置对应cell为红色字体显示
+                    if (isRefreshCell) {
+                        $.each(lockedStaffDateArrary, function (n, value) {
+                            //console.log('lockedStaffDateArrary.value', value);
+                            var staffDateArray = value.split('#');
+                            if (staffDateArray.length == 2) {
+                                var varSSTAFFNO = staffDateArray[0];
+                                var varDate = staffDateArray[1];
+                                //根据某人某天的锁定标志设置界面中的表格显示
+                                setLockShowByStaffOneDay(varSSTAFFNO, varDate, "1");
+                            }
+
+                        });
+                    }
+                }
+            });
+        }
+
+        //从数据组中根据日期获取其在本周期内的顺序号
+        function getDayOrderByDate(varDate) {
+            var tempArray = data_Column_StaffList.filter(function (item,index) {
+                return item.date && item.date == varDate
+            })
+            if (tempArray.length == 1) {
+                return tempArray[0]["day"];
+            } else {
+                return -1
+            }
+            //console.log('tempArray:', tempArray);
+        }
+
+        //根据某人某天的锁定标志设置界面中的表格显示
+        function setLockShowByStaffOneDay(varStaffNo, varDate, isToLock) {
+            //console.log('GetLockedYearMonth.yearMonthLockedArrary',yearMonthLockedArrary);
+            //console.log('GetDayLockedByYearMonth.dateLockedArrary', dateLockedArrary);
+            //从数据组中根据日期获取其在本周期内的顺序号
+            var varDay = getDayOrderByDate(varDate);
+            //根据工号获取行号x
+            var x = jsonData_DCNO_RowIndex.items(varStaffNo);
+            //根据异常日期index获取列码
+            var colChar = createCellPos(parseInt(varDay) - 1 + parseInt(fixedColumnCount_StaffList));
+            //获取sheet中cell的位置
+            var cellName = colChar + (x + 1).toString();
+            //console.log('setLockShowByStaffOneDay.cellName', cellName);
+
+            //如果这天不在已锁定日期列表中【已锁定的日期再前面已经整理设置了】
+            var indexDateLocked = $.inArray(varDate, dateLockedArrary);
+            if (indexDateLocked < 0 && varDay > -1) {
+                if (isToLock=='1') {
+                    //if (varSSTAFFNO == '0113' && varDay == '2022-10-30') {
+                    //    console.log('varSSTAFFNO:', varSSTAFFNO);
+                    //    console.log('varDay:', varDay);
+                    //    console.log('cellName:', cellName);
+                    //    console.log('data_Column_StaffList:', data_Column_StaffList);
+                    //    console.log('table_StaffList:', table_StaffList);
+                    //}
+                    //console.log('setLockShowByStaffOneDay.设置为红色');
+                    table_StaffList.setStyle(cellName, 'color', 'red');
+                } else {
+                    //console.log('setLockShowByStaffOneDay.设置为黑色');
+                    table_StaffList.setStyle(cellName, 'color', 'black');
+                }
+            }
+        }
+
+        ///锁定/解锁某员工某一天排班锁定
+        function LockStaffOneDay(staffNo,oneDay,isToLock) {
+            var urlQuery = "M=" + Math.random() + "&param=lockstaffoneday&userid=" + varPostSectionUserId + "&staffno=" + staffNo + "&oneday=" + oneDay + "&istolock=" + isToLock;
+            urlQuery = escape(urlQuery);
+            var lockDesc = isToLock == '1' ? "锁定" : "解锁";
+            lockDesc = lockDesc + "员工" + staffNo + "在" + oneDay + "的考勤排班";
+            var url = "AttLockedHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('LockStaffOneDay.data',data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //console.log('LockStaffOneDay.dataJson', dataJson);
+
+                    //alert(dataJson.ReturnCode);
+                    if (dataJson.ReturnCode == '1') {
+                        Ealt.Etoast(lockDesc + '成功', 2)   //默认三秒
+                        //重新刷新数据
+                        GetAttLockedStaffDays(false);
+
+                        setTimeout(function () {
+                            //专门设置显示
+                            setLockShowByStaffOneDay(staffNo, oneDay, isToLock);
+                        }, 200)
+                    } else {
+                        Ealt.Etoast(lockDesc + '失败', 2)   //默认三秒
+                    }
+                }
+            });
+        }
+
+        ///锁定/解锁某员工某一月排班锁定
+        function LockStaffOneMonth(staffNo, yearMonth, isToLock) {
+            var urlQuery = "M=" + Math.random() + "&param=lockstaffonemonth&userid=" + varPostSectionUserId + "&staffno=" + staffNo + "&yearmonth=" + yearMonth + "&istolock=" + isToLock;
+            urlQuery = escape(urlQuery);
+            var lockDesc = isToLock == '1' ? "锁定" : "解锁";
+            lockDesc = lockDesc + "员工" + staffNo + "在期间" + yearMonth + "的考勤排班";
+            var url = "AttLockedHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+
+                    //alert(dataJson.ReturnCode);
+                    if (dataJson.ReturnCode >= '1') {
+                        Ealt.Etoast(lockDesc + '成功', 2)   //默认三秒
+                        //重新刷新数据
+                        GetAttLockedStaffDays(false);
+
+                        setTimeout(function () {
+                            console.log('data_Column_StaffList:', data_Column_StaffList);
+                            //遍历整个月的进行专门设置显示
+                            data_Column_StaffList.forEach(function (item, index) {
+                                if (item.date) {
+                                    setLockShowByStaffOneDay(staffNo, item.date, isToLock);
+                                }
+                            })
+                        }, 200)
+                    } else {
+                        Ealt.Etoast(lockDesc + '失败', 2)   //默认三秒
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!--获取某月份下在表KQPERD_3中的PLOCK标志被锁定的日期 add by sammen 20221122-->
+    <script type="text/javascript">
+        ///获取在表KQPERD_1中的PLOCK标志被锁定的年月
+        function GetLockedYearMonth() {
+            var urlQuery = "M=" + Math.random() + "&param=getlockedyearmonth&userid=" + varPostSectionUserId;
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('GetLockedYearMonth.data',data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+
+                    yearMonthLockedArrary = dataJson.ReturnRowData;
+                    //console.log('GetLockedYearMonth.yearMonthLockedArrary',yearMonthLockedArrary);
+                }
+            });
+        }
+        ///获取某月份下在表KQPERD_3中的PLOCK标志被锁定的日期
+        function GetDayLockedByYearMonth() {
+            var urlQuery = "M=" + Math.random() + "&param=getdaylockedbyyearmonth&userid=" + varPostSectionUserId + "&yearmonth=" + $("#sel_YearMonth").val();
+            urlQuery = escape(urlQuery);
+            var url = "CommonHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('GetDayLockedByYearMonth.data',data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+
+                    dateLockedArrary = dataJson.ReturnRowData;
+                    //console.log('GetDayLockedByYearMonth.dateLockedArrary',dateLockedArrary);
+                }
+            });
+        }
+
+    </script>
+
+
+    <!--页面初始化区域-->
+    <script type="text/javascript">
+        $(function () {
+            //$("#divMaxArea").width(screenWidth-70);
+            //divSheet_StaffList表格屏蔽回车时间，主要是为了最后一行回车后会新增一行
+            $(".jspreadsheet").keydown(function (e) {
+                var key = window.event ? e.keyCode : e.which;
+                if (key.toString() == "13") {
+                    return false;
+                }
+            });
+
+
+        })
+    </script>
+
+</body>
+</html>

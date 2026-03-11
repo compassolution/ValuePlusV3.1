@@ -1,0 +1,603 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>推送本地模板字段配置到远程服务器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="alert alert-danger text-left" id="lb_PageTips" style="display:none">
+                <label id="lb_NoticeMsg" class="text-danger"></label>
+            </div>
+            <div class="span12">
+                <form id="formTMPDList" class="form-horizontal" method="post">
+                    <div class="row-fluid navbar" style="vertical-align:middle">
+                        <div>
+                            <h3>推送本地模板字段配置到远程服务器&nbsp;</h3>
+                        </div>
+                        <div class="btn-group">
+                            <text id="txtBusinessType" value="SelfEntry" style="display:none"></text>
+                            <button type="button" class="btn btn-success btn-sm " id="lbBusinessTypeName">员工入职自助登记个人信息业务</button>
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="aChangeBusinessType label-success" href="#" refData="SelfEntry">员工入职自助登记个人信息业务</a></li>
+                            </ul>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-primary pull-right" id="btnPushToRemote">推送选中的模板字段到远程服务器</button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group" style="display:none">
+                                <label class="col-sm-1 control-label">当前授权</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_ClientName" name="txt_ClientName" class="form-control" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">当前系统编号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_ProjectId" name="txt_ProjectId" class="form-control" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">远程地址</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_RemoteServer" name="txt_RemoteServer" class="form-control" readonly="readonly" />
+                                </div>
+                                <input type="text" id="txt_OpFlag" name="txt_OpFlag" class="form-control" style="display:none" />
+                                <textarea type="text" id="txt_LocalTMPDData" name="txt_LocalTMPDData" class="form-control col-lg-12" style="display:" rows="10"></textarea>
+                                <textarea type="text" id="txt_LocalLSTDData" name="txt_LocalLSTDData" class="form-control col-lg-12" style="display:" rows="10"></textarea>
+                                <textarea type="text" id="txt_StaffBasicData" name="txt_StaffBasicData" class="form-control col-lg-12" style="display:" rows="10"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label class="control-label" style="margin-bottom:10px">模板TID：</label>
+                            <select id="selTID" multiple class="form-control" style="height:500px">
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <label class="control-label" style="margin-bottom:10px">模板分组GID：</label>
+                            <select id="selGID" multiple class="form-control" style="height:500px">
+                            </select>
+                        </div>
+                        <div class="col-sm-5">
+                            <label class="control-label" style="margin-bottom:10px">模板字段PID：</label>
+                            <div class="btn-group pull-right">
+                                <button type="button" class="btn btn-danger btn-sm pull-right" id="btnPushClear">取消推送本模板本分组下的所有字段</button>
+                            </div>
+                            <select id="selPID" multiple class="form-control" style="height:500px">
+                            </select>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>        
+
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body" style="font-size:larger;color:red">
+                        
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        var varTIDRange = ['OANEW'];//需上传的TID范围，默认是SelfEntry业务的OANEW，如果length=0表示全部
+        var varGIDRange = ['1'];//需上传的GID范围，默认是SelfEntry业务的OANEW的1，如果length=0表示全部
+        $("#txtBusinessType").val('SelfEntry');
+
+        //远程服务器端的TMPD数据
+        var remoteData_TMPD = [];
+
+        $(document).ready(function () {
+            ///判断是否登录
+            JudgeIsLogin();
+
+            $('.aChangeBusinessType').click(function (e) {
+                $("#lbBusinessTypeName").text($(this).html());
+                $("#txtBusinessType").val($(this).attr("refData"));
+                $('.aChangeBusinessType').removeClass("label-info");
+                $(this).addClass("label-info");
+
+                if ($("#txtBusinessType").val() == 'SelfEntry') {
+                    varTIDRange = ['OANEW'];
+                    varGIDRange = ['1'];
+                } else {
+                    varTIDRange = [];
+                    varGIDRange = [];
+                }
+
+                ///通过TID范围获取模板档案的数据信息
+                GetLocalTMPHData();
+            });
+
+            $('#selTID').change(function (e) {
+                //设置单选
+                var selectTID = $('#selTID').val();
+                if (selectTID.length > 1) {
+                    var setOneArray = "[" + selectTID[selectTID.length-1] + "]";
+                    $('#selTID').val(JSON.parse(setOneArray))
+                }
+                ///通过GID范围获取特定模板分组的数据信息
+                GetLocalTMPGData();
+            });
+            $('#selGID').change(function (e) {
+                //设置单选
+                var selectGID = $('#selGID').val();
+                if (selectGID.length > 1) {
+                    var setOneArray = "[" + selectGID[selectGID.length - 1] + "]";
+                    $('#selGID').val(JSON.parse(setOneArray))
+                }
+                ///通过TID和PID获取对应字段属性的数据信息
+                GetLocalTMPDData();
+            });
+            $('#selPID').change(function (e) {
+                //alert($('#selPID').val());
+            });
+            $('#btnPushToRemote').click(function (e) {
+                ///通过TID/GID/PIDS获取对应字段属性的数据及对应字典LSTD的数据信息
+                GetLocalTMPDAndLSTDData();
+
+                //推送到远程服务器
+                //上传推送TMPD及对应的LSTD数据信息到云服务器
+                setTimeout(function () {
+                    //UploadDataToRemote();
+                },500)
+            });
+            $('#btnPushClear').click(function (e) {
+                ///通过TID/GID/PID删除远程服务器上对应字段属性的数据
+                DeleteRemoteTMPDData();
+            });
+            
+
+        });
+
+
+    </script>
+    <!--加载结果-->
+    <script type="text/javascript">
+        //判断是否登录
+        function JudgeIsLogin() {
+            var urlQuery = escape("M=" + Math.random());
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-9999') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                    } else {
+                        ///加载客户基本信息
+                        LoadClientInfo();
+                    }
+                }
+            })
+        }
+        ///加载客户基本信息
+        function LoadClientInfo() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getclientinfo");
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ClientInfo == "") return false;
+
+                    $.each(dataobj.ClientInfo, function (idx, item) {
+                        $("#txt_ProjectId").val(unescape(item.ProjectId));
+                        $("#txt_ClientName").val(unescape(item.ClientName));
+                        $("#txt_RemoteServer").val(unescape(item.RemoteServer));
+                    });
+
+                    ShowWaitting();
+                    setTimeout(function () {
+                        ///从远程服务器上获取对应ProjectId及对应业务的TMPD列表
+                        GetRemoteTMPDDataList();
+
+                    }, 100);
+                }
+            });
+        }
+
+        ///【本地数据】通过TID范围获取模板档案的数据信息
+        function GetLocalTMPHData() {
+            var urlQuery = escape("M=" + Math.random() + "&param=gettmphdata&tidrange=" + encodeURIComponent(JSON.stringify(varTIDRange)) + "&businesstype=" + $("#txtBusinessType").val());
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formTMPDList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    var dataobj = JSON.parse(data);
+                    var jsonData = JSON.stringify(dataobj.ResultData);
+                    //console.log(dataobj.ResultData);
+                    var tidList = dataobj.ResultData;
+
+                    //加载下拉列表selTID
+                    var firstTID = "";
+                    $("#selTID").empty();
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        var showName = unescape(item.TID) + "--" + unescape(item.TDESCCHS);
+                        firstTID = idx == 0 ? unescape(item.TID) : firstTID;
+                        var isSelected = idx == 0 ? "selected" : "";
+
+                        var arrayHadUpload = remoteData_TMPD.filter(function (element) {
+                            return element.ProjectId == $("#txt_ProjectId").val()
+                                && element.BusinessType == $("#txtBusinessType").val()
+                                && element.TID == unescape(item.TID)
+                        })
+                        var showHadUpload = arrayHadUpload.length > 0 ? "【存在推送字段】----" : "";
+                        showName = showHadUpload + showName
+
+                        $("#selTID").append("<option value='" + unescape(item.TID) + "' " + isSelected+">" + showName + "</option>");
+                    });
+                    $("#selTID").val(firstTID);
+                    ///通过GID范围获取特定模板分组的数据信息
+                    GetLocalTMPGData();
+                    
+
+                }
+            });
+        }
+
+        ///【本地数据】通过GID范围获取特定模板分组的数据信息
+        function GetLocalTMPGData() {
+            var urlQuery = escape("M=" + Math.random() + "&param=gettmpgdata&tid=" + $("#selTID").val() + "&gidrange=" + encodeURIComponent(JSON.stringify(varGIDRange)) + "&businesstype=" + $("#txtBusinessType").val());
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formTMPDList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    var dataobj = JSON.parse(data);
+                    var jsonData = JSON.stringify(dataobj.ResultData);
+                    //console.log(dataobj.ResultData);
+                    var gidList = dataobj.ResultData;
+
+                    var arrayHadUpload_CurTID = remoteData_TMPD.filter(function (element) {
+                        return element.ProjectId == $("#txt_ProjectId").val()
+                            && element.BusinessType == $("#txtBusinessType").val()
+                            && element.TID == $("#selTID").val()
+                    })
+
+                    //加载下拉列表selGID
+                    var firstGID = "";
+                    $("#selGID").empty();
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        var showName = unescape(item.GID) + "--" + unescape(item.GDESCCHS);
+                        firstGID = idx == 0 ? unescape(item.GID) : firstGID;
+                        var isSelected = idx == 0 ? "selected" : "";
+
+                        var arrayHadUpload = arrayHadUpload_CurTID.filter(function (element) {
+                            return element.GID == unescape(item.GID)
+                        })
+                        var showHadUpload = arrayHadUpload.length > 0 ? "【存在推送字段】----" : "";
+                        showName = showHadUpload + showName
+
+                        $("#selGID").append("<option value='" + unescape(item.GID) + "' " + isSelected + ">" + showName + "</option>");
+                    });
+                    $("#selGID").val(firstGID);
+                    ///TID和PID获取对应字段属性的数据信息
+                    GetLocalTMPDData();
+
+                }
+            });
+        }
+
+        ///【本地数据】通过TID和PID获取对应字段属性的数据信息
+        function GetLocalTMPDData() {
+            var urlQuery = escape("M=" + Math.random() + "&param=gettmpddata&tid=" + $("#selTID").val() + "&gid=" + $("#selGID").val() + "&businesstype=" + $("#txtBusinessType").val());
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formTMPDList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    var dataobj = JSON.parse(data);
+                    var jsonData = JSON.stringify(dataobj.ResultData);
+                    //console.log(dataobj.ResultData);
+                    var gidList = dataobj.ResultData;
+
+                    var arrayHadUpload_CurTIDGID = remoteData_TMPD.filter(function (element) {
+                        return element.ProjectId == $("#txt_ProjectId").val()
+                            && element.BusinessType == $("#txtBusinessType").val()
+                            && element.TID == $("#selTID").val()
+                            && element.GID == $("#selGID").val()
+                    })
+
+                    //加载下拉列表selPID
+                    $("#selPID").empty();
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        var showName = unescape(item.PID) + "--" + unescape(item.PDESCCHS);
+                        //var isSelected = idx == 0 ? "selected" : "";
+
+                        var arrayHadUpload = arrayHadUpload_CurTIDGID.filter(function (element) {
+                            return element.PID == unescape(item.PID)
+                        })
+                        var showHadUpload = arrayHadUpload.length > 0 ? "【已推送】----" : "";
+                        showName = showHadUpload + showName
+                        var isSelected = arrayHadUpload.length > 0 ? "selected" : "";
+
+                        $("#selPID").append("<option checkbox value='" + unescape(item.PID) + "' " + isSelected + ">" + showName + "</option>");
+                    });
+                    //$("#selPID").selectpicker('refresh');
+
+                }
+            });
+        }
+
+        ///【本地数据】通过TID/GID/PIDS获取对应字段属性的数据及对应字典LSTD的数据信息
+        function GetLocalTMPDAndLSTDData() {
+            var urlQuery = "M=" + Math.random() + "&param=gettmpddndlstddata&tid=" + $("#selTID").val() + "&gid=" + $("#selGID").val();
+            urlQuery = urlQuery + "&pidrange=" + encodeURIComponent($("#selPID").val());
+            //console.log(urlQuery);
+            urlQuery = escape(urlQuery);
+
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formTMPDList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    var dataobj = JSON.parse(data);
+                    var jsonData = JSON.stringify(dataobj.ResultData);
+                    //console.log(dataobj);
+
+                    $('#txt_LocalTMPDData').val(JSON.stringify(dataobj.TMPDData));
+                    $('#txt_LocalLSTDData').val(JSON.stringify(dataobj.LSTDData));
+                    //console.log(dataobj);
+
+                    //推送到远程服务器
+                    //上传推送TMPD及对应的LSTD数据信息到云服务器
+                    UploadDataToRemote();
+                }
+            });
+        }
+    </script>
+
+    <!--对远程服务器的操作-->
+    <script type="text/javascript">
+        ///从远程服务器上获取对应ProjectId及对应业务的TMPD列表
+        function GetRemoteTMPDDataList() {
+            $("#myWaittingModalContent").text('');
+            ShowWaitting();
+            $("#myWaittingModalContent").text('正在请求远程服务器的验证......');
+            var projectId = $("#txt_ProjectId").val();
+            var businessType = $("#txtBusinessType").val();
+            var strParam = "jsonCallback=";
+            var urlQuery = escape("M=" + Math.random() + "&param=getremotetmpd&projectid=" + projectId + "&businesstype=" + businessType+"&" + strParam);
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/UploadTMPD/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            try {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    data: $('#formTMPDList').serialize(), // 你的formid
+                    error: function (request) {
+                        HideWaiting();
+                        $("#lb_PageTips").show();
+                        $("#myWaittingModalContent").text('远程服务器请求异常，请重试！');
+                    },
+                    success: function (result) {
+                        //alert(result);
+                        //console.log('result:', result);
+                        if (result == 'error') {
+                            $("#lb_PageTips").show();
+                            $("#myWaittingModalContent").text('远程服务器请求异常，请重试！');
+                            HideWaiting();
+                            return false;
+                        }
+                        var dataobj = eval("(" + result + ")");
+                        remoteData_TMPD = dataobj.ResultData;
+                        //console.log('remoteData_TMPD:', remoteData_TMPD);
+                        HideWaiting();
+
+                        ///【本地获取】通过TID范围获取模板档案的数据信息
+                        GetLocalTMPHData();
+                    }
+                });
+            }
+            catch (err) {
+                HideWaiting();
+                return;
+            }
+        }
+
+
+        //上传推送TMPD及对应的LSTD数据信息到云服务器
+        function UploadDataToRemote() {
+            //console.log($('#txt_LocalTMPDData').val());
+            $("#myWaittingModalContent").text('');
+            ShowWaitting();
+            var curDatetime = new Date().format("yyyy-MM-dd hh:mm:ss");
+            var projectId = $("#txt_ProjectId").val();
+            var businessType = $("#txtBusinessType").val();
+            var returnValue = "-9";
+            var urlQuery = escape("M=" + Math.random() + "&param=uploaddatatoremote&projectid=" + projectId + "&businesstype=" + businessType);
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/UploadTMPD/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formTMPDList').serialize(), // 你的formid
+                error: function (request) {
+                    returnValue = "-9";
+                    $("#lb_NoticeMsg").text('推送失败，远程服务器发生异常，请重试！');
+                    var varNoticeTips = '(' + curDatetime + ')&nbsp;&nbsp推送失败，远程服务器发生异常，请重试';
+                    $("#myWaittingModalContent").prepend('<br\><span style = "color:#0066FF">' + varNoticeTips + '</span>&nbsp;&nbsp;');
+                    HideWaiting();
+                },
+                success: function (result) {
+                    returnValue = result;
+
+                    if (returnValue <= 0) {
+                        var varNoticeTips = '(' + curDatetime + ')&nbsp;&nbsp推送模板配置信息到远程云端服务器失败';
+                        $("#myWaittingModalContent").prepend('<br\><span style = "color:red">' + varNoticeTips + '</span>&nbsp;&nbsp;');
+                    } else {
+                        var varNoticeTips = '(' + curDatetime + ')&nbsp;&nbsp推送模板配置信息到远程云端服务器成功';
+                        $("#myWaittingModalContent").prepend('<br\><span style = "color:green">' + varNoticeTips + '</span>&nbsp;&nbsp;');
+
+                    }
+                    setTimeout(function () {
+                        ///从远程服务器上获取对应ProjectId及对应业务的TMPD列表
+                        GetRemoteTMPDDataList();
+                        //HideWaiting();
+                    }, 1000)
+                }
+            });
+            return returnValue;
+        }
+
+        ///通过TID/GID/PID删除远程服务器上对应字段属性的数据
+        function DeleteRemoteTMPDData() {
+            $("#myWaittingModalContent").text('');
+            ShowWaitting();
+            var curDatetime = new Date().format("yyyy-MM-dd hh:mm:ss");
+            var projectId = $("#txt_ProjectId").val();
+            var businessType = $("#txtBusinessType").val();
+            var tid = $("#selTID").val();
+            var gid = $("#selGID").val();
+            var returnValue = "-9";
+            var urlQuery = escape("M=" + Math.random() + "&param=deleteremotetmpd&projectid=" + projectId + "&businesstype=" + businessType + "&tid=" + tid + "&gid=" + gid + "&pid=");
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/UploadTMPD/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url)
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formTMPDList').serialize(), // 你的formid
+                error: function (request) {
+                    returnValue = "-9";
+                    $("#lb_NoticeMsg").text('推送失败，远程服务器发生异常，请重试！');
+                    var varNoticeTips = '(' + curDatetime + ')&nbsp;&nbsp推送失败，远程服务器发生异常，请重试';
+                    $("#myWaittingModalContent").prepend('<br\><span style = "color:#0066FF">' + varNoticeTips + '</span>&nbsp;&nbsp;');
+                    HideWaiting();
+                },
+                success: function (result) {
+                    returnValue = result;
+
+                    if (returnValue <= 0) {
+                        var varNoticeTips = '(' + curDatetime + ')&nbsp;&nbsp删除远程服务器上对应字段属性失败';
+                        $("#myWaittingModalContent").prepend('<br\><span style = "color:red">' + varNoticeTips + '</span>&nbsp;&nbsp;');
+                    } else {
+                        var varNoticeTips = '(' + curDatetime + ')&nbsp;&nbsp删除远程服务器上对应字段属性成功';
+                        $("#myWaittingModalContent").prepend('<br\><span style = "color:green">' + varNoticeTips + '</span>&nbsp;&nbsp;');
+
+                        ///从远程服务器上获取对应ProjectId及对应业务的TMPD列表
+                        GetRemoteTMPDDataList();
+                    }
+                    setTimeout(function () {
+                        HideWaiting();
+                    }, 2000)
+                }
+            });
+            return returnValue;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,499 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>推送微信消息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../../common/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="../../../common/plugins/summernote/summernote.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../../common/plugins/bootstrap-select/js/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../../common/plugins/bootstrap-select/js/i18n/defaults-zh_CN.min.js" type="text/javascript"></script>
+    <script src="../../../common/plugins/summernote/summernote.js"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row text-center" style="padding-left:10px;padding-right:30px">
+            <div class="alert alert-danger text-left" id="lb_PageTips" style="display:none">
+                <label id="lb_NoticeMsg" class="text-danger"></label>
+            </div>
+            <div class="row navbar col-sm-12" style="vertical-align:middle">
+                <h2>推送微信消息&nbsp;<label id="lbSubTile" class="text-danger" style="font-size:smaller"></label></h2>
+            </div>
+            <div class="row">
+                <div class="form-group" style="display:none">
+                    <label class="col-sm-1 control-label">当前授权</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="txt_ClientName" name="txt_ClientName" class="form-control" readonly="readonly" />
+                    </div>
+                    <label class="col-sm-1 control-label">当前系统编号</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="txt_ProjectId" name="txt_ProjectId" class="form-control" readonly="readonly" />
+                    </div>
+                    <label class="col-sm-1 control-label">远程地址</label>
+                    <div class="col-sm-3">
+                        <input type="text" id="txt_RemoteServer" name="txt_RemoteServer" class="form-control" readonly="readonly" />
+                    </div>
+                    <input type="text" id="txt_UserId" name="txt_UserId" class="form-control" style="display:none" />
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding-left:10px;padding-right:30px">
+            <div class="col-sm-12">
+                <div class="alert alert-danger text-left" id="lb_PageTips" style="display:none">
+                    <label id="lb_NoticeMsg" class="text-danger"></label>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <form id="formPushIndex" class="form-horizontal" method="post">
+                            <div class="col-sm-offset-2 col-sm-8" style="border:1px solid #808080">
+                                <h4 class="text-primary" style="font-weight:600">通知类型:</h4>
+                                <select id="sel_MessageType" name="sel_MessageType" class="selectpicker" data-style="btn" data-width="100%" data-live-search="true"></select>
+                                <h4 class="text-success" style="font-weight:600">主接收人:<span id="lbCount_Main" class="text-danger" style="font-size:small"><已选中0人></span></h4>
+                                <select id="sel_MainStaff" name="sel_MainStaff" class="selectpicker" data-style="btn" Multiple data-actions-box="true" data-width="100%" data-live-search="true"></select>
+                                <h4 class="text-warning" style="font-weight:600">抄送接收人:<span id="lbCount_CC" class="text-danger" style="font-size:small"><已选中0人></span></h4>
+                                <select id="sel_CCStaff" name="sel_CCStaff" class="selectpicker" data-style="btn" Multiple data-actions-box="true" data-width="100%" data-live-search="true"></select>
+                                <h4 class="text-info" style="font-weight:600">消息通知标题:</h4>
+                                <input type="text" id="txt_MessageTitle" name="txt_MessageTitle" class="form-control" maxlength="100" />
+                                <h4 class="text-info" style="font-weight:600">消息通知内容:</h4>
+                                <textarea id="txt_MessageContent" name="txt_MessageContent"></textarea>
+                                <h4 class="text-info" style="font-weight:600">通知落款:</h4>
+                                <input type="text" id="txt_MessageBadging" name="txt_MessageBadging" class="form-control" maxlength="100" />
+                                <br />
+                                <textarea type="text" id="txt_MainStaff" name="txt_MainStaff" class="form-control col-lg-12" style="display:none" rows="10"></textarea>
+                                <textarea type="text" id="txt_CCStaff" name="txt_CCStaff" class="form-control col-lg-12" style="display:none" rows="10"></textarea>
+                            </div>
+                        </form>
+                            <!--<div class="col-sm-3" style="border:1px solid #000">
+                                <h4>网页预览</h4>
+                                <div id="divPreviewHtml">
+                                    <iframe id="frmPreviewHtml" name="frmPreviewHtml" width="264" height="463" frameborder="0" src="" style="border: 0px solid #cecece;" scrolling="auto"></iframe>
+                                </div>
+                            </div>-->
+                    </div>
+                    <br />
+                    <div class="row text-center">
+                        <button id="aViewMobileRegist" type="button" class="btn btn-info">查询手机号注册情况</button>&nbsp; &nbsp;
+                        <button id="aPreview" type="button" class="btn btn-primary">点击预览</button>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+                        <button id="aSave" type="button" class="btn btn-success">保存并推送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="padding-left:10px;padding-right:30px;display:none">
+            <div class="col-sm-12">
+                <div id="divCustomToolbar" class="text-center">
+                    <button id="aClose" type="button" class="btn" onclick="javascript: window.close();">关闭</button>&nbsp; &nbsp;
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button id="aOnJob" type="button" class="btn btn-success">在职员工</button>&nbsp; &nbsp;
+                        <button id="aDimission" type="button" class="btn btn-danger">已离职员工</button>
+                    </div>
+                </div>
+                <div id="divListTableNeedUpdate" class="row">
+                    <table id="tbPushMessageList"
+                           data-toolbar="#divCustomToolbar"
+                           data-classes="table table-bordered table-striped table-hover"
+                           data-toggle="table"
+                           data-show-columns="true"
+                           data-show-toggle="false"
+                           data-pagination="true"
+                           data-height="750"
+                           data-cache="false"
+                           data-search="true"
+                           data-sortable="true"
+                           data-page-size="100"
+                           data-page-list="[10, 50,100, 200, 500, 1000]">
+                        <thead>
+                            <tr></tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body" style="font-size:larger;color:red">
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaitting() {
+            $('#myWaittingModal').modal('hide');
+        }
+        function showNewOpenWindow(url) {
+            var randamNum = (Math.floor((Math.random() * 100) + 1)).toString();//100之内的随机数,可同时打开多个动作页面
+            window.open(url, 'StaffMobileList' + randamNum, 'left=0,top=0,width=' + (screen.availWidth - 10) + ',height=' + (screen.availHeight - 50) + ',scrollbars,resizable=yes,toolbar=no,location=no');
+        }
+        function showOpenDialogPage(url) {
+            var randamNum = (Math.floor((Math.random() * 100) + 1)).toString();//100之内的随机数,可同时打开多个动作页面
+            window.showModalDialog(url, 'StaffMobileList' + randamNum, 'left:0;top:0;dialogWidth:' + (screen.availWidth - 10) + ';dialogHeight:' + (screen.availHeight - 50) + ';resizable:yes;toolbar:no;location:no');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        $(document).ready(function () {
+            $('#txt_MessageContent').summernote({
+                placeholder: 'Please input message content',
+                tabsize: 2,
+                height: 200,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: true                  // set focus to editable area after initializing summe
+            });
+            
+            //$('#aPreview').click(function () {
+            //    var markupStr = $('#txt_MessageContent').summernote('code');
+
+            //    var o = document.getElementById("frmPreviewHtml");
+            //    ed = document.all ? o.contentWindow.document : o.contentDocument;
+            //    ed.open();
+            //    ed.write(markupStr);
+            //    ed.close();
+            //    ed.contentEditable = true;
+            //    ed.designMode = 'on';
+            //});
+            
+            //判断是否登录
+            JudgeIsLogin();
+
+            $('#aViewMobileRegist').click(function () {
+                showOpenDialogPage("../StaffMobile/StaffMobileList.html");
+            });
+
+            //$('#sel_MainStaff').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            //    var SelectedString = $('#sel_MainStaff').val();
+            //    $("#lbCount_Main").html("<已选中" + SelectedString.toString().split(",").length.toString()+"人>");
+            //});
+            /////用jquery自带的事件，因为changed.bs.select在取消了全部选择时无法触发
+            $('#sel_MainStaff').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                var SelectedString = $('#sel_MainStaff').val();
+                if (SelectedString != null) {
+                    $("#lbCount_Main").html("<已选中" + SelectedString.toString().split(",").length.toString() + "人>");
+                } else {
+                    $('#sel_MainStaff').val("");
+                    $("#lbCount_Main").html("<已选中0人>");
+                }
+                $('#txt_MainStaff').val(SelectedString);
+            });
+
+            //$('#sel_CCStaff').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            //    var SelectedString = $('#sel_CCStaff').val();
+            //    $("#lbCount_CC").html("<已选中" + SelectedString.toString().split(",").length.toString() + "人>");
+            //});
+            /////用jquery自带的事件，因为changed.bs.select在取消了全部选择时无法触发
+            $('#sel_CCStaff').change(function () {
+                var SelectedString = $('#sel_CCStaff').val();
+                if (SelectedString != null) {
+                    $("#lbCount_CC").html("<已选中" + SelectedString.toString().split(",").length.toString() + "人>");
+                } else {
+                    $('#sel_CCStaff').val("");
+                    $("#lbCount_CC").html("<已选中0人>");
+                }
+                $('#txt_CCStaff').val(SelectedString);
+            });
+
+
+            $('#aSave').click(function () {
+                var IsValid = false;
+                //判断该项目是否具有此功能的授权
+                switch ($("#sel_MessageType").val()) {
+                    case "010"://生日祝福功能
+                        IsValid = JudgeProjectWXAuthIsValid($("#txt_ProjectId").val(), "030");
+                        break;
+                }
+                //alert(IsValid);
+                if (IsValid) {
+                    //保存消息
+                    SaveMessageData();
+                }
+                //SaveMessageData();
+            });
+        });
+    </script>
+
+    <!--加载页面信息-->
+    <script type="text/javascript">
+        //判断是否登录
+        function JudgeIsLogin() {
+            var urlQuery = escape("M=" + Math.random());
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                    $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-9999') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                    } else {
+                        ///加载客户基本信息
+                        LoadClientInfo();
+                    }
+                }
+            })
+        }
+
+        //判断该项目是否具有此功能的授权
+        function JudgeProjectWXAuthIsValid(ProjectId, WXMPModule) {
+            var IsValid = false;
+            var urlQuery = escape("M=" + Math.random() + "&param=wxauthisvalid&projectid=" + ProjectId + "&wxmpmodule=" + WXMPModule);
+            var url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/CommonServerHandler.ashx?" + urlQuery;
+            if (isTestDebug) {
+                url = "../CommonServerHandler.ashx?" + urlQuery;
+            }
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                    $("#myWaittingModalContent").text('远程服务器请求异常，请重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data != 'true') {
+                        alert(data);
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚无此功能的操作授权或者授权已过期，请联系系统管理员咨询！');
+                    } else {
+                        IsValid = true;
+                    }
+                }
+            });
+            return IsValid;
+        }
+
+
+        ///加载客户基本信息
+        function LoadClientInfo() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getclientinfo");
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                    $("#myWaittingModalContent").text('加载页面信息失败，请稍后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ClientInfo == "") return false;
+
+                    $.each(dataobj.ClientInfo, function (idx, item) {
+                        $("#txt_ProjectId").val(unescape(item.ProjectId));
+                        $("#txt_ClientName").val(unescape(item.ClientName));
+                        $("#txt_RemoteServer").val(unescape(item.RemoteServer));
+                        $("#txt_UserId").val(unescape(item.UserId));
+                    });
+                    
+                    ///加载接收人下拉框
+                    if (dataobj.StaffMobileListInfo != "") {
+                        $("#sel_MainStaff").empty();
+                        $("#sel_CCStaff").empty();
+                        //$("#sel_MainStaff").append("<option value=''>" + "" + "</option>");
+                        //$("#sel_CCStaff").append("<option value=''>" + "" + "</option>");
+
+                        $.each(dataobj.StaffMobileListInfo, function (idx, item) {
+                            var varMainStaff_String = "<option ";
+                            var varMainStaff_String = varMainStaff_String + " value='" + unescape(item.档案库手机号码) + "+" + unescape(item.员工编号) + "+" + unescape(item.中文名) + "+" + unescape(item.所在部门) + "+" + unescape(item.职务) + "'";
+                            //var varMainStaff_String = varMainStaff_String + " data-content='" + unescape(item.中文名) + "' ";
+                            var varMainStaff_String = varMainStaff_String + "'";
+                            var varMainStaff_String = varMainStaff_String + "<注册手机号>" + unescape(item.档案库手机号码);
+                            var varMainStaff_String = varMainStaff_String + "---<工号>" + unescape(item.员工编号) + "---<姓名>" + unescape(item.中文名);
+                            var varMainStaff_String = varMainStaff_String + "---<部门>" + unescape(item.所在部门) + "---<职务>" + unescape(item.职务) ;
+                            var varMainStaff_String = varMainStaff_String + "</option>";
+                            $("#sel_MainStaff").append(varMainStaff_String);
+                            $("#sel_CCStaff").append(varMainStaff_String);
+
+                            //$("#sel_MainStaff").append("<option value='" + unescape(item.档案库手机号码) + "'>" + unescape(item.员工编号) + unescape(item.中文名) + "(" + unescape(item.档案库手机号码) + ")" + "</option>");
+
+                            //$("#sel_CCStaff").append("<option value='" + unescape(item.档案库手机号码) + "'>" + unescape(item.员工编号) + unescape(item.中文名) + "(" + unescape(item.档案库手机号码) + ")" + "</option>");
+
+                        });
+                    }
+                    //获取推送消息类型数据
+                    GetMessageType();
+                }
+            });
+        }
+
+        //获取推送消息类型数据
+        function GetMessageType() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getmessagetypeinfo");
+            var url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/CommonServerHandler.ashx?" + urlQuery;
+            if (isTestDebug) {
+                url = "../CommonServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                data: $('#formPushIndex').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaitting();
+                    $("#myWaittingModalContent").text('远程服务器请求异常，请重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+
+                    //加载消息类别下拉列表
+                    if (dataobj.MessageTypeInfo != "") {
+                        //加载下拉列表sel_MessageType
+                        $("#sel_MessageType").empty();
+                        $("#sel_MessageType").append("<option value=''>" + "请选择消息类别" + "</option>");
+                        var iCount = 0;
+                        var varFirstCID;
+                        $.each(dataobj.MessageTypeInfo, function (idx, item) {
+                            $("#sel_MessageType").append("<option value='" + item.CID + "'>" + unescape(item.CDESCCHS) + "</option>");
+                            if (iCount == 0) { varFirstCID = item.CID; }
+                            iCount++;
+                        });
+                        if (iCount == 1) {
+                            $("#sel_MessageType").val(varFirstCID);
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
+    <!--保存消息-->
+    <script type="text/javascript">
+    //保存消息
+        function SaveMessageData()
+        {
+            var IsCanSave = true;
+            if ($("#sel_MessageType").val() == null) {
+                IsCanSave = false;
+                $('#sel_MessageType').selectpicker('setStyle', 'btn-danger');
+            }
+            if ($("#sel_MainStaff").val() == null) {
+                IsCanSave = false;
+                $('#sel_MainStaff').selectpicker('setStyle', 'btn-danger');
+            }
+            //if ($("#sel_CCStaff").val() == null) {
+            //    IsCanSave = false;
+            //    $('#sel_CCStaff').selectpicker('setStyle', 'btn-danger');
+            //}
+            if ($("#txt_MessageTitle").val() == '') {
+                IsCanSave = false;
+                $("#txt_MessageTitle").css('background-color', 'red');
+            }
+            if ($('#txt_MessageContent').summernote('isEmpty')) {
+                IsCanSave = false;
+                //$("#txt_MessageContent").css('background-color', 'red');
+                $('#txt_MessageContent').summernote('backColor', 'red');
+            }
+            //if ($("#txt_MessageContent").val() == '<p><br></p>') {
+            //}
+            //alert(IsCanSave);
+            if (!IsCanSave) {
+                ShowWaitting();
+                $("#myWaittingModalContent").text('失败,请填写必填项目("类型"/"主接收人"/"标题"/"内容")后重试!');
+                setTimeout(function () {
+                    HideWaitting();
+                }, 2000);
+            } else {
+                if (confirm("是否确定要推送?")) {
+                    ShowWaitting();
+                    $("#myWaittingModalContent").text('正在分析通知消息......');
+                    var urlQuery = escape("M=" + Math.random() + "&param=savemessagedata&msgtype=" + $('#sel_MessageType').val() + "&projectid=" + $('#txt_ProjectId').val() + "&userid=" + $("#txt_UserId").val());
+                    var url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/PushMessage/ServerHandler.ashx?" + urlQuery;
+                    if (isTestDebug) {
+                        url = "ServerHandler.ashx?" + urlQuery;
+                    }
+                    //alert(url);
+                    $.ajax({
+                        cache: false,
+                        url: url,
+                        type: "POST",//json数据大时，此配置非常重要
+                        async: false,
+                        dataType: 'json',
+                        data: $('#formPushIndex').serialize(), // 你的formid
+                        error: function (request) {
+                            HideWaitting();
+                            $("#myWaittingModalContent").text('远程服务器请求异常，请重试！');
+                        },
+                        success: function (data) {
+                            //alert(data);
+                            //alert(data.IsPushSuccess);
+                            //alert(data.iNeedPushCount);
+                            //alert(data.iHadPushCount);
+
+                            var showResultString = "选择推送" + data.iNeedPushCount + "人，实际成功推送" + data.iHadPushCount + "人";
+                            if (data.IsPushSuccess == '1') {
+                                $("#myWaittingModalContent").html('推送通知消息成功！<br/>' + showResultString);
+
+                                setTimeout(function () {
+                                    HideWaitting();
+                                }, 4000);
+                            } else {
+                                //ShowWaitting();
+                                $("#myWaittingModalContent").html('推送通知消息失败，请联系系统管理员咨询！<br/>' + showResultString);
+                                setTimeout(function () {
+                                    HideWaitting();
+                                }, 10000);
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

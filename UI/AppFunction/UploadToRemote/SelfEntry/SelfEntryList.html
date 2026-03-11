@@ -1,0 +1,443 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>入职自助预录入信息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="alert alert-danger text-left" id="lb_PageTips" style="display:none">
+                <label id="lb_NoticeMsg" class="text-danger"></label>
+            </div>
+            <div class="span12">
+                <form id="formSelfEntryList" class="form-horizontal" method="post">
+                    <div class="row-fluid " style="vertical-align:middle;margin-bottom:20px"> 
+                        <div class="col-sm-11 pull-left">
+                            <span class="h3">入职自助预录入信息&nbsp;</span>
+                        </div>
+                        <div class="col-sm-1 text-right">
+                            <a id="aToSetting" href="#" class="btn">设置</a>
+                        </div> 
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group" style="display:none">
+                                <label class="col-sm-1 control-label">当前授权</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_ClientName" name="txt_ClientName" class="form-control" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">当前系统编号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_ProjectId" name="txt_ProjectId" class="form-control" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">远程地址</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_RemoteServer" name="txt_RemoteServer" class="form-control" readonly="readonly" />
+                                </div>
+                                <input type="text" id="txt_OpFlag" name="txt_OpFlag" class="form-control" style="display:none" />
+                                <textarea type="text" id="txt_StaffMobileList" name="txt_StaffMobileList" class="form-control col-lg-12" style="display:" rows="10"></textarea>
+                                <textarea type="text" id="txt_VerifyMobileData" name="txt_VerifyMobileData" class="form-control col-lg-12" style="display:" rows="10"></textarea>
+                                <textarea type="text" id="txt_StaffBasicData" name="txt_StaffBasicData" class="form-control col-lg-12" style="display:" rows="10"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div id="divCustomToolbar" class="text-center">
+                            <button id="aClose" type="button" class="btn" onclick="javascript: window.close();">关闭</button>&nbsp; &nbsp;
+                        </div>
+                        <div id="divListTableNeedUpdate" class="row-fluid">
+                            <table id="tbSelfEntryList"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="750"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size="100"
+                                   data-page-list="[10, 50,100, 200, 500, 1000]">
+                                <thead>
+                                    <tr></tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body" style="font-size:larger;color:red">
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+
+        function OpenNewWindow(url) {
+            window.open(url, 'ArchiveDetail', 'left=0,top=0,width=' + (screen.availWidth - 10) + ',height=' + (screen.availHeight - 50) + ',scrollbars,resizable=yes,toolbar=no,location=no');//最大化打开
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        var localArrayDCID = [];//本地应用中已入职过员工的身份证号码
+        var arrayTableColumns = [];//服务器端获取到的自助登记数据表列信息数组
+        $(document).ready(function () {
+            ///判断是否登录
+            JudgeIsLogin();
+
+            //GetSelfEntryInputDataFromRemote('VP_HR_HKSFT');
+
+
+            $('#aToSetting').click(function () {
+                OpenNewWindow("../UploadTMPD/TMPDList.html");
+            });
+        });
+
+
+    </script>
+    <!--客户端数据加载-->
+    <script type="text/javascript">
+        //判断是否登录
+        function JudgeIsLogin() {
+            var urlQuery = escape("M=" + Math.random());
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-9999') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                        HideWaitting();
+                    } else {
+                        if (data.toLowerCase() == 'admin') {
+                            $('#aToSetting').show();
+                        }
+                        ///加载客户基本信息
+                        LoadClientInfo();
+                    }
+                }
+            })
+        }
+        ///加载客户基本信息
+        function LoadClientInfo() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getclientinfo");
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ClientInfo == "") return false;
+
+                    $.each(dataobj.ClientInfo, function (idx, item) {
+                        $("#txt_ProjectId").val(unescape(item.ProjectId));
+                        $("#txt_ClientName").val(unescape(item.ClientName));
+                        $("#txt_RemoteServer").val(unescape(item.RemoteServer));
+                    });
+
+                    setTimeout(function () {
+                        //获取系统已入职的员工身份证号
+                        GetStaffDCIDList();
+                    }, 100);
+                }
+            });
+        }
+
+        //获取系统已入职的员工身份证号
+        function GetStaffDCIDList() {
+            arrayTableColumns = []
+            var urlQuery = escape("M=" + Math.random() + "&param=getstaffdcidlist");
+            var url = "ClientHandler.ashx?" + urlQuery;
+            //alert(url);
+            try {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    error: function (request) {
+                        HideWaiting();
+                    },
+                    success: function (result) {
+                        //alert(result);
+                        //console.log('result',result)
+                        var dataobj = JSON.parse(result);
+                        //console.log('dataobj', dataobj);
+                        if (!dataobj.ReturnStatus.ReturnCode == "1") {
+                            $("#myWaittingModalContent").text(dataobj.ReturnStatus.ReturnMsg);
+                        } else {
+                            localArrayDCID = dataobj.ResultData;
+                        }
+
+                        setTimeout(function () {
+                            //获取远程服务器中的保存的自助录入信息数据
+                            GetSelfEntryInputDataFromRemote($("#txt_ProjectId").val());
+                        }, 100);
+                    }
+                });
+            }
+            catch (err) {
+                HideWaiting();
+                return;
+            }
+        }
+    </script>
+
+    <!--远程服务端数据加载-->
+    <script type="text/javascript">
+        //获取远程服务器中的保存的自助录入信息数据
+        function GetSelfEntryInputDataFromRemote(projectId) {
+            ShowWaitting()
+            $("#myWaittingModalContent").text('正在请求云端服务器的验证......');
+            arrayTableColumns = []
+            var strParam = "jsonCallback=";
+            //var projectId = "VP_HR_HKSFT";
+            var urlQuery = escape("M=" + Math.random() + "&param=getselfentryinputdata&projectid=" + projectId);
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/SelfEntry/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            try {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    data: $('#formSelfEntryList').serialize(), // 你的formid
+                    error: function (request) {
+                        HideWaiting();
+                        $("#lb_PageTips").show();
+                        $("#myWaittingModalContent").text('远程服务器请求异常，请重试！');
+                    },
+                    success: function (result) {
+                        //alert(result);
+                        //console.log('result',result)
+                        var dataobj = JSON.parse(result);
+                        //console.log('dataobj', dataobj);
+                        if (!dataobj.ReturnStatus.ReturnCode == "1") {
+                            $("#myWaittingModalContent").text(dataobj.ReturnStatus.ReturnMsg);
+                        } else {
+                            var item = dataobj.ResultData[0];
+                            var rows = dataobj.ResultData.length;
+
+                            arrayTableColumns = dataobj.ColumnsData
+
+                            //构建表格####### Start
+                            var i, columns = [], data = [];
+
+                            //自定义第一列操作列
+                            columns.push({
+                                title: '操作',
+                                field: 'operate',
+                                align: 'center',
+                                valign: 'middle',
+                                width:100,
+                                formatter: operateFormatter, //自定义方法，添加操作按钮
+                                events: operateEvents
+
+                            });
+
+                            for (var key in arrayTableColumns) {
+                                var pid = unescape(arrayTableColumns[key].PID)
+                                var colName = unescape(arrayTableColumns[key].PDESCCHS)
+                                if ('RowKey'.indexOf(pid) >= 0) {
+                                    columns.push({
+                                        field: pid,
+                                        title: colName,
+                                        sortable: true,
+                                        visible: false,
+                                        order: "desc"
+                                    });
+                                } else if (['DCNAMECHS', 'DCID','DCMOBILE'].includes(pid)) {
+                                    columns.push({
+                                        field: pid,
+                                        title: colName,
+                                        sortable: true,
+                                        visible: true,
+                                        cellStyle: function (value, row, index) {
+                                            return { css: { "color": "blue" } }
+                                        },
+                                        order: "desc"
+                                    });
+                                } else {
+                                    columns.push({
+                                        field: pid,
+                                        title: colName,
+                                        sortable: true,
+                                        visible: true,
+                                        order: "desc"
+                                    });
+                                }
+                            }
+                            //最后一列增加录入时间
+                            columns.push({
+                                title: '录入时间',
+                                field: 'InputTime',
+                                align: 'center',
+                                valign: 'middle',
+                                width: 100,
+
+                            });
+
+                            for (i = 0; i < rows; i++) {
+                                var row = {};
+                                for (var key in arrayTableColumns) {
+                                    var pid = unescape(arrayTableColumns[key].PID)
+                                    var colName = unescape(arrayTableColumns[key].PDESCCHS)
+                                    var pctrl = unescape(arrayTableColumns[key].PCTRL)
+                                    //对值进行编码处理特殊字符，如引号等//
+                                    row[pid] = unescape(dataobj.ResultData[i][pid]);
+                                }
+                                row["InputTime"] = unescape(dataobj.ResultData[i]["InputTime"]);
+                                data.push(row);
+                            }
+
+                            $('#tbSelfEntryList').bootstrapTable('destroy').bootstrapTable({
+                                columns: columns,
+                                data: data
+                            });
+                            $('#tbSelfEntryList').bootstrapTable('resetView');
+                        }
+
+                        setTimeout(function () {
+                            HideWaiting();
+                        },1000);
+                    }
+                });
+            }
+            catch (err) {
+                HideWaiting();
+                return;
+            }
+        }
+
+        //定义每列的操作事件
+        function operateFormatter(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var curDCMOBILE = RowData.DCMOBILE;
+            var curDCID = RowData.DCID;
+            //console.log('curDCID', curDCMOBILE);
+
+            //判断身份证如果已经入档案库，则无需操作
+            if (localArrayDCID.includes(curDCID)) {
+                return [
+                    '<a class="btn btn-sm row-select" disabled href="javascript:void(0)" id ="a_' + curDCMOBILE + '" >',
+                    '<i class="icon-remove"></i>已入档案库,无需操作',
+                    '</a>'
+                ].join('');
+
+            } else {
+                return [
+                    '<a class="btn btn-danger btn-sm row-select" href="javascript:void(0)" id ="a_' + curDCMOBILE + '" >',
+                    '<i class="icon-remove"></i>点击选择',
+                    '</a>'
+                ].join('');
+            }
+
+        }
+        window.operateEvents = {
+            'click .row-select': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                //console.log('RowData:', RowData);
+
+                for (var key in arrayTableColumns) {
+                    var pid = unescape(arrayTableColumns[key].PID)
+                    var colName = unescape(arrayTableColumns[key].PDESCCHS)
+                    var pctrl = unescape(arrayTableColumns[key].PCTRL)
+                    var colValue = "";
+                    if (RowData[pid]) {
+                        colValue = RowData[pid];
+                        if (pctrl == '1') {
+                            var tempValue = colValue.split('-');
+                            if (tempValue.length > 0) {
+                                colValue = tempValue[0];
+                            }
+                        }
+                    }
+                    //console.log('colName.value:', colValue);
+                    var ctrlId = "txt_OANEW_1_" + pid;
+                    if (window.opener && window.opener.document.getElementById(ctrlId)) {
+                        window.opener.document.getElementById(ctrlId).value = colValue;
+                    } else {
+                        ctrlId = "ddList_OANEW_1_" + pid;
+                        if (window.opener && window.opener.document.getElementById(ctrlId)) {
+                            window.opener.document.getElementById(ctrlId).value = colValue;
+                        }
+                    }
+
+                }
+
+                window.close();
+            }
+        };
+    </script>
+
+</body>
+</html>

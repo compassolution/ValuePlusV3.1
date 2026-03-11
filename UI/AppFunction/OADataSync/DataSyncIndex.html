@@ -1,0 +1,835 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>内外网数据同步</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <form id="formList" class="form-horizontal" method="post">
+                    <div class="jumbotron" style="padding: 25px; padding-bottom: 10px; margin-bottom: 5px ">
+                        <div>
+                            <span class="h2">内外网数据同步</span>
+                        </div>
+                        <div>
+                            <span>当前授权：</span><strong id="txt_ClientName"></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span>当前系统编号：</span><strong id="txt_ProjectId"></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span>同步外网服务地址：</span>
+                            <strong id="span_DataSyncOuterServer"></strong>
+                            <button type="button" class="btn btn-link" id="btnToModifyOuterServer">点击修改外网服务地址</button>
+                            <button type="button" class="btn btn-link" id="btnViewDataSyncConfig">点击查看数据同步配置</button>
+                            <strong id="txt_UserId" style="display:none"></strong>
+                            <strong id="txt_RemoteServer" style="display:none"></strong>
+                            <strong id="txt_IsOuterServer" style="display:none"></strong>
+                        </div>
+                        <div>
+                            <h5>提示说明:</h5>
+                            <ol>
+                                <li class="" style="padding-top:3px">
+                                    本页面同步功能应用于HR系统部署在<strong style="color:red">办公内网服务器</strong>上
+                                    ，但<strong style="color:red">需使用手机端审批功能</strong>时的场景下
+                                    ，通过<strong style="color:red">在内网服务上打开</strong>此页面实现企业内网与手机外网服务的相关数据同步操作
+                                    ，请确保<strong style="color:red">能正常访问外网同步服务地址</strong>。
+                                </li>
+                                <li class="" style="padding-top:3px">
+                                    手机端审批功能需每个员工在档案库中录入的<strong style="color:red">手机号在公众号中进行注册登记</strong>
+                                    ，其注册登记情况查询请点击&nbsp;&nbsp;
+                                    <!--<button type="button" class="btn btn-xs btn-success btn-info" id="aToStaffMobileRegistInfo">员工手机号注册查询</button>-->
+                                    <a id="aToStaffMobileRegistInfo" href="#">员工手机号注册查询</a>
+                                </li>
+                                <li class="" style="padding-top:3px">
+                                    需数据同步的项目如下表显示，每个项目均只能<strong style="color:red">单向同步</strong>
+                                    ，即在“同步操作:内网===>>外网”与“同步操作:外网===>>内网”中<strong style="color:red">二选一</strong>
+                                    ，可单项分别点击同步，亦可点击<strong style="color:red">“一键同步所有数据”</strong>按钮一次性完成所有项目的同步。
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div id="divCustomToolbar" class="text-center">
+                            <div class="pull-left">
+                                <button id="aClose" type="button" class="btn btn-sm" onclick="javascript: window.close();">
+                                    关闭
+                                </button>&nbsp;
+                                <button id="btnInitDataSyncConfig" type="button" class="btn btn-sm btn-warning">
+                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;初始化同步配置
+                                </button>&nbsp;
+                                <button id="btnReloadList" type="button" class="btn btn-sm btn-info">
+                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;重新刷新
+                                </button>&nbsp;&nbsp;
+                            </div>
+                            <div class="pull-right">
+                                <button id="aOneStepSyncData" type="button" class="btn btn-sm btn-danger">
+                                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;一键同步所有数据
+                                </button>
+                            </div>
+                        </div>
+                        <div id="divListTable" class="row-fluid">
+                            <table id="tbOADataSyncList"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="550"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size="20"
+                                   data-page-list="[10, 20,50]">
+                                <thead>
+                                    <tr>
+                                        <th data-field="ID" data-sortable="true" data-align="center" data-order="asc" data-visible="true">序号</th>
+                                        <th data-field="DSCODE" data-sortable="true" data-align="center" data-order="asc" data-visible="true">项目编码</th>
+                                        <th data-field="DSNAME" data-sortable="true" data-align="center" data-order="asc" data-visible="true">名称</th>
+                                        <th data-field="DSDESC" data-sortable="true" data-align="center" data-order="asc" data-visible="true">描述</th>
+                                        <th data-field="ISUPLOAD" data-sortable="true" data-align="center" data-order="asc" data-visible="false">可上传?</th>
+                                        <th data-field="LASTUPLOADTIME" data-sortable="true" data-align="center" data-order="asc" data-visible="true">最后上传时间</th>
+                                        <th data-field="LASTUPLOADUSER" data-sortable="true" data-align="center" data-order="asc" data-visible="true">最后上传用户</th>
+                                        <th data-field="ISDOWNLOAD" data-sortable="true" data-align="center" data-order="asc" data-visible="false">可下载?</th>
+                                        <th data-field="LASTDOWNTIME" data-sortable="true" data-align="center" data-order="asc" data-visible="true">最后下载时间</th>
+                                        <th data-field="LASTDOWNUSER" data-sortable="true" data-align="center" data-order="asc" data-visible="true">最后下载用户</th>
+                                        <th data-field="operation" data-align="center" data-formatter="FormatterOperation" data-events="EventsOperation">操作</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" style="display:none">
+                        <div class="text-center col-sm-12">
+                            <textarea type="text" id="txt_DataSyncResult" name="txt_DataSyncResult" class="form-control col-sm-12" rows="2" style="display:none"></textarea>
+                            <textarea type="text" id="txt_OADataSync2ConfigData" name="txt_OADataSync2ConfigData" class="form-control col-sm-12" rows="2" style="display:none"></textarea>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <!-- 模态框（Modal）弹出框修改 -->
+        <div class="modal fade" id="myInputModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="sizing-addon3">外网服务地址</span>
+                            <input type="text" id="txt_DataSyncOuterServer" class="form-control"aria-describedby="sizing-addon3">
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">
+                            关闭
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" id="btnDoModifyOuterServer">
+                            提交修改
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="btnCloseWaittingModal" type="button" class="close">
+                            <span class="text-danger h4">关闭</span>
+                        </button>
+                        <h4 class="modal-title text-center" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body" style="font-size:small;color:red">
+
+                    </div>
+                    <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>-->
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <!--<script src="UserInfo/Inner.js?timestamp=202504211706" type="text/javascript"></script>
+    <script src="HRDOCU/Inner.js?timestamp=202504211706" type="text/javascript"></script>
+    <script src="KQRSSZ/Inner.js?timestamp=202504211706" type="text/javascript"></script>-->
+    <script type="text/javascript">
+        //import { getUserInfoFromInner } from 'UserInfo/Inner.js';
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+            $('#btnCloseWaittingModal').hide();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+            $("#myWaittingModalContent").text('');
+            $("#myWaittingModalTitle").text('正在处理中,请稍候.....');
+        }
+        function showNewOpenWindow(url) {
+            var randamNum = (Math.floor((Math.random() * 100) + 1)).toString();//100之内的随机数,可同时打开多个动作页面
+            window.open(url, 'StaffMobileList' + randamNum, 'left=0,top=0,width=' + (screen.availWidth - 10) + ',height=' + (screen.availHeight - 50) + ',scrollbars,resizable=yes,toolbar=no,location=no');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        var isOneStep = false;//是否是一键同步操作
+        $(document).ready(function () {
+            //判断是否登录
+            JudgeIsLogin();
+
+            //触发修改外网地址对话框
+            $('#btnToModifyOuterServer').click(function () {
+                $('#myInputModal').modal();
+            });
+            //确定修改外网地址对话框
+            $('#btnDoModifyOuterServer').click(function () {
+                //修改【内网应用】中BasicParam_1中的OADataSyncOuterServer值
+                var paramName = 'OADataSyncOuterServer';
+                var paramValue = $("#txt_DataSyncOuterServer").val();
+                updateBasicParamValueByName(paramName, paramValue, 'modifyOuterServer');
+            });
+            
+            //关闭等待窗
+            $('#btnCloseWaittingModal').click(function () {
+                //重新加载排班表
+                $("#btnReloadList").click();
+            })            
+            //初始化同步配置数据-同步上传内网的数据同步配置数据到外网
+            $("#btnInitDataSyncConfig").click(function () {
+                InitDataSyncConfig();
+            });
+            //重新加载排班表
+            $("#btnReloadList").click(function () {
+                GetAndSetListResult();
+            });
+            //一键同步所有数据
+            $("#aOneStepSyncData").click(function () {
+                DoSyncDataOneStep();
+            });
+
+            //手机号码登记注册情况查询
+            $("#aToStaffMobileRegistInfo").click(function () {
+                var url = $("#txt_DataSyncOuterServer").val() + "/AppFunction/UploadToRemote/StaffMobile/StaffMobileList.html"
+                showNewOpenWindow(url);
+            });
+            //点击查看同步配置
+            $("#btnViewDataSyncConfig").click(function () {
+                var url = "../../Archive/Archive.aspx?DOCU=OADataSync"
+                showNewOpenWindow(url);
+            });       
+
+        });
+
+        //判断是否登录
+        function JudgeIsLogin() {
+            var urlQuery = escape("M=" + Math.random());
+            var url = "../UploadToRemote/CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-9999') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                    } else {
+                        //获取当前客户信息
+                        GetCurClientInfo();
+                    }
+                }
+            })
+        }
+
+        function GetNowHtml() {
+            return "<br>" + "<span class='label label-info'>" + new Date().format("yyyy-MM-dd hh:mm:ss") + "</span> &nbsp;&nbsp;";
+        }
+
+        //获取当前客户信息
+        function GetCurClientInfo() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getclientinfo");
+            var url = "DataSyncIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    if (data == '') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('获取系统参数配置异常，请联系管理员处理！');
+                    } else {
+                        var dataobj = JSON.parse(data);
+                        console.log('dataobj:', dataobj);
+                        var item = dataobj[0];
+
+                        $("#txt_ProjectId").html(unescape(item.ProjectId));
+                        $("#txt_ClientName").html(unescape(item.ClientName));
+                        $("#txt_RemoteServer").html(unescape(item.RemoteServer));
+                        $("#txt_IsOuterServer").html(unescape(item.IsOuterServer_OADataSync));                       
+                        $("#txt_DataSyncOuterServer").val(unescape(item.OADataSyncOuterServer));
+                        $("#span_DataSyncOuterServer").html(unescape(item.OADataSyncOuterServer));                        
+                        $("#txt_UserId").html(unescape(item.UserId));
+
+                        if ($("#txt_IsOuterServer").html() != '1') {
+                            //自动同步上传内网的数据同步配置数据到外网
+                            setTimeout(function () {
+                                InitDataSyncConfig();
+                            }, 500)
+
+                            ///加载OA数据同步配置信息列表
+                            GetAndSetListResult();
+                        } else {
+                            ShowWaitting();
+                            $("#myWaittingModalTitle").text('仅内网服务应用可使用此数据同步功能!');
+                        }
+
+                    }
+                }
+            })
+        }
+
+        //自动同步上传内网的数据同步配置数据到外网
+        function InitDataSyncConfig() {
+            ShowWaitting();
+            var showTips = ""
+            $("#myWaittingModalTitle").text('正在初始化数据同步基础配置,请稍候.....');
+            $("#myWaittingModalContent").append(GetNowHtml() + '正在自动同步上传配置数据到外网服务器');
+            //// 遍历数据行
+            //var rows = $('#tbOADataSyncList').bootstrapTable('getData');
+            //var RowData = rows[0]
+            ////console.log('rows[0]: ', rows[0]);
+            //var varDSCode = RowData.DSCODE;
+            //var varDSName = RowData.DSNAME;
+            //var varOrder = RowData.ID;
+            /////根据同步编码获取OA数据同步配置明细表信息【OADataSync_2】
+            //getOADataSync2ConfigData(varOrder, varDSCode, varDSName, 'upload'); 
+
+            $("#txt_DataSyncResult").text("");
+            var urlQuery = escape("M=" + Math.random() + "&param=getarchivedata_oadatasync");
+            var url = "DataSyncIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_PageTips").show();
+                    $("#myWaittingModalContent").text('当前数据库加载有误，请重试！');
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    $("#txt_DataSyncResult").text(data);
+                    $("#myWaittingModalContent").append(GetNowHtml() + '同步配置基础数据准备就绪，准备上传至外网服务器。。。。。');
+
+                    var outerServer = $("#txt_DataSyncOuterServer").val();
+                    var urlQuery = escape("M=" + Math.random() + "&param=uploadarchivedata_oadatasync");
+                    var url = outerServer + "/AppFunction/OADataSync/OuterHandler.ashx?" + urlQuery;
+                    //alert(url);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: url,
+                        async: false,
+                        data: $('#formList').serialize(), // 你的formid
+                        error: function (request) {
+                            //HideWaiting();
+                            $('#txt_DataSyncResult').text(request);
+                            showTips = '外网服务地址[' + outerServer + ']无法访问，请重试或者联系管理员处理!';
+                            $("#myWaittingModalTitle").text(showTips);
+                            $("#myWaittingModalContent").append(GetNowHtml() + showTips);
+                            $('#btnCloseWaittingModal').show();
+                        },
+                        success: function (data) {
+                            //console.log('data:', data);
+                            $('#txt_DataSyncResult').text(data);
+                            if (data > '0') {
+                                showTips = '初始化数据同步基础配置并上传至外网服务器成功!';
+                                $("#myWaittingModalTitle").text(showTips);
+                                $("#myWaittingModalContent").append(GetNowHtml() + showTips);
+                                setTimeout(function () {
+                                    HideWaiting();
+                                }, 2000)
+                            } else {
+                                showTips = '初始化数据同步基础配置并上传至外网服务器失败，请重新刷新此页面重试!';
+                                $("#myWaittingModalTitle").text(showTips);
+                                $("#myWaittingModalContent").append(GetNowHtml() + showTips);
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        ///根据同步编码获取OA数据同步配置明细表信息【OADataSync_2】
+        function getOADataSync2ConfigData(varOrder, varDSCode, varDSName, upOrDown) {
+            $("#txt_OADataSync2ConfigData").text("");
+            var urlQuery = escape("M=" + Math.random() + "&param=getoadatasync2configdata&dscode=" + varDSCode);
+            var url = "DataSyncIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_PageTips").show();
+                    $("#myWaittingModalContent").text('当前数据库加载有误，请重试！');
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    //alert(data);
+                    if (data == '') {
+                        $("#myWaittingModalContent").append(GetNowHtml() + '获取同步编号' + varDSCode + '的数据表及条件配置出错，请联系管理员处理！');
+                    } else {
+                        $("#txt_OADataSync2ConfigData").text(data);
+                        if (upOrDown == 'upload') {
+                            //从内网数据库中获取需同步到外网的数据信息
+                            setTimeout(function () {
+                                getDataFromInner(varOrder, varDSCode, varDSName);
+                            }, 500)
+                        } if (upOrDown == 'download') {
+                            //从外网数据库中获取需同步到内网的数据信息
+                            setTimeout(function () {
+                                getDataFromOuter(varOrder, varDSCode, varDSName);
+                            }, 500)
+                        }
+
+                    }
+                }
+            });
+        }
+
+        //更新OADataSync_1表中的最后插入时间及用户信息
+        function updateOADataSyncLastOperation(varOrder, dsCode) {
+            var urlQuery = escape("M=" + Math.random() + "&param=updateoadatasynclastoperation&dscode=" + dsCode + "&uploadordownload=upload");
+            var url = "DataSyncIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    console.log('完成操作varOrder: ' + varOrder);
+                    var rows = $('#tbOADataSyncList').bootstrapTable('getData');
+                    //完成最后一行项目
+                    if (!isOneStep || varOrder == rows.length) {
+                        $('#btnCloseWaittingModal').show();
+                        $("#myWaittingModalTitle").text('同步操作已成功完成!');
+
+                        if (isOneStep && varOrder == rows.length) {
+                            $("#myWaittingModalContent").append(GetNowHtml() + '完成所有' + rows.length + '个项目的同步操作');
+                        }
+
+                        setTimeout(function () {
+                            $('#btnCloseWaittingModal').click();
+                        }, 3000)
+                    }
+
+                    if (data > '0') {
+                        //ShowWaitting();
+                    } else {
+                        //console.log('dataobj:', dataobj);
+                    }
+                }
+            })
+        }
+
+        //【内网/外网】修改BasicParam_1中的某个paramName的值
+        function updateBasicParamValueByName(paramName, paramvalue,opType) {
+            paramvalue = encodeURIComponent(paramvalue);
+            var urlParam = "param=updatebasicparamvaluebyname&paramname=" + paramName + "&paramvalue=" + paramvalue;
+            var urlHanlder = "InnerHandler.ashx?";
+            if (opType == 'modifyOuterServer') {
+                //【内网应用】
+                urlHanlder = "InnerHandler.ashx?";
+            } else if (opType = 'modifyIsOuterServer') {
+                //【外网应用】
+                var outerServer = $("#txt_DataSyncOuterServer").val();
+                urlHanlder = outerServer + "/AppFunction/OADataSync/OuterHandler.ashx?";
+            }
+
+            var urlQuery = "M=" + Math.random() + "&" + urlParam;
+            //var urlQuery = escape("M=" + Math.random() + "&" + urlParam);
+            var url = urlHanlder + urlQuery;
+
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    if (opType == 'modifyOuterServer') {
+                        if (data > '0') {
+                            //ShowWaitting();
+                            alert('修改成功');
+                            $('#myInputModal').modal('hide');
+                            GetCurClientInfo();
+
+                            //修改成功后，及时的修改【外网应用】中BasicParam_1中的IsOuterServer_OADataSync值为1
+                            var paramName = 'IsOuterServer_OADataSync';
+                            var paramValue = '1';
+                            updateBasicParamValueByName(paramName, paramValue, 'modifyIsOuterServer');
+                        } else {
+                            //console.log('dataobj:', dataobj);
+                            alert('修改失败，请重试!');
+                        }
+                    }
+                }
+            })
+        }
+
+
+    </script>
+
+    <!--表格操作-->
+    <script type="text/javascript">
+        ///加载OA数据同步配置信息列表
+        function GetAndSetListResult() {
+            ShowWaitting();
+            $("#myWaittingModalContent").text('正在加载列表......');
+            var urlQuery = escape("M=" + Math.random() + "&param=getoadatasync1configdata");
+            var url = "DataSyncIndex.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_PageTips").show();
+                    $("#myWaittingModalContent").text('当前数据库加载有误，请重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        $("#lb_PageTips").show();
+                        $("#myWaittingModalContent").text('当前数据库加载有误，请重试！');
+                        HideWaiting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj);
+                    //alert(dataobj.ResultData.length); //输出ResultData的子对象数量//
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+                    //columns.push({
+                    //    field: "check",
+                    //    checkbox: true,
+                    //    visible: true,
+                    //    order: "desc"
+                    //});
+                    //alert(rows);
+
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbOADataSyncList').bootstrapTable('destroy').bootstrapTable({
+                        data: data
+                    });
+                    $('#tbOADataSyncList').bootstrapTable('resetView');
+                    //构建表格####### End
+                    HideWaiting();
+                }
+            });
+            HideWaiting();
+        }
+
+        //定义每行的操作
+        function FormatterOperation(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varDSCode = RowData.DSCODE;
+            var varIsUpload = RowData.ISUPLOAD;
+            var varIsDownload = RowData.ISDOWNLOAD;
+            var ctrlId = "sel#Item#" + varDSCode + "#Operation";
+            //alert(ctrlId);
+            return [
+                '<div>'
+                + ((varIsUpload != '1') ? '' : '  <a class="btn btn-success btn-sm upload" href="#" id="aUpload" href="#" refData="' + varDSCode + '" role="button"><span class="glyphicon glyphicon-upload " aria-hidden="true"></span>同步操作:内网===>>外网</a>&nbsp;&nbsp;')
+                + ((varIsDownload != '1') ? '' : '  <a class="btn btn-warning btn-sm download" href="#" id="aDownload" href="#" refData="' + varDSCode + '" role="button"><span class="glyphicon glyphicon-upload " aria-hidden="true"></span>同步操作:外网===>>内网</a>')
+            ].join('');
+        }
+        //定义操作的事件
+        window.EventsOperation = {
+            'click .btn': function (e, value, row, index) {
+                ShowWaitting();
+                isOneStep = false;
+                var outerServer = $("#txt_DataSyncOuterServer").val();
+                var userId = $("#txt_UserId").html();
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varOrder = RowData.ID;
+                var varDSCode = RowData.DSCODE;
+                var varDSName = RowData.DSNAME;
+                var ctrlId = $(this).attr("id");
+                var isUpload = RowData.ISUPLOAD
+                var isDownload = RowData.ISDOWNLOAD
+                console.log('RowData: ', RowData);
+                //alert(varDSCode);
+                if (isUpload == '1') {
+                    if (confirm("是否确定要从上传【" + varDSCode + "-" + varDSName + "】到远程服务器？")) {
+                        ///根据同步编码获取OA数据同步配置明细表信息【OADataSync_2】
+                        getOADataSync2ConfigData(varOrder, varDSCode, varDSName, 'upload');
+                    } else {
+                        HideWaiting();
+                    }
+                } else if (isDownload == '1') {
+                    if (confirm("是否确定要从远程服务器下载【" + varDSCode + "-" + varDSName + "】到本地？")) {
+                        ///根据同步编码获取OA数据同步配置明细表信息【OADataSync_2】
+                        getOADataSync2ConfigData(varOrder, varDSCode, varDSName, 'download');
+                    } else {
+                        HideWaiting();
+                    }
+                }
+            }
+        };
+
+        //遍历表格行进行一步同步处理
+        function DoSyncDataOneStep() {
+            if (confirm("是否确定要一键同步所有同步操作？")) {
+                ShowWaitting();
+                isOneStep = true;
+                // 遍历数据行
+                var rows = $('#tbOADataSyncList').bootstrapTable('getData');
+                $.each(rows, function (index, RowData) {
+                    var varDSCode = RowData.DSCODE;
+                    var varDSName = RowData.DSNAME;
+                    var varOrder = RowData.ID;
+                    var isUpload = RowData.ISUPLOAD
+                    var isDownload = RowData.ISDOWNLOAD
+                    //console.log('Index: ' + index + ', Code: ' + varDSCode + ', Name: ' + varDSName);
+                    if (isUpload == '1') {
+                        ///根据同步编码获取OA数据同步配置明细表信息【OADataSync_2】
+                        getOADataSync2ConfigData(varOrder, varDSCode, varDSName, 'upload');
+                    } else if (isDownload == '1') {
+                        ///根据同步编码获取OA数据同步配置明细表信息【OADataSync_2】
+                        getOADataSync2ConfigData(varOrder, varDSCode, varDSName, 'download');
+                    }
+                });
+            }
+        }
+
+    </script>
+
+    <!--从内网上传到外网的操作-->
+    <script type="text/javascript">
+        //从内网数据库中获取需同步到外网的数据信息
+        function getDataFromInner(varOrder, varDSCode, varDSName) {
+            $("#myWaittingModalContent").append(GetNowHtml() + '【行序号' + varOrder + ':正在获取内网' + varDSName + '......】');
+            var urlQuery = escape("M=" + Math.random() + "&param=getinnerdata&dscode=" + varDSCode);
+            var url = "InnerHandler.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    if (data == '') {
+                        $("#myWaittingModalContent").append(GetNowHtml() + '获取内网' + varDSName + '异常，请联系管理员处理！');
+                    } else {
+                        var dataobj = JSON.parse(data);
+                        //console.log('dataobj:', dataobj);
+                        $("#myWaittingModalContent").append(GetNowHtml() + '获取内网' + varDSName + '完成，准备上传至外网服务器......');
+
+                        $('#txt_DataSyncResult').text(data);
+                        //上传数据到外网服务器
+                        uploadDataToOuter(varOrder, varDSCode, varDSName);
+                    }
+                }
+            })
+        }
+
+        //上传数据到外网服务器
+        function uploadDataToOuter(varOrder, varDSCode, varDSName) {
+            $("#myWaittingModalContent").append(GetNowHtml() + '正在上传[' + varDSName + ']数据到外网服务器，请稍后......');
+            var userId = $("#txt_UserId").html();
+            var outerServer = $("#txt_DataSyncOuterServer").val();
+            var urlQuery = escape("M=" + Math.random() + "&param=uploaddatatoouter&dscode=" + varDSCode);
+            var url = outerServer + "/AppFunction/OADataSync/OuterHandler.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    $('#txt_DataSyncResult').text(data);
+                    if (data > '0') {
+                        if (data == '1') {
+                            var logTips = GetNowHtml() + '成功上传[' + varDSName + ']数据到外网服务器！';
+                            $("#myWaittingModalContent").append(logTips);
+                            console.log(logTips);
+                            //成功后写会OADataSync_1表中
+                            updateOADataSyncLastOperation(varOrder, varDSCode);
+                        } else {
+                            $("#myWaittingModalContent").append(GetNowHtml() + '上传[' + varDSName + ']数据到外网临时表，但发生错误尚未完成同步，请重试！');
+                            $('#btnCloseWaittingModal').show();
+                            $("#myWaittingModalTitle").text('同步操作失败!');
+                        }
+
+                    } else {
+                        $("#myWaittingModalContent").append(GetNowHtml() + '上传[' + varDSName + ']数据到外网服务器时失败！');
+                        $('#btnCloseWaittingModal').show();
+                        $("#myWaittingModalTitle").text('同步操作失败!');
+                    }
+                }
+            })
+        }
+
+    </script>
+
+    <!--从外网下载到内网的操作-->
+    <script type="text/javascript">
+        //从内网数据库中获取需同步到外网的数据信息
+        function getDataFromOuter(varOrder, varDSCode, varDSName) {
+            var outerServer = $("#txt_DataSyncOuterServer").val();
+            $("#myWaittingModalContent").append(GetNowHtml() + '【行序号' + varOrder + ':正在获取外网' + varDSName + '......】');
+            var urlQuery = escape("M=" + Math.random() + "&param=getouterdata&dscode=" + varDSCode);
+            var url = outerServer + "/AppFunction/OADataSync/OuterHandler.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    if (data == '') {
+                        $("#myWaittingModalContent").append(GetNowHtml() + '获取外网' + varDSName + '异常，请联系管理员处理！');
+                    } else {
+                        var dataobj = JSON.parse(data);
+                        //console.log('dataobj:', dataobj);
+                        $("#myWaittingModalContent").append(GetNowHtml() + '获取外网' + varDSName + '完成，准备下载至内网服务器......');
+
+                        $('#txt_DataSyncResult').text(data);
+                        //下载数据到内网服务器
+                        downloadDataToInner(varOrder, varDSCode, varDSName);
+                    }
+                }
+            })
+        }
+
+        //下载数据到内网服务器
+        function downloadDataToInner(varOrder, varDSCode, varDSName) {
+            $("#myWaittingModalContent").append(GetNowHtml() + '正在下载[' + varDSName + ']数据到内网服务器，请稍后......');
+            var userId = $("#txt_UserId").html();
+            var urlQuery = escape("M=" + Math.random() + "&param=downloaddatatoinner&dscode=" + varDSCode);
+            var url = "InnerHandler.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //console.log('data:', data);
+                    $('#txt_DataSyncResult').text(data);
+                    if (data > '0') {
+                        if (data == '1') {
+                            var logTips = GetNowHtml() + '成功下载[' + varDSName + ']数据到内网服务器！';
+                            $("#myWaittingModalContent").append(logTips);
+                            console.log(logTips);
+                            //成功后写会OADataSync_1表中
+                            updateOADataSyncLastOperation(varOrder, varDSCode);
+                        } else {
+                            $("#myWaittingModalContent").append(GetNowHtml() + '下载[' + varDSName + ']数据到内网临时表，但发生错误尚未完成同步，请重试！');
+                            $('#btnCloseWaittingModal').show();
+                            $("#myWaittingModalTitle").text('同步操作失败!');
+                        }
+
+                    } else {
+                        $("#myWaittingModalContent").append(GetNowHtml() + '下载[' + varDSName + ']数据到内网服务器时失败！');
+                        $('#btnCloseWaittingModal').show();
+                        $("#myWaittingModalTitle").text('同步操作失败!');
+                    }
+                }
+            })
+        }
+
+    </script>
+
+
+
+</body>
+</html >

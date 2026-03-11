@@ -1,0 +1,365 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>推送备份到远程服务器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <form id="formBackupConfigList" class="form-horizontal" method="post">
+                    <div class="row-fluid navbar" style="vertical-align:middle">
+                        <h2>推送备份</h2>
+                    </div>
+                    <div class="row-fluid">
+                        <div id="divCustomToolbar" class="text-center">
+                            <button id="aClose" type="button" class="btn" onclick="javascript: window.close();">关闭</button>
+                            <label id="lb_NoticeMsg" class="text-danger"></label>
+                            <input type="text" id="txt_RemoteServer" name="txt_RemoteServer" class="form-control" style="display:none" />
+                            <input type="text" id="txt_ProjectId" name="txt_ProjectId" class="form-control" style="display:none" readonly="readonly" />
+                        </div>
+                        <div id="divListTableNeedUpdate" class="row-fluid">
+                            <table id="tbBackupConfigList"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="650"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size="200"
+                                   data-page-list="[10, 50,100, 200, 500, 1000]">
+                                <thead style="background-color:lightgray">
+                                    <tr></tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                    <div class="row">
+                        <div class="text-center col-sm-12">
+                            <textarea type="text" id="txt_BuildScriptsContent" name="txt_BuildScriptsContent" class="form-control col-sm-12" rows="5" style="display:none"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>        
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle" style="text-align:center">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body">
+                        
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = true;//是否调试模式，否则链接跨域远程服务器
+        var varCurTablesCount = 0;
+        var varCurViewsCount = 0;
+        var varCurSPCount = 0;
+        var varCurFuncitonsCount = 0;
+        $(document).ready(function () {
+            //加载列表
+            GetAndSetListResult();
+
+            ///确定推送
+            $('#aUploadSalary').click(function () {
+                $("#myWaittingModalTitle").html("正在处理中,请稍候.....");
+                $("#myWaittingModalContent").empty();
+                $("#txt_UploadResult").empty();
+                UploadSalaryByOneStaff();
+            });
+        });
+    </script>
+
+    <!--加载结果列表-->
+    <script type="text/javascript">
+        ///加载结果列表
+        function GetAndSetListResult() {
+            ShowWaitting();
+
+            var urlQuery = escape("M=" + Math.random() + "&param=getbackuplist");
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formBackupConfigList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").text('列表页面显示错误，请稍后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        $("#lb_NoticeMsg").text('列表页面显示错误，请稍后重试！');
+                        HideWaiting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj);
+                    //alert(dataobj.ResultData.length); //输出ResultData的子对象数量//
+
+                    $.each(dataobj.ClientInfo, function (idx, item) {
+                        $("#txt_ProjectId").val(unescape(item.ProjectId));
+                        $("#txt_RemoteServer").val(unescape(item.RemoteServer));
+                    });
+
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //alert(rows);
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+
+                    for (var key in dataobj.colNames[0]) {
+                        if ('SORDER;BISSTOP;BKTRType'.indexOf(key) >= 0) {
+                            columns.push({
+                                field: key,
+                                title: dataobj.colNames[0][key],
+                                sortable: true,
+                                visible: false,
+                                halign :"left",
+                                order: "desc"
+                            });
+                        } else {
+                            columns.push({
+                                field: key,
+                                title: dataobj.colNames[0][key],
+                                sortable: true,
+                                visible: true,
+                                halign: "left",
+                                order: "desc"
+                            });
+                        }
+                    }
+                    columns.push({
+                        title: '操作',
+                        field: 'operate',
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: operateFormatter, //自定义方法，添加操作按钮
+                        events: operateEvents
+
+                    });
+
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbBackupConfigList').bootstrapTable('destroy').bootstrapTable({
+                        columns: columns,
+                        data: data
+                    });
+                    $('#tbBackupConfigList').bootstrapTable('resetView');
+                    //构建表格####### End
+                    HideWaiting();
+                }
+            });
+            HideWaiting();
+        }
+
+        //定义每列的操作事件
+        function operateFormatter(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var curBKTR = RowData.BKTR;
+            return [
+                '<a class="push ml10" href="javascript:void(0)" title="点击推送" id ="a_' + curBKTR + '">',
+                    '<i class="icon-remove"></i>点击推送',
+                '</a>'
+            ].join('');
+
+        }
+        window.operateEvents = {
+            'click .push': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var curBKTR = RowData.BKTR;
+                var curBKTRType = RowData.BKTRType;
+                var curBKTRName = RowData.BKTRNAME;
+                var curBKTRFolder = RowData.FolderPath;
+                varCurTablesCount = RowData.TableCount;
+                varCurViewsCount = RowData.ViewCount;
+                varCurSPCount = RowData.SPCount;
+                varCurFuncitonsCount = RowData.FunctionCount;
+                if ((curBKTRFolder=='') && (varCurTablesCount == 0) && (varCurViewsCount == 0) && (varCurSPCount == 0) && (varCurFuncitonsCount == 0)) {
+                    alert("该推送配置("+curBKTRName+")尚未设置成功,请联系管理员处理!");
+                } else {
+                    if ((curBKTRFolder != '') && (curBKTRType != '020')) {
+                        alert("该推送配置("+curBKTRName+")有误,请联系管理员处理!");
+                    } else {
+                        BackUpObject(curBKTR, curBKTRName, curBKTRType, curBKTRFolder);
+                    }
+                }
+            }
+        };
+
+
+
+    </script>
+
+    <script type="text/javascript">
+        //备份相关对象并打包成zip文件流
+        function BackUpObject(curBKTR, curBKTRName, curBKTRType, curBKTRFolder) {
+            ShowWaitting();
+            if (confirm("将执行推送备份（" + curBKTRName + "）的操作，是否确定?")) {
+                var urlQuery = escape("M=" + Math.random() + "&param=backupobject&bktr=" + curBKTR + "&bktrname=" + curBKTRName + "&bktrtype=" + curBKTRType + "&bktrfolder=" + curBKTRFolder);
+                var url = "ClientHandler.ashx?" + urlQuery;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    data: $('#formBackupConfigList').serialize(), // 你的formid
+                    error: function (request) {
+                        HideWaiting();
+                        alert('推送备份发生错误，请稍后重试！');
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        if ((data == "") || (data == "-1") || (data == "0")) {
+                            alert('推送备份发生错误，请稍后重试！');
+                            HideWaiting();
+                            return false;
+                        }
+                        var dataobj = eval("(" + data + ")");
+                        //alert(dataobj);
+                        //alert(dataobj.ResultData.length); //输出ResultData的子对象数量//
+
+                        $("#txt_BuildScriptsContent").text("");
+                        $("#txt_BuildScriptsContent").text(dataobj.fileString);
+
+                        //推送备份文件到远程服务器
+                        SendBackupFileToRemote($("#txt_ProjectId").val(), dataobj.fileName, curBKTR);
+
+                        //构建表格####### End
+                        HideWaiting();
+                    }
+                });
+            } else {
+                HideWaiting();
+            }
+        }
+
+        //推送备份文件到远程服务器
+        function SendBackupFileToRemote(projectId, filename, curBKTR) {
+            var returnValue;
+            var strParam = "projectid=" + projectId + "&filename=" + filename;
+            var urlQuery = escape("M=" + Math.random() + "&param=sendbackupfile&" + strParam);
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/BackupToRemote/ServerHandler.ashx?" + urlQuery;
+            }
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formBackupConfigList').serialize(), // 你的formid
+                error: function (request) {
+                    returnValue = "-9";
+                    $("#lb_NoticeMsg").text('推送备份发生错误，远程服务器发生异常，请重试！');
+                    HideWaiting();
+                },
+                success: function (result) {
+                    //alert(result);
+                    returnValue = result;
+                    if (result == '1') {
+                        //记录备份推送操作历史记录
+                        RecordBackUpOperation(curBKTR);
+                        alert('本次推送备份操作成功,可通知管理员处理!');
+                        //重新加载列表
+                        GetAndSetListResult();
+                    } else {
+                        alert('推送备份发生错误，远程服务器发生异常，请重试！');
+                    }
+                    HideWaiting();
+                }
+            });
+            return returnValue;
+
+        }
+
+        //记录备份推送操作历史记录
+        function RecordBackUpOperation(curBKTR) {
+            var urlQuery = escape("M=" + Math.random() + "&param=setsendrecord&bktr=" + curBKTR);
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formBackupConfigList').serialize(), // 你的formid
+                error: function (request) {
+                    $("#lb_NoticeMsg").text('记录备份推送操作历史记录发生错误');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data <1) {
+                        $("#lb_NoticeMsg").text('记录备份推送操作历史记录发生错误');
+                        return false;
+                    }
+                }
+            });
+        }
+    </script>
+
+
+</body>
+</html>

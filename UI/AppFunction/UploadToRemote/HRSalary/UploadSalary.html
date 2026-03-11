@@ -1,0 +1,665 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>推送员工工资条</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <form id="formStaffSalaryList" class="form-horizontal" method="post">
+                    <div class="row-fluid navbar" style="vertical-align:middle">
+                        <h2>推送员工工资条</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">薪资期间</label>
+                                <div class="col-sm-3">
+                                    <select id="sel_YearMonth" name="sel_YearMonth" class="selectpicker" data-width="100%" data-live-search="true"></select>
+                                </div>
+                                <label class="col-sm-1 control-label">当前授权</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_ClientName" name="txt_ClientName" class="form-control" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">当前系统编号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_ProjectId" name="txt_ProjectId" class="form-control" readonly="readonly"/>
+                                </div>
+                                <div class="col-sm-4">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div id="divCustomToolbar" class="text-center">
+                            <button id="aClose" type="button" class="btn" onclick="javascript: window.close();">关闭</button>
+                            <button id="aUploadSalary" type="button" class="btn btn-success">推送当前期间员工薪资</button>
+                            <a href="../StaffMobile/StaffMobileList.html" target="_blank" class="m-lg" style="display:none">查看员工手机号码</a>
+                            <label id="lb_NoticeMsg" class="text-danger"></label>
+                            <input type="text" id="txt_RemoteServer" name="txt_RemoteServer" class="form-control" style="display:none" />
+                            <input type="text" id="txt_OpFlag" name="txt_OpFlag" class="form-control" style="display:none" />
+                            <textarea type="text" id="txt_SelectedYearMonthDCNO" name="txt_SelectedYearMonthDCNO" class="form-control" style="display:none"></textarea>
+                            <textarea type="text" id="txt_SalaryData" name="txt_SalaryData" class="form-control" style="display:none"></textarea>
+                        </div>
+                        <div id="divListTableNeedUpdate" class="row-fluid">
+                            <table id="tbStaffSalaryList"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="650"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size="200"
+                                   data-page-list="[10, 50,100, 200, 500, 1000]">
+                                <thead>
+                                    <tr></tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                    <div class="row">
+                        <div class="text-center col-sm-12">
+                            <textarea type="text" id="txt_UploadResult" name="txt_UploadResult" class="form-control col-sm-12" rows="5"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body" style="font-size:larger;color:red">
+                        
+                    </div>
+                    <!--<div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            提交更改
+                        </button>
+                    </div>-->
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        $(document).ready(function () {
+            //判断是否登录
+            JudgeIsLogin();
+
+            ///期间下拉框切换事件
+            $('#sel_YearMonth').change(function () {
+                if ($("#sel_YearMonth").val() != '') {
+                    GetAndSetListResult();
+                }
+            });
+
+            ///确定推送
+            $('#aUploadSalary').click(function () {
+                $("#myWaittingModalTitle").html("正在处理中,请稍候.....");
+                $("#myWaittingModalContent").empty();
+                $("#txt_UploadResult").empty();
+                UploadSalaryByOneStaff();
+            });
+        });
+
+        //判断是否登录
+        function JudgeIsLogin() {
+            var urlQuery = escape("M=" + Math.random());
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-9999') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                    } else {
+                        ///加载薪资期间下拉框
+                        LoadYearMonthList();
+                    }
+                }
+            })
+        }
+
+        //判断该项目是否具有此功能的授权
+        function JudgeProjectWXAuthIsValid(ProjectId, WXMPModule) {
+            var urlQuery = escape("M=" + Math.random() + "&param=wxauthisvalid&projectid=" + ProjectId + "&wxmpmodule=" + WXMPModule);
+            var url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/CommonServerHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data != 'true') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚无此功能的操作授权或者授权已过期，请联系系统管理员咨询！');
+                    } else {
+
+                    }
+                }
+            });
+        }
+    </script>
+    
+    <!--单个员工或批量推送上传--> 
+    <script type="text/javascript">
+        //单个员工推送上传
+        function UploadSalaryByOneStaff() {
+            ShowWaitting();
+            $("#txt_SelectedYearMonthDCNO").val("");
+            var getSelectRows = JSON.stringify($("#tbStaffSalaryList").bootstrapTable('getSelections'));
+            getSelectRows = JSON.parse(getSelectRows);
+            //alert(getSelectRows.length);
+            if (getSelectRows.length <= 0) {
+                $("#lb_NoticeMsg").text('请选择任意员工后再重试！');
+                HideWaiting();
+            } else {
+                if (confirm("是否确定推送选中员工的当月薪资?")) {
+                    $("#lb_NoticeMsg").text('推送中...请稍候...');
+                    var iTotalCount = getSelectRows.length;
+                    var iSuccessCount = 0;
+                    if (iTotalCount > 0) {
+                        //循环递归调用每行数据
+                        //需要调用ajax请求，此处不用for循环，递归能保证循环体结束后才进入下一循环中
+                        LoopGetStaffSalaryAjax(getSelectRows, 0, iTotalCount, iSuccessCount);
+                    }
+                } else {
+                    HideWaiting();
+                }
+            }
+        }
+
+        ///循环递归调用每行数据
+        function LoopGetStaffSalaryAjax(getSelectRows, iIndex, iTotalCount, iSuccessCount) {
+            var RowData = getSelectRows[iIndex];
+            var YearMonthDCNO = RowData.员工年月;
+            var YearMonth = RowData.发放年月;
+            var StaffName = RowData.英文名;
+            var StaffNameChs = RowData.中文姓名;
+            var curDatetime = new Date().format("yyyy-MM-dd hh:mm:ss");
+            //alert((i + 1).toString() +'/'+ iTotalCount.toString());
+            //$("#myWaittingModalContent").prepend('<span style = "color:#0066FF">正在推送员工:' + StaffNameChs + '(期间' + YearMonth + ')</span><br\>');
+            //setTimeout(function () {
+            $("#myWaittingModalContent").prepend('<br\><span style = "color:#0066FF">(' + curDatetime + ')&nbsp;&nbsp正在推送员工:' + StaffNameChs + '(期间' + YearMonth + ')</span>&nbsp;&nbsp;');
+
+            var urlQuery = escape("M=" + Math.random() + "&param=getstaffsalary&yearmonthdcno=" + YearMonthDCNO);
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    $("#lb_NoticeMsg").text('推送失败，请重试！');
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-1') {
+                        $("#lb_NoticeMsg").text('推送失败，请重试！');
+                        HideWaiting();
+                    } else {
+                        var dataobj = eval("(" + data + ")");
+                        var jsonData = JSON.stringify(data);
+
+                        $("#txt_SalaryData").val(data);
+                        //alert($("#txt_SalaryData").val());
+
+                        ////上传数据到远程服务器
+                        var iReturn = UploadSalaryDataToRemote();
+                        //alert(iReturn);
+
+                        if (iReturn == '-9') {
+                            $("#myWaittingModalTitle").html('<span style = "color:red">推送数据时远程服务器出错,请联系管理员处理!</span>');
+                            $("#lb_NoticeMsg").text("推送数据时远程服务器出错,请联系管理员处理!");
+                            setTimeout(function () {
+                                HideWaiting();
+                            }, 5000);
+                            return;
+                        }else if (iReturn == '-1') {
+                            $("#myWaittingModalContent").prepend('<br\><span style = "color:red">(' + curDatetime + ')&nbsp;&nbsp推送员工:' + StaffNameChs + '(期间' + YearMonth + ')失败！</span>&nbsp;&nbsp;');
+                            $("#txt_UploadResult").prepend('(' + curDatetime + ')推送员工:' + StaffNameChs + '(期间' + YearMonth + ')失败!<br/>');
+                        } else {
+                            iSuccessCount++;
+                            $("#myWaittingModalContent").prepend('<br\><span style = "color:green">(' + curDatetime + ')&nbsp;&nbsp成功推送员工:' + StaffNameChs + '(期间' + YearMonth + ')</span>&nbsp;&nbsp;');
+                            $("#myWaittingModalTitle").html('推送中,请稍候.....<span style = "color:red">(已完成' + (iIndex + 1) + '/' + iTotalCount + ')</span>');
+                            $("#txt_UploadResult").prepend('(' + curDatetime + ')成功推送员工:' + StaffNameChs + '(期间' + YearMonth + ')<br/>');
+                            //单个记录推送成功的记录
+                            RecordSendHistory(YearMonthDCNO);
+                        }
+
+                        iIndex++;
+                        setTimeout(function () {
+                            if (iIndex < iTotalCount) {
+                                LoopGetStaffSalaryAjax(getSelectRows, iIndex, iTotalCount, iSuccessCount);
+                            } else {
+                                $("#myWaittingModalTitle").html('<span style = "color:red">正在进行推送的后续处理,请稍候.....</span>');
+                                //上传数据到远程服务器成功后的后续处理
+                                var iReturnSuccess = UploadSalaryDataToRemote_AfterSuccess();
+                                if (iReturn == '-9') {
+                                    $("#myWaittingModalTitle").html('<span style = "color:red">推送成功后续处理时远程服务器出错，请联系管理员处理!</span>');
+                                    $("#lb_NoticeMsg").text("推送成功后续处理时远程服务器出错，请联系管理员处理!");
+                                    setTimeout(function () {
+                                        HideWaiting();
+                                    }, 5000);
+                                    return;
+                                } else if (iReturnSuccess == '-1') {
+                                    $("#lb_NoticeMsg").text('推送操作后的后续处理失败.请联系系统管理处理!');
+
+                                    $("#myWaittingModalTitle").html('<span style = "color:red">推送操作后的后续处理失败.请联系系统管理处理!</span>');
+                                    $("#txt_UploadResult").prepend('推送操作后的后续处理失败!<br/>');
+                                    setTimeout(function () {
+                                        HideWaiting();
+                                    }, 5000);
+                                } else {
+                                    var tips = '完成推送选中员工(数量' + iTotalCount.toString() + ')的月份薪资条！其中成功' + iSuccessCount.toString() + '条,失败' + (iTotalCount - iSuccessCount).toString() + '条';
+                                    $("#lb_NoticeMsg").text(tips);
+
+                                    $("#myWaittingModalTitle").html('<span style = "color:red">已成功完成操作.</span>');
+                                    $("#txt_UploadResult").prepend(tips + "<br/>");
+                                    GetAndSetListResult();
+                                    setTimeout(function () {
+                                        HideWaiting();
+                                    }, 2000);
+                                }
+
+                            }
+                        }, 500);
+                    }
+                }
+            });
+        }
+
+        //单个记录推送成功的记录
+        function RecordSendHistory(YearMonthDcno) {
+            var urlQuery = escape("M=" + Math.random() + "&param=recordsendhistory&yearmonthdcno=" + YearMonthDcno);
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: true,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-1') {
+                    } else {
+                    
+                    }
+                }
+            });
+        }
+
+        //批量推送上传
+        function UploadSalaryBatch() {
+            ShowWaitting();
+            $("#txt_SelectedYearMonthDCNO").val("");
+            var getSelectRows = JSON.stringify($("#tbStaffSalaryList").bootstrapTable('getSelections'));
+            getSelectRows = JSON.parse(getSelectRows);
+            //alert(getSelectRows.length);
+            if (getSelectRows.length <= 0) {
+                $("#lb_NoticeMsg").text('请选择任意员工后再重试！');
+                HideWaiting();
+            } else {
+                if (confirm("是否确定推送选中员工的当月薪资?")) {
+                    $("#lb_NoticeMsg").text('推送中...请稍候...');
+                    for (var i = 0; i < getSelectRows.length; i++) {
+                        var RowData = getSelectRows[i];
+                        $("#txt_SelectedYearMonthDCNO").val($("#txt_SelectedYearMonthDCNO").val() + RowData.员工年月 + ";");
+                    }
+                    ShowWaitting();
+
+                    var urlQuery = escape("M=" + Math.random() + "&param=getstaffsalary");
+                    var url = "ClientHandler.ashx?" + urlQuery;
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: url,
+                        async: false,
+                        data: $('#formStaffSalaryList').serialize(), // 你的formid
+                        success: function (data) {
+                            //alert(data);
+                            if (data == '-1') {
+                                $("#lb_NoticeMsg").text('推送失败，请重试！');
+                                HideWaiting();
+                            } else {
+
+                                var dataobj = eval("(" + data + ")");
+                                var jsonData = JSON.stringify(data);
+
+                                $("#txt_SalaryData").val(data);
+                                //alert($("#txt_SalaryData").val());
+                                //上传数据到远程服务器
+                                UploadSalaryDataToRemote_Batch();
+                            }
+                            //if (parseInt(data) > 0) {
+                            //    GetAndSetListResult();
+                            //    $("#lb_NoticeMsg").text('推送选中员工(数量' + data + ')的月份薪资条'+$('#sel_YearMonth').val()+'成功！');
+                            //} else {
+                            //    $("#lb_NoticeMsg").text('推送选中员工(数量' + data + ')的月份薪资条' + $('#sel_YearMonth').val()+ '失败！');
+                            //}
+                            //HideWaiting();
+                        }
+                    });
+                } else {
+                    HideWaiting();
+                }
+            }
+            HideWaiting();
+        }
+    </script>
+
+    <!--///上传数据到远程服务器-->
+    <script type="text/javascript">
+        ///上传数据到远程服务器
+        function UploadSalaryDataToRemote() {
+            var returnValue = "-9";
+            var urlQuery = escape("M=" + Math.random() + "&param=uploadsalarydata&projectid="+$("#txt_ProjectId").val());
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/HRSalary/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    returnValue = "-9";
+                    //$("#lb_NoticeMsg").text('推送失败，远程服务器发生异常，请重试！');
+                },
+                success: function (result) {
+                    //alert(result);
+                    returnValue = result;
+                }
+            });
+            return returnValue;
+        }
+
+        ///上传数据到远程服务器成功后的后续处理
+        function UploadSalaryDataToRemote_AfterSuccess() {
+            var returnValue = "-9";
+            var urlQuery = escape("M=" + Math.random() + "&param=afteruploadsuccess&projectid=" + $("#txt_ProjectId").val());
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/HRSalary/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    returnValue = "-9";
+                },
+                success: function (result) {
+                    //alert(result);
+                    returnValue = result;
+                }
+            });
+            return returnValue;
+        }
+
+        ///批量上传数据到远程服务器(未完成)
+        function UploadSalaryDataToRemote_Batch() {
+            var urlQuery = escape("M=" + Math.random() + "&param=uploadsalarydata");
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/HRSalary/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                //data: { txt_SalaryData: $("#txt_SalaryData").val() },
+                dataType: 'json',
+                error: function (request) {
+                    $("#lb_NoticeMsg").text('推送失败，远程服务器发生异常，请重试！');
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-1') {
+                        $("#lb_NoticeMsg").text('推送失败，远程服务器发生异常，请重试！');
+                        HideWaiting();
+                    } else {
+                        $("#lb_NoticeMsg").text('推送成功！');
+                        HideWaiting();
+                    }
+                    //if (data == "") return false;
+                    //var dataobj = eval("(" + data + ")");
+                    ////alert(dataobj.root.length); //输出root的子对象数量
+                    ////                alert(dataobj.ResultData);
+                    //if (dataobj.ResultData == "") return false;
+
+
+
+                }
+            });
+        }
+    </script>
+
+    <!--加载结果-->
+    <script type="text/javascript">
+        ///加载薪资期间下拉框
+        function LoadYearMonthList() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getyearmonth");
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_YearMonth
+                    $("#sel_YearMonth").empty();
+                    $("#sel_YearMonth").append("<option value=''>" + "请选择薪资期间" + "</option>");
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        var showName = unescape(item.PISNOW) == '1' ? unescape(item.PID)+"(当前期间)" : unescape(item.PID);
+                        $("#sel_YearMonth").append("<option value='" + item.PID + "'>" + showName + "</option>");
+                    });
+
+                    $.each(dataobj.ClientInfo, function (idx, item) {
+                        $("#txt_ProjectId").val(unescape(item.ProjectId));
+                        $("#txt_ClientName").val(unescape(item.ClientName));
+                        $("#txt_RemoteServer").val(unescape(item.RemoteServer));
+                    });
+
+                    //判断该项目是否具有此功能的授权
+                    JudgeProjectWXAuthIsValid($("#txt_ProjectId").val(), "010");
+
+                }
+            });
+        }
+
+        ///加载结果列表
+        function GetAndSetListResult() {
+            ShowWaitting();
+            $("#lb_NoticeMsg").text('');
+            if ($("#sel_YearMonth").val() == '') {
+                $("#lb_NoticeMsg").text('请选择一个薪资期间！');
+                HideWaiting();
+                $("#sel_YearMonth").focus();
+            } else {
+                $("#txt_OpFlag").val(NewClientGuid());
+                var urlQuery = escape("M=" + Math.random() + "&param=getstafflist");
+                var url = "ClientHandler.ashx?" + urlQuery;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    data: $('#formStaffSalaryList').serialize(), // 你的formid
+                    error: function (request) {
+                        HideWaiting();
+                        $("#lb_NoticeMsg").text('查询出现错误，请更正查询条件后重试！');
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        if ((data == "") || (data == "")) {
+                            $("#lb_NoticeMsg").text('查询出现错误，请更正查询条件后重试！');
+                            HideWaiting();
+                            return false;
+                        }
+                        var dataobj = eval("(" + data + ")");
+                        //alert(dataobj);
+                        //alert(dataobj.ResultData.length); //输出ResultData的子对象数量//
+                        var item = dataobj.ResultData[0];
+                        var rows = dataobj.ResultData.length;
+                        //构建表格####### Start
+                        var i, j, row, columns = [], data = [];
+
+                        columns.push({
+                            field: "check",
+                            checkbox: true,
+                            visible: true,
+                            order: "desc"
+                        });
+                        for (var key in dataobj.colNames[0]) {
+                            if ('QueryFlag;QueryUser;QueryTime'.indexOf(key) >= 0) {
+                                columns.push({
+                                    field: key,
+                                    title: dataobj.colNames[0][key],
+                                    sortable: true,
+                                    visible: false,
+                                    order: "desc"
+                                });
+                            } else {
+                                if ('推送状态'.indexOf(key) >= 0) {
+                                    var cellBgColor = "green";
+                                    if (dataobj.colNames[0][key] == '已推送') {
+                                        cellBgColor = "red";
+                                    }
+                                    columns.push({
+                                        field: key,
+                                        title: dataobj.colNames[0][key],
+                                        sortable: true,
+                                        visible: true,
+                                        cellStyle:function(value,row,index){
+                                            if (value == '已推送') {
+                                                return { css: { "color": "green" } }
+                                            }else{
+                                                return { css: { "color": "red" } }
+                                            }
+                                        },
+                                        order: "desc"
+                                    });
+                                } else {
+                                    columns.push({
+                                        field: key,
+                                        title: dataobj.colNames[0][key],
+                                        sortable: true,
+                                        visible: true,
+                                        order: "desc"
+                                    });
+                                }
+                            }
+                        }
+
+                        for (i = 0; i < rows; i++) {
+                            row = {};
+                            for (var key in dataobj.ResultData[i]) {
+                                //对值进行编码处理特殊字符，如引号等//
+                                row[key] = unescape(dataobj.ResultData[i][key]);
+                            }
+                            data.push(row);
+                        }
+
+                        $('#tbStaffSalaryList').bootstrapTable('destroy').bootstrapTable({
+                            columns: columns,
+                            data: data
+                        });
+                        $('#tbStaffSalaryList').bootstrapTable('resetView');
+                        //构建表格####### End
+                        HideWaiting();
+                    }
+                });
+            }
+            HideWaiting();
+        }
+    </script>
+
+</body>
+</html>

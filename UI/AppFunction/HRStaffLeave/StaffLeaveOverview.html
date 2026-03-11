@@ -1,0 +1,1203 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>员工加班休假情况一览表</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../common/js/stringUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/MainUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <form id="formStaffSalaryList" class="form-horizontal" method="post">
+                    <div class="row-fluid" style="vertical-align:middle">
+                        <div class="pull-left">
+                            <h3>员工加班休假情况一览表</h3>
+                        </div>
+                        <div id="divStaffList" class="pull-right" style="display:none">
+                            <br><span class="text-danger">申请加班的员工列表：</span>
+                            <select id="sel_StaffList" name="sel_StaffList" class="selectpicker" data-width="" data-live-search="true">
+                                <option>选择员工</option>
+                            </select>&nbsp;
+                        </div>
+                        <div id="divYearMonth" class="pull-right">
+                            <br>
+                            <select id="sel_YearMonth" name="sel_YearMonth" class="selectpicker" data-width="100%" data-live-search="true">
+                                <option>选择考勤期间</option>
+                            </select>&nbsp;
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-sm-8">
+                                <div class="row well">
+                                    <span class="label label-success" style="font-size:medium">员工信息</span>
+                                    <table class="table table-striped">
+                                        <tr class="success">
+                                            <td>员工编号</td>
+                                            <td>员工姓名</td>
+                                            <td>部门</td>
+                                            <td>职位</td>
+                                            <td>级别</td>
+                                            <td>入职日期</td>
+                                            <td>最后工作日</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span id="span_StaffNo"></span></td>
+                                            <td><span id="span_StaffName"></span></td>
+                                            <td><span id="span_DeptName"></span></td>
+                                            <td><span id="span_PosiName"></span></td>
+                                            <td><span id="span_PosiLevel"></span></td>
+                                            <td><span id="span_JoinDate"></span></td>
+                                            <td><span id="span_LeaveDate"></span></td>
+                                        </tr>
+                                    </table>
+                                    <span class="label label-danger" style="font-size:medium">年假信息</span>
+                                    <table class="table table-striped">
+                                        <tr class="danger">
+                                            <td>年度</td>
+                                            <td>服务年限</td>
+                                            <td>标准天数</td>
+                                            <td>生成天数</td>
+                                            <td>已用天数</td>
+                                            <td>往年余额(天)</td>
+                                            <td>当前余额(天)</td>
+                                            <td>截止日期</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span id="span_Year"></span></td>
+                                            <td><span id="span_ServiceYear"></span></td>
+                                            <td><span id="span_STDDAY"></span></td>
+                                            <td><span id="span_BUILDDAY"></span></td>
+                                            <td><span id="span_USEDAY"></span></td>
+                                            <td><span id="span_PREREMAIN"></span></td>
+                                            <td><span id="span_REMAINDAY"></span></td>
+                                            <td><span id="span_DeadLine"></span></td>
+                                        </tr>
+                                    </table>
+                                    <div id="divFLJArea" style="display:none">
+                                        <span class="label label-info" style="font-size:medium">福利假信息</span>
+                                        <table class="table table-striped">
+                                            <tr class="danger">
+                                                <td>年度</td>
+                                                <td>福利年限</td>
+                                                <td>标准天数</td>
+                                                <td>生成天数</td>
+                                                <td>已用天数</td>
+                                                <td id="td_Title_FLDUEDAY" style="display:none">过期作废天数</td>
+                                                <td>往年余额(天)</td>
+                                                <td>当前余额(天)</td>
+                                                <td>截止日期</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span id="span_FLYear"></span></td>
+                                                <td><span id="span_FLServiceYear"></span></td>
+                                                <td><span id="span_FLSTDDAY"></span></td>
+                                                <td><span id="span_FLBUILDDAY"></span></td>
+                                                <td><span id="span_FLUSEDAY"></span></td>
+                                                <td id="td_Value_FLDUEDAY" style="display:none"><span id="span_FLDUEDAY"></span></td>
+                                                <td><span id="span_FLPREREMAIN"></span></td>
+                                                <td><span id="span_FLREMAINDAY"></span></td>
+                                                <td><span id="span_FLDeadLine"></span></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <span class="label label-warning" style="font-size:medium">调休假信息</span>
+                                    <a href="javascript:ShowOLBalanceHis();" class="pull-right" style="font-size:medium">查看历史</a>
+                                    <table class="table table-striped">
+                                        <tr class="warning">
+                                            <td>当前期间</td>
+                                            <td>上期余额(小时)</td>
+                                            <td>本期加班(小时)</td>
+                                            <td>本期休假(小时)</td>
+                                            <td>本期余额(小时)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><span id="span_CurYearMonth"></span></td>
+                                            <td><span id="span_PreMonthHours"></span></td>
+                                            <td><span id="span_OvertimeHours"></span></td>
+                                            <td><span id="span_LeaveHours"></span></td>
+                                            <td><span id="span_CurMonthHours"></span></td>
+                                        </tr>
+                                        <tr id="trCurDateBalance" style="display:none">
+                                            <td colspan="5">
+                                                截止到今天<span id="span_CurDate" style="color:red"></span>的余额小时数：
+                                                <span id="span_CurDateBalance" style="color:red"></span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="divCustomToolbar_LeaveSummary" class="text-center">
+                                <div class="col-sm-3">
+                                </div>
+                            </div>
+                            <div class="col-sm-4 well">
+                                <div class="row">
+                                    <div class="pull-left" style="padding-left:15px">
+                                        <ul id="myTabs_Summary" class="nav nav-tabs nav-pills" role="tablist">
+                                            <li class="active"><a href="#divLeaveSummary" data-toggle="tab">假期汇总</a></li>
+                                            <li> <a href="#divOverTimeSummary" data-toggle="tab">加班汇总</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade in active" id="divLeaveSummary">
+                                        <div id="divListTableLeaveSummary" aria-labelledby="leaveSummary-tab">
+                                            <table id="tbStaffLeaveSummary"
+                                                   data-classes="table table-bordered table-striped table-hover"
+                                                   data-toggle="table"
+                                                   data-show-columns="false"
+                                                   data-show-toggle="false"
+                                                   data-pagination="false"
+                                                   data-height="338"
+                                                   data-cache="false"
+                                                   data-search="false"
+                                                   data-sortable="true"
+                                                   data-page-size="20"
+                                                   data-page-list="[10, 50]">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-width="15%" data-field="TYPENO" data-sortable="true" data-align="center" data-order="asc">休假类型编码</th>
+                                                        <th data-width="55%" data-field="TYPENAMECHS" data-sortable="true" data-align="center" data-order="asc">休假类型名称</th>
+                                                        <th data-width="30%" data-field="LVDAYS" data-sortable="true" data-align="center" data-order="asc">休假天数</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade in" id="divOverTimeSummary">
+                                        <div id="divListTableOvertimeSummary" aria-labelledby="OvertimeSummary-tab">
+                                            <table id="tbStaffOvertimeSummary_OTTYPE"
+                                                   data-classes="table table-bordered table-striped table-hover"
+                                                   data-toggle="table"
+                                                   data-height="171">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-width="15%" data-field="OTTYPE" data-sortable="true" data-align="center" data-order="asc">加班类型编码</th>
+                                                        <th data-width="55%" data-field="TYPENAMECHS" data-sortable="true" data-align="center" data-order="asc">加班类型名称</th>
+                                                        <th data-width="30%" data-field="OTDAYS" data-sortable="true" data-align="center" data-order="asc">加班天数</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                            <table id="tbStaffOvertimeSummary_PayType"
+                                                   data-classes="table table-bordered table-striped table-hover"
+                                                   data-toggle="table"
+                                                   data-height="120">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-width="15%" data-field="CID" data-sortable="true" data-align="center" data-order="asc">支付类型编码</th>
+                                                        <th data-width="55%" data-field="CDESCCHS" data-sortable="true" data-align="center" data-order="asc">支付类型名称</th>
+                                                        <th data-width="30%" data-field="OTDAYS" data-sortable="true" data-align="center" data-order="asc">加班天数</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid well">
+                        <div class="row">
+                            <div class="pull-left" style="padding-left:15px">
+                                <ul id="myTabs_Record" class="nav nav-tabs nav-pills" role="tablist">
+                                    <li role="presentation" class="active"><a href="#divLeaveRecord" data-toggle="tab">休假单列表</a></li>
+                                    <li role="presentation"> <a href="#divOverTimeRecord" data-toggle="tab">加班单列表</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="text-center pull-right">
+                                <button id="aScopeShowRecord_CurYearMonth" type="button" class="btn-filter btn btn-sm btn-default btn-primary">当前期间</button>&nbsp;&nbsp;
+                                <button id="aScopeShowRecord_InnerOneMonth" type="button" class="btn-filter btn btn-sm btn-default">一个月内</button>&nbsp;&nbsp;
+                                <button id="aScopeShowRecord_InnerThreeMonth" type="button" class="btn-filter btn btn-sm btn-default">三个月内</button>&nbsp;&nbsp;
+                                <button id="aScopeShowRecord_InnerOneYear" type="button" class="btn-filter btn btn-sm btn-default">一年内</button>&nbsp;&nbsp;
+                                <button id="aScopeShowRecord_All" type="button" class="btn-filter btn btn-sm btn-default">全部</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </div>
+
+
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="divLeaveRecord">
+                                <div id="divCustomToolbar_LeaveRecord" class="text-center">
+                                    <select id="sel_LVTYPE" name="sel_LVTYPE" class="selectpicker"></select>&nbsp;
+                                    <select id="sel_LVStatus" name="sel_LVStatus" class="selectpicker"></select>&nbsp;
+                                </div>
+                                <div id="divListTableLeaveRecord" class="row-fluid">
+                                    <table id="tbStaffLeaveRecordList"
+                                           data-toolbar="#divCustomToolbar_LeaveRecord"
+                                           data-classes="table table-bordered table-striped table-hover"
+                                           data-toggle="table"
+                                           data-show-columns="true"
+                                           data-show-toggle="false"
+                                           data-pagination="true"
+                                           data-height="450"
+                                           data-cache="false"
+                                           data-search="true"
+                                           data-sortable="true"
+                                           data-page-size="10"
+                                           data-page-list="[10,50, 100, 200, 500, 1000]">
+                                        <thead>
+                                            <tr>
+                                                <th data-width="10%" data-field="LVNO" data-sortable="true" data-align="center" data-order="asc">休假单号</th>
+                                                <th data-width="8%" data-field="EMPLOYEE" data-sortable="true" data-align="center" data-order="asc">员工编号</th>
+                                                <th data-width="10%" data-field="CNAME" data-sortable="true" data-align="center" data-order="asc">员工姓名</th>
+                                                <th data-width="10%" data-field="LVTYPE_DESC" data-sortable="true" data-align="center" data-order="asc">休假类型</th>
+                                                <th data-width="10%" data-field="LVDATEF" data-sortable="true" data-align="center" data-order="asc">休假开始时间</th>
+                                                <th data-width="10%" data-field="LVDATET" data-sortable="true" data-align="center" data-order="asc">休假结束时间</th>
+                                                <th data-width="5%" data-field="LVDAYS" data-sortable="true" data-align="center" data-order="asc">休假天数</th>
+                                                <th data-width="5%" data-field="LVTIME" data-sortable="true" data-align="center" data-order="asc">休假小时数</th>
+                                                <th data-width="5%" data-field="ISSALARY_DESC" data-sortable="true" data-align="center" data-order="asc">是否带薪</th>
+                                                <th data-width="10%" data-field="WHRTYPE_DESC" data-sortable="true" data-align="center" data-order="asc">工时统计类型</th>
+                                                <th data-width="10%" data-field="LVAUDTSTAT_DESC" data-sortable="true" data-align="center" data-order="asc">状态</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade in" id="divOverTimeRecord">
+                                <div id="divCustomToolbar_OvertimeRecord" class="text-center">
+                                    <select id="sel_OTTYPE" name="sel_OTTYPE" class="selectpicker"></select>&nbsp;
+                                    <select id="sel_PayType" name="sel_PayType" class="selectpicker"></select>&nbsp;
+                                    <select id="sel_OTStatus" name="sel_OTStatus" class="selectpicker"></select>&nbsp;;
+                                </div>
+                                <div id="divListTableOvertimeRecord" class="row-fluid">
+                                    <table id="tbStaffOvertimeRecordList"
+                                           data-toolbar="#divCustomToolbar_OvertimeRecord"
+                                           data-classes="table table-bordered table-striped table-hover"
+                                           data-toggle="table"
+                                           data-show-columns="true"
+                                           data-show-toggle="false"
+                                           data-pagination="true"
+                                           data-height="450"
+                                           data-cache="false"
+                                           data-search="true"
+                                           data-sortable="true"
+                                           data-page-size="10"
+                                           data-page-list="[10,50, 100, 200, 500, 1000]">
+                                        <thead>
+                                            <tr>
+                                                <th data-width="10%" data-field="OTNO" data-sortable="true" data-align="center" data-order="asc">加班单号</th>
+                                                <th data-width="5%" data-field="EMPLOYEE" data-sortable="true" data-align="center" data-order="asc">员工编号</th>
+                                                <th data-width="10%" data-field="CNAME" data-sortable="true" data-align="center" data-order="asc">员工姓名</th>
+                                                <th data-width="10%" data-field="OTTYPE_DESC" data-sortable="true" data-align="center" data-order="asc">加班类型</th>
+                                                <th data-width="10%" data-field="OTPTYPE_DESC" data-sortable="true" data-align="center" data-order="asc">支付类型</th>
+                                                <th data-width="10%" data-field="OTDATEF" data-sortable="true" data-align="center" data-order="asc">加班日期</th>
+                                                <th data-width="5%" data-field="OTTMF" data-sortable="true" data-align="center" data-order="asc">开始时间</th>
+                                                <th data-width="5%" data-field="OTTMT" data-sortable="true" data-align="center" data-order="asc">结束时间</th>
+                                                <th data-width="5%" data-field="OTDAYS" data-sortable="true" data-align="center" data-order="asc">加班天数</th>
+                                                <th data-width="5%" data-field="OTTIME" data-sortable="true" data-align="center" data-order="asc">加班小时数</th>
+                                                <th data-width="10%" data-field="WHRTYPE_DESC" data-sortable="true" data-align="center" data-order="asc">工时统计类型</th>
+                                                <th data-width="10%" data-field="OTAUDTSTAT_DESC" data-sortable="true" data-align="center" data-order="asc">状态</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myLOBalanceHisModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog  modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                        <h4 class="modal-title" id="myLOBalanceHisModalTitle">
+                            调休假余额各期间历史记录
+                        </h4>
+                    </div>
+                    <div id="myLOBalanceHisModalContent" class="modal-body">
+                        <table id="tbStaffLOBalanceHis"
+                               data-classes="table table-bordered table-striped table-hover"
+                               data-toggle="table"
+                               data-show-columns="false"
+                               data-show-toggle="false"
+                               data-pagination="false"
+                               data-cache="false"
+                               data-search="false"
+                               data-sortable="true"
+                               data-page-size="20"
+                               data-page-list="[10, 50，100]">
+                            <thead>
+                                <tr>
+                                    <th data-width="40%" data-field="YearMonthScope" data-sortable="true" data-align="center" data-order="asc">考勤期间</th>
+                                    <th data-width="15%" data-field="LimitBegin" data-sortable="true" data-align="center" data-order="asc">上期余额(小时)</th>
+                                    <th data-width="15%" data-field="LimitOT" data-sortable="true" data-align="center" data-order="asc">本期加班(小时)</th>
+                                    <th data-width="15%" data-field="LimitLV" data-sortable="true" data-align="center" data-order="asc">本期休假(小时)</th>
+                                    <th data-width="15%" data-field="LimitEnd" data-sortable="true" data-align="center" data-order="asc">本期余额(小时)</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body">
+
+                    </div>
+                    <!--<div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>-->
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <script type="text/javascript">
+        var varTimeScopeType = "1";//默认是当前期间
+        var varTodayDate = AddDays(new Date(), 0);
+        var varCurYearMonth = "";
+        var varCurYearMonthDateFrom = "";
+        var varCurYearMonthDateTo = "";
+        var varTID = GetUrlQueryString("tid");
+        var varKeyValue = GetUrlQueryString("keyvalue");
+        var varP0 = GetUrlQueryString("P0");//流程中传递进来的TID,固定为P0
+        var varP4 = GetUrlQueryString("P4");//流程中传递进来的flowcode,固定为P4
+        //alert(varP0);
+        //alert(varP4);
+        if (varP0 != null && varP0 != '' && varP0 != 'null') {
+            varTID = varP0 == 'null' ? varTID : varP0;
+        }
+        if (varP4 != null && varP4 != '' && varP4 != 'null') {
+            varKeyValue = varP4 == 'null' ? varKeyValue : varP4;
+        }
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaitting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if (varTID == 'FLOT') {
+                $("#divStaffList").show();
+                ///加载FLOT员工列表信息
+                LoadFLOTStaffList();
+            } else {
+                //重新刷新主页面
+                LoadPageData();
+            }
+            
+
+            ///员工列表下拉框切换事件
+            $('#sel_StaffList').change(function () {
+                ShowWaitting();
+                LoadDataByFLOTStaff();
+            });
+
+            ///期间下拉框切换事件
+            $('#sel_YearMonth').change(function () {
+                varCurYearMonth = $("#sel_YearMonth").val()
+                varCurYearMonthDateFrom = $("#sel_YearMonth").find("option[value='" + $("#sel_YearMonth").val() + "']").attr("pstart");
+                varCurYearMonthDateTo = $("#sel_YearMonth").find("option[value='" + $("#sel_YearMonth").val() + "']").attr("pend");
+                //ShowWaitting();
+                setTimeout(function () {
+                    ///加载年假信息
+                    LoadAnnualLeaveInfo(varCurYearMonth);
+                    ///加载加班调休余额表信息
+                    LoadOTLVBalanceInfo(varCurYearMonth);
+                    //加载休假单汇总列表
+                    GetAndSetListResult_LVSummary(varCurYearMonth);
+                    //加载加班单汇总列表
+                    GetAndSetListResult_OTSummary(varCurYearMonth)
+                    $('#aScopeShowRecord_CurYearMonth').text('当前期间(' + varCurYearMonth + ')');
+                    $('#aScopeShowRecord_CurYearMonth').click();
+                }, 200);
+                //alert(varCurYearMonthDateTo);
+            });
+
+            ///假期类型下拉框切换事件
+            $('#sel_LVTYPE').change(function () {
+                ShowWaitting();
+                //加载休假单明细表
+                LoadOverTimeAndLeavesRecord('lv');
+            });
+            ///休假单状态下拉框切换事件
+            $('#sel_LVStatus').change(function () {
+                ShowWaitting();
+                //加载休假单明细表
+                LoadOverTimeAndLeavesRecord('lv');
+            });
+
+            ///日期范围点击事件
+            $('#aScopeShowRecord_CurYearMonth').click(function () {//当前期间
+                ShowWaitting();
+                varTimeScopeType = "1"
+                //加载加班单和休假单明细表
+                LoadOverTimeAndLeavesRecord('');
+            });
+            $('#aScopeShowRecord_InnerOneMonth').click(function () {//一个月内
+                ShowWaitting();
+                varTimeScopeType = "2"
+                //加载加班单和休假单明细表
+                LoadOverTimeAndLeavesRecord('');
+            });
+            $('#aScopeShowRecord_InnerThreeMonth').click(function () {//三个月内
+                ShowWaitting();
+                varTimeScopeType = "3"
+                //加载加班单和休假单明细表
+                LoadOverTimeAndLeavesRecord('');
+            });
+            $('#aScopeShowRecord_InnerOneYear').click(function () {//一年内
+                ShowWaitting();
+                varTimeScopeType = "4"
+                //加载加班单和休假单明细表
+                LoadOverTimeAndLeavesRecord('');
+            });
+            $('#aScopeShowRecord_All').click(function () {//全部
+                ShowWaitting();
+                varTimeScopeType = "5"
+                //加载加班单和休假单明细表
+                LoadOverTimeAndLeavesRecord('');
+            });
+            ///日期范围点击事件
+            
+            ///加班类型下拉框切换事件
+            $('#sel_OTTYPE').change(function () {
+                ShowWaitting();
+                //加载加班单明细表
+                LoadOverTimeAndLeavesRecord('ot');
+            });
+            ///支付类型下拉框切换事件
+            $('#sel_PayType').change(function () {
+                ShowWaitting();
+                //加载加班单明细表
+                LoadOverTimeAndLeavesRecord('ot');
+            });
+            ///加班单状态下拉框切换事件
+            $('#sel_OTStatus').change(function () {
+                ShowWaitting();
+                //加载加班单明细表
+                LoadOverTimeAndLeavesRecord('ot');
+            });
+
+            //$('#myTabs_Summary a[href="#profile"]').tab('show') // Select tab by name
+            $('#myTabs_Summary a').click(function (e) {
+                e.preventDefault()
+                setTimeout(function () {
+                    $('#tbStaffOvertimeSummary_LVTYPE').bootstrapTable('resetView');
+                    $('#tbStaffOvertimeSummary_OTTYPE').bootstrapTable('resetView');
+                    $('#tbStaffOvertimeSummary_PayType').bootstrapTable('resetView');
+                },200)
+            })
+
+            $('#myTabs_Record a').click(function (e) {
+                e.preventDefault()
+                setTimeout(function () {
+                    $('#tbStaffLeaveRecordList').bootstrapTable('resetView');
+                    $('#tbStaffOvertimeRecordList').bootstrapTable('resetView');
+                }, 200)
+            })
+
+        });
+        //重新刷新主页面
+        function LoadPageData() {
+            ///加载考勤期间下拉框
+            LoadYearMonthList();
+
+            ///加载假期类型下拉框
+            LoadLVTYPEList();
+            ///加载休假单状态下拉框
+            LoadLVStatusList();
+
+            ///加载加班类型下拉框
+            LoadOTTYPEList();
+            ///加载加班单状态下拉框
+            LoadOTStatusList();
+
+            setTimeout(function () {
+                //加载加班单和休假单明细表
+                LoadOverTimeAndLeavesRecord('');
+            }, 500);
+        }
+        //切换或者选择某员工时加载数据
+        function LoadDataByFLOTStaff() {
+            varCurTID = "HRDOCU";
+            varKeyValue = $("#sel_StaffList").val();
+            //varKeyValue = $("#sel_StaffList").find("option[value='" + $("#sel_StaffList").val() + "']").attr("flowCode");
+            //重新刷新主页面
+            LoadPageData();
+        }
+
+        //加载加班单和休假单明细表
+        function LoadOverTimeAndLeavesRecord(type) {
+            var loadYearMonth = varCurYearMonth;
+            var loadDateFrom = varCurYearMonthDateFrom;
+            var loadDateTo = varCurYearMonthDateTo
+            switch (varTimeScopeType) {
+                case "1"://当前期间
+                    $(".btn-filter").removeClass("btn-primary");
+                    $('#aScopeShowRecord_CurYearMonth').addClass("btn-primary");
+                    break;
+                case "2"://一个月内
+                    $(".btn-filter").removeClass("btn-primary");
+                    $('#aScopeShowRecord_InnerOneMonth').addClass("btn-primary");
+                    loadDateFrom = AddMonths(new Date(), -1);
+                    loadDateTo = varTodayDate
+                    break;
+                case "3"://三个月内
+                    $(".btn-filter").removeClass("btn-primary");
+                    $('#aScopeShowRecord_InnerThreeMonth').addClass("btn-primary");
+                    loadDateFrom = AddMonths(new Date(), -3);
+                    loadDateTo = varTodayDate
+                    break;
+                case "4"://一年内
+                    $(".btn-filter").removeClass("btn-primary");
+                    $('#aScopeShowRecord_InnerOneYear').addClass("btn-primary");
+                    loadDateFrom = AddMonths(new Date(), -12);
+                    loadDateTo = varTodayDate
+                    break;
+                case "5"://全部
+                    $(".btn-filter").removeClass("btn-primary");
+                    $('#aScopeShowRecord_All').addClass("btn-primary");
+                    loadDateFrom = "1900-01-01";
+                    loadDateTo = "2999-12-31"
+                    break;
+                default:
+                    $(".btn-filter").removeClass("btn-primary");
+                    $('#aScopeShowRecord_CurYearMonth').addClass("btn-primary");
+                    break;
+            }
+            if (type == '' || type == 'lv') {
+                ///加载休假单明细列表
+                GetAndSetListResult_LVRecord($('#sel_LVTYPE').val(), $('#sel_LVStatus').val(), loadYearMonth, loadDateFrom, loadDateTo);
+            }
+            if (type == '' || type == 'ot') {
+                ///加载加班单明细列表
+                GetAndSetListResult_OTRecord($('#sel_OTTYPE').val(), $('#sel_PayType').val(), $('#sel_OTStatus').val(), loadYearMonth, loadDateFrom, loadDateTo);
+            }
+        }
+
+        function ShowOLBalanceHis() {
+            $('#tbStaffLOBalanceHis').bootstrapTable('resetView');
+            $('#myLOBalanceHisModal').modal();
+        }
+    </script>
+
+    <!--加载结果-->
+    <script type="text/javascript">
+        ///加载FLOT员工列表信息
+        function LoadFLOTStaffList() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getflotstafflist&tid=" + varTID + "&keyvalue=" + varKeyValue);
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            //alert(url)
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_StaffList
+                    $("#sel_StaffList").empty();
+                    //$("#sel_StaffList").append("<option value=''>" + "全部加班单员工" + "</option>");
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        var flowCode = unescape(item.FlowCode);
+                        var showName = unescape(item.ENAME) + "/" + unescape(item.CNAME);
+                        $("#sel_StaffList").append("<option value='" + item.EMPLOYEE + "' flowCode='" + flowCode + "'>" + showName + "</option>");
+                    });
+                    if (dataobj.ResultData.length > 0) {
+                        $("#sel_StaffList").get(0).selectedIndex = 0;  //设置Select索引值为0的项选中
+                        LoadDataByFLOTStaff();
+                        //$("#select_id option[index='jQuery']").attr("selected", true);   //设置Select的Text值为jQuery的项选中
+                    } else {
+
+                    }
+                }
+            });
+        }
+
+        ///加载考勤期间下拉框
+        function LoadYearMonthList() {
+            ShowWaitting();
+            var urlQuery = escape("M=" + Math.random() + "&param=getyearmonth");
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                                                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_YearMonth
+                    $("#sel_YearMonth").empty();
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        var showName = unescape(item.PKQISNOW) == '1' ?
+                            unescape(item.PID) + "(" + unescape(item.PSTART) + "----" + unescape(item.PEND) + "(当前期间)" :
+                            unescape(item.PID) + "(" + unescape(item.PSTART) + "----" + unescape(item.PEND) + ")";
+                        if (unescape(item.PKQISNOW) == '1') {
+                            varCurYearMonth = item.PID;
+                            varCurYearMonthDateFrom = unescape(item.PSTART);
+                            varCurYearMonthDateTo = unescape(item.PEND);
+                        }
+                        $("#sel_YearMonth").append("<option value='" + item.PID + "' pstart = '" + unescape(item.PSTART) + "' pend = '" + unescape(item.PEND) + "'>" + showName + "</option>");
+                    });
+                    $("#sel_YearMonth").find("option[value='" + varCurYearMonth + "']").attr("selected", true);
+                    $('#aScopeShowRecord_CurYearMonth').text('当前期间(' + varCurYearMonth + ')');
+                    //alert(varCurYearMonth);
+                    setTimeout(function () {
+                        ///加载年假信息
+                        LoadAnnualLeaveInfo(varCurYearMonth);
+                        ///加载加班调休余额表信息
+                        LoadOTLVBalanceInfo(varCurYearMonth);
+                        //加载休假单汇总列表
+                        GetAndSetListResult_LVSummary(varCurYearMonth);
+                        //加载加班单汇总列表
+                        GetAndSetListResult_OTSummary(varCurYearMonth)
+                    }, 200);
+
+                    HideWaitting();
+                }
+            });
+        }
+
+        ///加载年假信息
+        function LoadAnnualLeaveInfo(yearmonth) {
+            var urlQuery = "M=" + Math.random() + "&param=getannualleaveinfo&tid=" + varTID + "&keyvalue=" + varKeyValue + "&yearmonth=" + yearmonth;
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                                    //alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+
+                    $("#span_StaffNo").text(unescape(dataobj.ResultData[0]["DCNO"]));
+                    $("#span_StaffName").text(unescape(dataobj.ResultData[0]["StaffNameChs"]) + '/' + unescape(dataobj.ResultData[0]["StaffName"]));
+                    $("#span_DeptName").text(unescape(dataobj.ResultData[0]["DeptName"]));
+                    $("#span_PosiName").text(unescape(dataobj.ResultData[0]["PosiName"]));
+                    $("#span_PosiLevel").text(unescape(dataobj.ResultData[0]["PosiLevel"]));
+                    $("#span_JoinDate").text(unescape(dataobj.ResultData[0]["JoinDate"]));
+                    $("#span_LeaveDate").text(unescape(dataobj.ResultData[0]["LeaveDate"]));
+                    $("#span_ServiceYear").text(unescape(dataobj.ResultData[0]["ServiceYear"]));
+                    $("#span_Year").text(unescape(dataobj.ResultData[0]["Year"]));
+
+                    $("#span_STDDAY").text(unescape(dataobj.ResultData[0]["STDDAY"]));
+                    $("#span_BUILDDAY").text(unescape(dataobj.ResultData[0]["BUILDDAY"]));
+                    $("#span_USEDAY").text(unescape(dataobj.ResultData[0]["USEDAY"]));
+                    $("#span_PREREMAIN").text(unescape(dataobj.ResultData[0]["PREREMAIN"]));
+                    $("#span_REMAINDAY").text(unescape(dataobj.ResultData[0]["REMAINDAY"]));
+                    $("#span_DeadLine").text(unescape(dataobj.ResultData[0]["DeadLine"]));
+
+                    ///福利假显示区域
+                    var IsShowFLJArea = dataobj.IsShowFLJArea;
+                    if (IsShowFLJArea == '1') {
+                        $("#divFLJArea").show();
+
+                        $("#span_FLYear").text(unescape(dataobj.ResultData[0]["Year"]));
+                        $("#span_FLServiceYear").text(unescape(dataobj.ResultData[0]["FLServiceYear"]));
+                        $("#span_FLSTDDAY").text(unescape(dataobj.ResultData[0]["FLSTDDAY"]));
+                        $("#span_FLBUILDDAY").text(unescape(dataobj.ResultData[0]["FLBUILDDAY"]));
+                        $("#span_FLUSEDAY").text(unescape(dataobj.ResultData[0]["FLUSEDAY"]));
+                        $("#span_FLPREREMAIN").text(unescape(dataobj.ResultData[0]["FLPREREMAIN"]));
+                        $("#span_FLDUEDAY").text(unescape(dataobj.ResultData[0]["FLDUEDAY"]));
+                        $("#span_FLREMAINDAY").text(unescape(dataobj.ResultData[0]["FLREMAINDAY"]));
+                        $("#span_FLDeadLine").text(unescape(dataobj.ResultData[0]["DeadLine"]));
+
+                        ///福利假过期作废天数是否显示
+                        var IsShowFLJDue = dataobj.IsShowFLJDue;
+                        if (IsShowFLJDue && IsShowFLJDue == '1') {
+                            $('#td_Title_FLDUEDAY').show();
+                            $('#td_Value_FLDUEDAY').show();
+                        } else {
+                            $('#td_Title_FLDUEDAY').hide();
+                            $('#td_Value_FLDUEDAY').hide();
+                        }
+
+                    } else {
+                        $("#divFLJArea").hide();
+                    }
+
+                }
+            });
+        }
+
+        ///加载加班调休余额表信息
+        function LoadOTLVBalanceInfo(yearmonth) {
+            var urlQuery = escape("M=" + Math.random() + "&param=getotlvbalance&tid=" + varTID + "&keyvalue=" + varKeyValue + "&yearmonth=" + yearmonth);
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //alert(dataobj.ResultData);
+                    $("#span_CurYearMonth").text(yearmonth);
+                    if (dataobj.ResultData == "") {
+                        $("#span_PreMonthHours").text('N/A');
+                        $("#span_OvertimeHours").text('N/A');
+                        $("#span_LeaveHours").text('N/A');
+                        $("#span_CurMonthHours").text('N/A');
+                    }
+                    else {
+                        $("#span_PreMonthHours").text(unescape(dataobj.ResultData[0]["LimitBegin"]));
+                        $("#span_OvertimeHours").text(unescape(dataobj.ResultData[0]["LimitOT"]));
+                        $("#span_LeaveHours").text(unescape(dataobj.ResultData[0]["LimitLV"]));
+                        $("#span_CurMonthHours").text(unescape(dataobj.ResultData[0]["LimitEnd"]));
+                    }
+                    if (dataobj.todayDate) {
+                        $("#trCurDateBalance").show();
+                        $("#span_CurDate").text(unescape(dataobj.todayDate));
+                        $("#span_CurDateBalance").text(unescape(dataobj.todayBalance));
+                    } else {
+                        $("#trCurDateBalance").hide();
+                    }
+
+                    if (dataobj.ResultData_HIS) {
+                        //加载加班调休历史记录
+                        var rows = dataobj.ResultData_HIS.length;
+                        //构建表格####### Start
+                        var i, j, row, columns = [], data = [];
+                        for (i = 0; i < rows; i++) {
+                            row = {};
+                            for (var key in dataobj.ResultData_HIS[i]) {
+                                //对值进行编码处理特殊字符，如引号等//
+                                row[key] = unescape(dataobj.ResultData_HIS[i][key]);
+                            }
+                            data.push(row);
+                        }
+                        $('#tbStaffLOBalanceHis').bootstrapTable('destroy').bootstrapTable({
+                            data: data
+                        });
+                        $('#tbStaffLOBalanceHis').bootstrapTable('resetView');
+                    }
+                }
+            });
+        }
+
+        ///加载假期类型下拉框
+        function LoadLVTYPEList() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getlvtyplist");
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_LVTYPE
+                    $("#sel_LVTYPE").empty();
+                    $("#sel_LVTYPE").append("<option value=''>" + "全部假期类型" + "</option>");
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        var showName = unescape(item.TYPENO)+"--"+ unescape(item.TYPENAMECHS);
+                        $("#sel_LVTYPE").append("<option value='" + item.TYPENO + "'>" + showName + "</option>");
+                    });
+                }
+            });
+        }
+
+        ///加载休假单状态下拉框
+        function LoadLVStatusList() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getlvstatus");
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_LVStatus
+                    $("#sel_LVStatus").empty();
+                    $("#sel_LVStatus").append("<option value=''>" + "全部审批状态" + "</option>");
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        //var showName = unescape(item.CID) + "--" + unescape(item.CDESCCHS);
+                        var showName = unescape(item.CDESCCHS);
+                        $("#sel_LVStatus").append("<option value='" + item.CID + "'>" + showName + "</option>");
+                    });
+                    $("#sel_LVStatus option[value='090']").attr("selected", true);   //设置Select的Value值为jQuery的项选中
+                }
+            });
+        }
+
+        ///加载休假单汇总列表
+        function GetAndSetListResult_LVSummary(varYearMonth) {
+            var urlQuery = escape("M=" + Math.random() + "&param=getlvsummary&tid=" + varTID + "&keyvalue=" + varKeyValue + "&yearmonth=" + varYearMonth);
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        HideWaitting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+                    
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbStaffLeaveSummary').bootstrapTable('destroy').bootstrapTable({
+                        data: data
+                    });
+                    $('#tbStaffLeaveSummary').bootstrapTable('resetView');
+                    //构建表格####### End
+                    HideWaitting();
+                }
+            });
+
+            HideWaitting();
+        }
+
+        ///加载休假单明细列表
+        function GetAndSetListResult_LVRecord(lvTypeCode,lvStatusCode, varYearMonth, varDateFrom, varDateTo) {
+            var urlQuery = "M=" + Math.random() + "&param=getlvrecord&tid=" + varTID + "&keyvalue=" + varKeyValue + "&lvtype=" + lvTypeCode + "&lvstatus=" + lvStatusCode;
+            urlQuery = urlQuery + "&yearmonth=" + varYearMonth + "&datefrom=" + varDateFrom + "&dateto=" + varDateTo
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        HideWaitting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbStaffLeaveRecordList').bootstrapTable('destroy').bootstrapTable({
+                        data: data
+                    });
+                    $('#tbStaffLeaveRecordList').bootstrapTable('resetView');
+
+                    //构建表格####### End
+                    HideWaitting();
+                }
+            });
+
+            HideWaitting();
+        }
+
+        ///加载加班类型下拉框
+        function LoadOTTYPEList() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getottyplist");
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_OTTYPE
+                    $("#sel_OTTYPE").empty();
+                    $("#sel_OTTYPE").append("<option value=''>" + "全部加班类型" + "</option>");
+                    $.each(dataobj.ResultData_OTTYPE, function (idx, item) {
+                        var showName = unescape(item.OTTYPE) + "--" + unescape(item.TYPENAMECHS);
+                        $("#sel_OTTYPE").append("<option value='" + item.OTTYPE + "'>" + showName + "</option>");
+                    });
+
+                    //加载下拉列表sel_PayType
+                    $("#sel_PayType").empty();
+                    $("#sel_PayType").append("<option value=''>" + "全部支付类型" + "</option>");
+                    $.each(dataobj.ResultData_PayType, function (idx, item) {
+                        var showName = unescape(item.CID) + "--" + unescape(item.CDESCCHS);
+                        $("#sel_PayType").append("<option value='" + item.CID + "'>" + showName + "</option>");
+                    });
+                }
+            });
+        }
+
+        ///加载加班单状态下拉框
+        function LoadOTStatusList() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getlvstatus");
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_OTStatus
+                    $("#sel_OTStatus").empty();
+                    $("#sel_OTStatus").append("<option value=''>" + "全部审批状态" + "</option>");
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        //var showName = unescape(item.CID) + "--" + unescape(item.CDESCCHS);
+                        var showName = unescape(item.CDESCCHS);
+                        $("#sel_OTStatus").append("<option value='" + item.CID + "'>" + showName + "</option>");
+                    });
+                    $("#sel_OTStatus option[value='090']").attr("selected", true);   //设置Select的Value值为jQuery的项选中
+                }
+            });
+        }
+
+        ///加载加班单类型汇总列表
+        function GetAndSetListResult_OTSummary(varYearMonth) {
+            var urlQuery = escape("M=" + Math.random() + "&param=getotsummary&tid=" + varTID + "&keyvalue=" + varKeyValue + "&yearmonth=" + varYearMonth);
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        HideWaitting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+
+                    var i, j, row, columns = [], data = [];
+                    //构建加班类型汇总表格####### Start
+                    var rows = dataobj.ResultData_OTTYPE.length;
+                    data = []
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData_OTTYPE[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData_OTTYPE[i][key]);
+                        }
+                        data.push(row);
+                    }
+                    $('#tbStaffOvertimeSummary_OTTYPE').bootstrapTable('destroy').bootstrapTable({
+                        data: data
+                    });
+                    $('#tbStaffOvertimeSummary_OTTYPE').bootstrapTable('resetView');
+                    //构建加班类型汇总表格####### End
+
+                    //构建支付类型汇总表格####### Start
+                    var rows = dataobj.ResultData_PayType.length;
+                    data = []
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData_PayType[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData_PayType[i][key]);
+                        }
+                        data.push(row);
+                    }
+                    $('#tbStaffOvertimeSummary_PayType').bootstrapTable('destroy').bootstrapTable({
+                        data: data
+                    });
+                    $('#tbStaffOvertimeSummary_PayType').bootstrapTable('resetView');
+                    //构建支付类型汇总表格####### End
+
+                    HideWaitting();
+                }
+            });
+
+            HideWaitting();
+        }
+        
+        ///加载加班单明细列表
+        function GetAndSetListResult_OTRecord(otTypeCode,payTypeCode,otStatus, varYearMonth, varDateFrom, varDateTo) {
+            var urlQuery = "M=" + Math.random() + "&param=getotrecord&tid=" + varTID + "&keyvalue=" + varKeyValue + "&ottype=" + otTypeCode + "&paytype=" + payTypeCode + "&otstatus=" + otStatus;
+            urlQuery = urlQuery + "&yearmonth=" + varYearMonth + "&datefrom=" + varDateFrom + "&dateto=" + varDateTo
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "StaffLeaveOverview.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        HideWaitting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbStaffOvertimeRecordList').bootstrapTable('destroy').bootstrapTable({
+                        data: data
+                    });
+                    $('#tbStaffOvertimeRecordList').bootstrapTable('resetView');
+
+                    //构建表格####### End
+                    HideWaitting();
+                }
+            });
+
+            HideWaitting();
+        }
+    </script>
+
+</body>
+</html>

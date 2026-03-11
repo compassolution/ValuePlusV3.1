@@ -1,0 +1,1018 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>薪资项目设置</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../common/js/stringUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/MainUtil.js" type="text/javascript"></script>
+
+    <div class="alert alert-success text-left" id="lb_Tips">
+        <div class="row">
+            <div class="text-center col-sm-12">
+                <div class="alert alert-danger text-center" id="lb_NoticeMsg" role="alert"></div>
+                <textarea type="text" id="txt_ResultData" name="txt_ResultData" class="form-control text-info" style="display:none"></textarea>
+            </div>
+        </div>
+        <!--<span>提示:1、本页面可以进行批量删除</span>
+            <span>2、本页面中的可输入部分，在输入数据后会立即单独保存,请谨慎操作!</span>
+        -->
+        <button id="btnSwitchToTreeView" type="button" class="btn btn-warning btn-sm">切换到公式树形视图</button>
+        <div class="btn-group">
+            <text id="txtIsStopCode" value="" style="display:none"></text>
+            <button type="button" class="btn btn-default btn-sm " id="lbIsStopDesc">正常使用</button>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="aChangeIsStop" href="#" refData="">All-所有状态</a></li>
+                <li><a class="aChangeIsStop label-info" href="#" refData="2">正常使用</a></li>
+                <li><a class="aChangeIsStop" href="#" refData="1">已停用</a></li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <text id="txtIsShowPrintCode" value="" style="display:none"></text>
+            <button type="button" class="btn btn-default btn-sm " id="lbIsShowPrintDesc">所有显示状态</button>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="aChangeIsShowPrint label-info" href="#" refData="">All-所有显示状态</a></li>
+                <li><a class="aChangeIsShowPrint" href="#" refData="1">报表显示</a></li>
+                <li><a class="aChangeIsShowPrint" href="#" refData="2">报表不显示</a></li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <text id="txtItemTypeCode" value="" style="display:none"></text>
+            <button type="button" class="btn btn-default btn-sm " id="lbItemTypeDesc">All-所有类型</button>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="aChangeItemType label-info" href="#" refData="">All-所有类型</a></li>
+                <li><a class="aChangeItemType" href="#" refData="010">010-基础数据</a></li>
+                <li><a class="aChangeItemType" href="#" refData="020">020-固定金额</a></li>
+                <li><a class="aChangeItemType" href="#" refData="030">030-公式计算</a></li>
+            </ul>
+        </div>
+        <a id="btn_ToOtherPayItemList" href="#" class="glyphicon glyphicon-triangle-right pull-right">补充薪资项目列表</a>
+    </div>
+    <form id="formList" class="form-horizontal" method="post">
+        <div class="container-fiuled">
+            <div class="row-fluid">
+                <div class="col-sm-12">
+                    <div class="col-sm-12">
+                        <div id="divCustomToolbar">
+                            <div class="left-block">
+                                <label id="lb_PageTile" class="h4" style="font-size:x-large;font-weight:500">薪资项目列表</label>
+                                <label id="lb_PageSubTile" class="text-danger" style="font-size:large"></label>
+                                <button type="button" class="btn btn-default btn-sm " id="btnExportAllItemData">导出所有项目数据脚本</button>
+                            </div>
+                        </div>
+                        <div id="divListTable" class="row">
+                            <table id="tbListTable"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="800"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size="500"
+                                   data-page-list="[20, 50,100, 200, 500, 1000]">
+                                <thead>
+                                    <tr>
+                                        <th data-field="operation" data-align="center" data-formatter="FormatterOperation" data-events="EventsOperation">操作</th>
+                                        <th data-field="ITEMCODE" data-sortable="true" data-align="center" data-order="asc" data-visible="true">项目编码</th>
+                                        <th data-field="ITEMNAME" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterITEMNAME" data-events="EventsITEMNAME">项目英文名</th>
+                                        <th data-field="ITEMNAMECHS" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterITEMNAMECHS" data-events="EventsITEMNAMECHS">项目中文名称</th>
+                                        <th data-field="SHOWNAME" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterSHOWNAME" data-events="EventsSHOWNAME">显示英文名称</th>
+                                        <th data-field="SHOWNAMECHS" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterSHOWNAMECHS" data-events="EventsSHOWNAMECHS">显示中文名称</th>
+                                        <th data-field="ITEMECAL" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterITEMECAL" data-events="EventsITEMECAL">数据来源类型</th>
+                                        <th data-field="ITEMPORDER" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterITEMPORDER" data-events="EventsITEMPORDER">显示序列</th>
+                                        <th data-field="ITEMCORDER" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterITEMCORDER" data-events="EventsITEMCORDER">计算序列</th>
+                                        <th data-field="ITEMPRINT" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterITEMPRINT" data-events="EventsITEMPRINT">是否显示</th>
+                                        <th data-field="BISSTOP" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterBISSTOP" data-events="EventsBISSTOP">是否停用</th>
+                                        <th data-field="EPPLDESC" data-sortable="true" data-align="center" data-order="asc" data-visible="false">公式描述</th>
+                                        <th data-field="ITEMVERIFY_DESC" data-sortable="true" data-align="center" data-order="asc">验证状态</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- 模态框（我涉及到的项目） -->
+    <div class="modal fade bs-example-modal-lg" id="myRefItemModal" tabindex="-1" role="dialog" aria-labelledby="myRefItemModalLabel" data-dismiss="modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width:80%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myRefItemModalTitle">
+                        与我有关的薪资项目
+                    </h4>
+                </div>
+                <div id="myRefItemModalContent" class="modal-body">
+                    <div class="panel panel-default">
+                        <div id="divMyRefItem_030">
+                            <div class="panel-heading">
+                                <span class="text-danger">我的公式</span>
+                            </div>
+                            <div class="panel-heading">
+                                <span id="txt_MyFormula" class="panel-heading text-primary"></span>
+                            </div>
+
+                            <!-- Default panel contents -->
+                            <div class="panel-heading"><span class="text-danger">我的公式涉及到的项目</span></div>
+                            <!-- Table -->
+                            <table class="table">
+                                <thead>
+                                    <tr class="text-left text-info" style="background-color:linen">
+                                        <td>#</td>
+                                        <td>项目编码</td>
+                                        <td>英文名</td>
+                                        <td>中文名</td>
+                                        <td>显示英文名</td>
+                                        <td>显示中文名</td>
+                                        <td>项目类型</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody_MySubItem">
+                                </tbody>
+                            </table>
+                            <hr />
+                        </div>
+                        <div class="panel-heading"><span class="text-danger">公式涉及到我的项目</span></div>
+                        <!-- Table -->
+                        <table class="table">
+                            <thead>
+                                <tr class="text-left text-info" style="background-color:linen">
+                                    <td>#</td>
+                                    <td>项目编码</td>
+                                    <td>英文名</td>
+                                    <td>中文名</td>
+                                    <td>显示英文名</td>
+                                    <td>显示中文名</td>
+                                    <td>项目类型</td>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody_RefMeItem">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+    </div>
+
+    <!-- 模态框（数据导出脚本） -->
+    <div class="modal fade bs-example-modal-lg" id="myDataSqlModal" tabindex="-1" role="dialog" aria-labelledby="myDataSqlModalLabel" data-dismiss="modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width:100%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myDataSqlModalTitle">
+                        导出数据脚本
+                    </h4>
+                </div>
+                <div id="myDataSqlModalContent" class="modal-body">
+                    <div class="panel panel-default">
+                        <div class="row">
+
+                            <form class="form-horizontal" method="post">
+                                <textarea type="text" id="txt_DataSql" name="txt_DataSql" class="form-control" rows="30"></textarea>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-lg-6 pull-right">
+                            <button type="button" class="btn btn-danger btn-sm pull-right" id="btnCopyDataSql">
+                                点击复制脚本
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>-->
+                    <h4 class="modal-title" id="myWaittingModalTitle">
+                        正在处理中,请稍候.....
+                    </h4>
+                </div>
+                <div id="myWaittingModalContent" class="modal-body">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+        function OpenNewWindow(url) {
+            window.open(url, 'ArchiveDetail', 'left=0,top=0,width=' + (screen.availWidth - 10) + ',height=' + (screen.availHeight - 50) + ',scrollbars,resizable=yes,toolbar=no,location=no');//最大化打开
+        }
+    </script>
+
+    <script type="text/javascript">
+        //var varItemCode = GetUrlQueryString("P0");
+
+        $(document).ready(function () {
+            //$("#lb_NoticeMsg").text('').hide();
+            //$("#lb_PageSubTile").text('（料单号:' + varItemCode + '）');
+
+            $("#txtIsStopCode").val("2");
+            $("#txtIsShowPrintCode").val("");
+            $("#txtItemTypeCode").val("");
+            //加载列表
+            GetAndSetListResult();
+
+            $('#btnSwitchToTreeView').click(function (e) {
+                ShowWaitting();
+                window.location.href = 'PRItemTree.html'
+            });
+            $('#btn_ToOtherPayItemList').click(function (e) {
+                ShowWaitting();
+                window.location.href = 'OtherPayItemList.html'
+            });
+
+
+
+            $('.aChangeItemType').click(function (e) {
+                $("#lbItemTypeDesc").text($(this).html());
+                $("#txtItemTypeCode").val($(this).attr("refData"));
+
+                $('.aChangeItemType').removeClass("label-info");
+                $(this).addClass("label-info");
+
+                //加载列表
+                GetAndSetListResult();
+            });
+
+            $('.aChangeIsStop').click(function (e) {
+                $("#lbIsStopDesc").text($(this).html());
+                $("#txtIsStopCode").val($(this).attr("refData"));
+
+                $('.aChangeIsStop').removeClass("label-info");
+                $(this).addClass("label-info");
+
+
+                //加载列表
+                GetAndSetListResult();
+            });
+
+            $('.aChangeIsShowPrint').click(function (e) {
+                $("#lbIsShowPrintDesc").text($(this).html());
+                $("#txtIsShowPrintCode").val($(this).attr("refData"));
+
+                $('.aChangeIsShowPrint').removeClass("label-info");
+                $(this).addClass("label-info");
+
+
+                //加载列表
+                GetAndSetListResult();
+            });
+
+            ///点击复制脚本到剪贴板操作
+            $('#btnCopyDataSql').click(function () {
+                $("#txt_DataSql").select();
+                document.execCommand("Copy");
+                $("#btnCopyDataSql").text("已成功复制到剪贴板").attr("disabled", true);
+                setTimeout(function () {
+                    $("#btnCopyDataSql").text("点击复制脚本").attr("disabled", false);
+                }, 3000)
+            });
+
+            //导出所有项目数据脚本
+            $('#btnExportAllItemData').click(function () {
+                ExportDataSql("");
+            })
+
+        });
+
+    </script>
+
+    <!--///加载结果列表-->
+    <script type="text/javascript">
+        ///加载结果列表
+        function GetAndSetListResult() {
+            $("#lb_NoticeMsg").text('').hide();
+            ShowWaitting();
+            var strParam = "itemtype=" + $("#txtItemTypeCode").val();
+            strParam = strParam + "&isstop=" + $("#txtIsStopCode").val();
+            strParam = strParam + "&isshowprint=" + $("#txtIsShowPrintCode").val();
+            //alert(strParam);
+            var urlQuery = escape("M=" + Math.random() + "&param=querylist&" + strParam);
+            var url = "PRItemIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                        HideWaiting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+
+
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbListTable').bootstrapTable('destroy').bootstrapTable({
+                        data: data
+                    });
+                    $('#tbListTable').bootstrapTable('resetView');
+
+                    ///设置表格自适应高度
+                    SetBootstrapAutoHeight($('#tbListTable'));
+
+                    //构建表格####### End
+                    HideWaiting();
+                }
+            });
+            //反向赋值select控件
+            $("#tbListTable select").each(function () {
+                //alert($(this).attr("OldValue"));
+                $(this).val($(this).attr("OldValue"));
+            });
+            //反向赋值Checkbox控件
+            $("#tbListTable input[type='checkbox']").each(function () {
+                if ($(this).attr("OldValue") == "true") {
+                    $(this).attr("checked", "true");
+                } else {
+                    $(this).removeAttr("checked");
+                }
+            });
+
+            HideWaiting();
+        }
+        ///设置表格自适应高度
+        function SetBootstrapAutoHeight($table) {
+            var documentHeight = $(document).height();
+            var varHeight = documentHeight - 140;
+            $table.bootstrapTable('refreshOptions', {
+                height: varHeight
+            })
+        }
+
+    </script>
+
+    <!--//定义每行的项目英文名文本框-->
+    <script type="text/javascript">
+        //定义每行的项目英文名文本框
+        function FormatterITEMNAME(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var ITEMNAME = RowData.ITEMNAME;
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#ITEMNAME" OldValue = "' + ITEMNAME.toString() + '" class="form-control input-sm inputITEMNAME" value = "' + ITEMNAME + '"/>'
+            ].join('');
+
+        }
+
+        //定义项目英文名的事件
+        window.EventsITEMNAME = {
+            'blur .inputITEMNAME': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varItemCode = RowData.ITEMCODE;
+                if ($(this).val() != $(this).attr("OldValue")) {
+                    //即时保存单独每个字段控件的数据
+                    SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                    $(this).attr("OldValue", $(this).val());
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的项目中文名文本框-->
+    <script type="text/javascript">
+        //定义每行的项目中文名文本框
+        function FormatterITEMNAMECHS(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var ITEMNAMECHS = RowData.ITEMNAMECHS;
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#ITEMNAMECHS" OldValue = "' + ITEMNAMECHS.toString() + '" class="form-control input-sm inputITEMNAMECHS" value = "' + ITEMNAMECHS + '"/>'
+            ].join('');
+
+        }
+
+        //定义项目中文名的事件
+        window.EventsITEMNAMECHS = {
+            'blur .inputITEMNAMECHS': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varItemCode = RowData.ITEMCODE;
+                if ($(this).val() != $(this).attr("OldValue")) {
+                    //即时保存单独每个字段控件的数据
+                    SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                    $(this).attr("OldValue", $(this).val());
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的显示英文名文本框-->
+    <script type="text/javascript">
+        //定义每行的显示英文名文本框
+        function FormatterSHOWNAME(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var SHOWNAME = RowData.SHOWNAME;
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#SHOWNAME" OldValue = "' + SHOWNAME.toString() + '" class="form-control input-sm inputSHOWNAME" value = "' + SHOWNAME + '"/>'
+            ].join('');
+
+        }
+
+        //定义显示英文名的事件
+        window.EventsSHOWNAME = {
+            'blur .inputSHOWNAME': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varItemCode = RowData.ITEMCODE;
+                if ($(this).val() != $(this).attr("OldValue")) {
+                    //即时保存单独每个字段控件的数据
+                    SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                    $(this).attr("OldValue", $(this).val());
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的显示中文名文本框-->
+    <script type="text/javascript">
+        //定义每行的显示中文名文本框
+        function FormatterSHOWNAMECHS(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var SHOWNAMECHS = RowData.SHOWNAMECHS;
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#SHOWNAMECHS" OldValue = "' + SHOWNAMECHS.toString() + '" class="form-control input-sm inputSHOWNAMECHS" value = "' + SHOWNAMECHS + '"/>'
+            ].join('');
+
+        }
+
+        //定义显示中文名的事件
+        window.EventsSHOWNAMECHS = {
+            'blur .inputSHOWNAMECHS': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varItemCode = RowData.ITEMCODE;
+                if ($(this).val() != $(this).attr("OldValue")) {
+                    //即时保存单独每个字段控件的数据
+                    SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                    $(this).attr("OldValue", $(this).val());
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的计算序列文本框-->
+    <script type="text/javascript">
+        //定义每行的计算序列文本框
+        function FormatterITEMCORDER(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var ITEMCORDER = RowData.ITEMCORDER;
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#ITEMCORDER" OldValue = "' + ITEMCORDER.toString() + '" class="form-control input-sm inputITEMCORDER" value = "' + ITEMCORDER + '"/>'
+            ].join('');
+
+        }
+
+        //定义计算序列的事件
+        window.EventsITEMCORDER = {
+            'blur .inputITEMCORDER': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var InputITEMCORDER = $(this).val();
+                var varItemCode = RowData.ITEMCODE;
+                //校验为数值
+                var pattern = /^([-]){0,1}([0-9]){1,}([.]){0,1}([0-9]){0,}$/;
+                var flag = pattern.test(InputITEMCORDER);
+                if (flag) {
+                    $("#lb_NoticeMsg").text('').hide();
+                    $(this).removeClass('btn-warning');
+                    if (parseFloat($(this).val()) != parseFloat($(this).attr("OldValue"))) {
+                        //即时保存单独每个字段控件的数据
+                        SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                        $(this).attr("OldValue", $(this).val());
+                    }
+                } else {
+                    $("#lb_NoticeMsg").show().text('颜色标记出的输入框请输入数值型');
+                    $(this).addClass('btn-warning');
+                    $(this).addClass('focus');
+                    $(this).val("100");
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的数据来源类型下拉框-->
+    <script type="text/javascript">
+        //定义每行的数据来源类型下拉框
+        function FormatterITEMECAL(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var ITEMECAL = RowData.ITEMECAL;
+            var txtClass = "btn-info";
+            if (ITEMECAL == '020') {
+                txtClass = "btn-warning";
+            } if (ITEMECAL == '030') {
+                txtClass = "btn-success";
+            }
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#ITEMECAL" OldValue = "' + ITEMECAL.toString() + '" class="form-control input-sm inputITEMECAL ' + txtClass + '" value = "' + ITEMECAL + '"/>'
+            ].join('');
+        }
+
+        //定义数据来源类型的事件
+        window.EventsITEMECAL = {
+            'change .inputITEMECAL': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var ITEMECAL = RowData.ITEMECAL;
+                var varItemCode = RowData.ITEMCODE;
+                var InputITEMECAL = $(this).val();
+                if ($(this).val() != '010' && $(this).val() != '020' && $(this).val() != '030') {
+                    $("#lb_NoticeMsg").show().text('颜色标记出的输入框只能输入三个值:010基础数据/020固定金额/030计算公式');
+                    $(this).addClass('btn-warning');
+                    $(this).addClass('focus');
+                    $(this).val($(this).attr("OldValue"));
+                } else {
+                    $("#lb_NoticeMsg").text('').hide();
+                    $(this).removeClass('btn-warning');
+
+                    if (parseFloat($(this).val()) != parseFloat($(this).attr("OldValue"))) {
+                        //即时保存单独每个字段控件的数据
+                        SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                        $(this).attr("OldValue", $(this).val());
+                    }
+                }
+
+            }
+        };
+    </script>
+
+    <!--//定义每行的显示序列文本框-->
+    <script type="text/javascript">
+        //定义每行的显示序列文本框
+        function FormatterITEMPORDER(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var ITEMPORDER = RowData.ITEMPORDER;
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#ITEMPORDER" OldValue = "' + ITEMPORDER.toString() + '" class="form-control input-sm inputITEMPORDER" value = "' + ITEMPORDER + '"/>'
+            ].join('');
+
+        }
+
+        //定义显示序列的事件
+        window.EventsITEMPORDER = {
+            'blur .inputITEMPORDER': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varItemCode = RowData.ITEMCODE;
+                var InputITEMPORDER = $(this).val();
+                //校验为数值
+                var pattern = /^([-]){0,1}([0-9]){1,}([.]){0,1}([0-9]){0,}$/;
+                var flag = pattern.test(InputITEMPORDER);
+                if (flag) {
+                    $("#lb_NoticeMsg").text('').hide();
+                    $(this).removeClass('btn-warning');
+                    if (parseFloat($(this).val()) != parseFloat($(this).attr("OldValue"))) {
+                        //即时保存单独每个字段控件的数据
+                        SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                        $(this).attr("OldValue", $(this).val());
+                    }
+                } else {
+                    $("#lb_NoticeMsg").show().text('颜色标记出的输入框请输入数值型');
+                    $(this).addClass('btn-warning');
+                    $(this).addClass('focus');
+                    $(this).val("0");
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的是否停用-->
+    <script type="text/javascript">
+        //定义每行的是否停用
+        function FormatterBISSTOP(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var BISSTOP = RowData.BISSTOP;
+            //alert(ctrlId);
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#BISSTOP" OldValue = "' + BISSTOP.toString() + '" class="form-control input-sm inputBISSTOP" value = "' + BISSTOP + '"/>'
+            ].join('');
+        }
+
+        //定义是否停用的事件
+        window.EventsBISSTOP = {
+            'change .inputBISSTOP': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varItemCode = RowData.ITEMCODE;
+                if (parseFloat($(this).val()) != 1 && parseFloat($(this).val()) != 2) {
+                    $("#lb_NoticeMsg").show().text('颜色标记出的输入框只能输入两个值:1是/2否');
+                    $(this).addClass('btn-warning');
+                    $(this).addClass('focus');
+                    $(this).val($(this).attr("OldValue"));
+                } else {
+                    $("#lb_NoticeMsg").text('').hide();
+                    $(this).removeClass('btn-warning');
+
+                    if (parseFloat($(this).val()) != parseFloat($(this).attr("OldValue"))) {
+                        //即时保存单独每个字段控件的数据
+                        SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                        $(this).attr("OldValue", $(this).val());
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的是否报表显示-->
+    <script type="text/javascript">
+        //定义每行的是否报表显示
+        function FormatterITEMPRINT(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var ITEMPRINT = RowData.ITEMPRINT;
+            //alert(ctrlId);
+            return [
+                '<input type="text" id="txt#Item#' + varItemCode + '#ITEMPRINT" OldValue = "' + ITEMPRINT.toString() + '" class="form-control input-sm inputITEMPRINT" value = "' + ITEMPRINT + '"/>'
+            ].join('');
+        }
+
+        //定义是否报表显示的事件
+        window.EventsITEMPRINT = {
+            'change .inputITEMPRINT': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varItemCode = RowData.ITEMCODE;
+                if (parseFloat($(this).val()) != 1 && parseFloat($(this).val()) != 2) {
+                    $("#lb_NoticeMsg").show().text('颜色标记出的输入框只能输入两个值:1是/2否');
+                    $(this).addClass('btn-warning');
+                    $(this).addClass('focus');
+                    $(this).val($(this).attr("OldValue"));
+                } else {
+                    $("#lb_NoticeMsg").text('').hide();
+                    $(this).removeClass('btn-warning');
+
+                    if (parseFloat($(this).val()) != parseFloat($(this).attr("OldValue"))) {
+                        //即时保存单独每个字段控件的数据
+                        SaveDataOneCtral(varItemCode, $(this).attr("id"), $(this).val());
+                        $(this).attr("OldValue", $(this).val());
+                    }
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的操作-->
+    <script type="text/javascript">
+        //定义每行的操作
+        function FormatterOperation(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var varItemCode = RowData.ITEMCODE;
+            var varItemECAL = RowData.ITEMECAL;
+            var ctrlId = "sel#Item#" + varItemCode + "#Operation";
+            //alert(ctrlId);
+            return [
+                '<div class="btn-group">'
+                + ' <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'
+                + '     <span class="caret"></span>'
+                + ' </button>'
+                + ' <ul class="dropdown-menu">'
+                + '     <li><a class="inputOperation" id="aDeleteItem" href="#" refData="' + varItemCode + '">删除项目</a></li>'
+                + '     <li><a class="inputOperation" id="aViewDetail" href="#" refData="' + varItemCode + '">详细明细信息</a></li>'
+                + '     <li><a class="inputOperation" id="aViewRefIteList" href="#" refData="' + varItemCode + '">与我有关的薪资项目</a></li>'
+                + '     <li><a class="inputOperation" id="aExportDataSql" href="#" refData="' + varItemCode + '">导出数据脚本</a></li>'
+                + ' </ul>'
+            ].join('');
+        }
+
+        //<div class="btn-group">
+        //    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        //        <span class="caret"></span>
+        //    </button>
+        //    <ul class="dropdown-menu">
+        //        <li><a class="aChangeIsShowPrint" href="#" refData="">All-所有显示状态</a></li>
+        //        <li><a class="aChangeIsShowPrint" href="#" refData="1">报表显示</a></li>
+        //        <li><a class="aChangeIsShowPrint" href="#" refData="2">报表不显示</a></li>
+        //    </ul>
+        //</div>
+        //定义操作的事件
+        window.EventsOperation = {
+            'click .inputOperation': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var varItemCode = RowData.ITEMCODE;
+                var varItemName = RowData.ITEMNAMECHS;
+                var varItemEPPL = RowData.ITEMEPPL;
+                var varItemEPPLDESC = RowData.EPPLDESC;
+                var varItemECAL = RowData.ITEMECAL;
+                var ctrlId = $(this).attr("id");
+                //alert(ctrlId);
+                //alert(varItemCode);DeleteOneItem
+                if (ctrlId == 'aDeleteItem') {
+                    if (confirm("是否确定要删除项目【" + varItemCode + "-" + varItemName + "】")) {
+                        DeleteOneItem(varItemCode);
+                    }
+                }
+                else if (ctrlId == 'aViewDetail') {
+                    OpenItemDetailPage(varItemCode);
+                } else if (ctrlId == 'aViewRefIteList') {
+                    $('#myRefItemModalTitle').html('与我【' + varItemCode + '-' + varItemName + '】有关的项目');
+                    if (varItemECAL == '030') {
+                        $("#divMyRefItem_030").show();
+
+                        varItemEPPL = varItemEPPL.replaceAll("《", "<var>");
+                        varItemEPPL = varItemEPPL.replaceAll("》", "</var>");
+                        varItemEPPLDESC = varItemEPPLDESC.replaceAll("《", "<var>");
+                        varItemEPPLDESC = varItemEPPLDESC.replaceAll("》", "</var>");
+
+                        $('#txt_MyFormula').html(varItemEPPL);
+                    } else {
+                        $("#divMyRefItem_030").hide();
+
+                    }
+
+                    ShowMyRefItemList(varItemCode);
+                } else if (ctrlId == 'aExportDataSql') {
+                    ExportDataSql(varItemCode);
+                }
+
+            }
+        };
+        //弹窗显示项目明细信息
+        function OpenItemDetailPage(itemcode) {
+            var urlQuery = escape("M=" + Math.random() + "&param=toedititempage&itemcode=" + itemcode);
+            var url = "PRItemIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                type: "post",
+                data: $("#formList").serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('请求服务器时出错，请联系管理员处理!');
+                },
+                success: function (data) {
+                    //alert(data);
+                    $("#txt_ResultData").val(data);
+                    if (data == "") return false;
+
+                    OpenNewWindow(data);
+
+                }
+            });
+        }
+
+        //模态框显示我涉及到的项目信息
+        function ShowMyRefItemList(itemcode) {
+            var urlQuery = escape("M=" + Math.random() + "&param=querymyrefitemlist&itemcode=" + itemcode);
+            var url = "PRItemIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                type: "post",
+                data: $("#formList").serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('请求服务器时出错，请联系管理员处理!');
+                },
+                success: function (data) {
+                    //alert(data);
+                    $("#txt_ResultData").val(data);
+                    if (data == "") return false;
+
+                    var dataObj = JSON.parse(data);
+                    //alert(dataObj.ResultData_MySub);
+                    var tempHTML = "";
+                    $.each(dataObj.ResultData_MySub, function (index, item) {
+                        //alert(unescape(item.ITEMNAMECHS));
+                        $('#tbody_MySubItem').empty();
+                        tempHTML = tempHTML + '<tr class="text-left">';
+                        tempHTML = tempHTML + '<td>' + (index + 1).toString() + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.ITEMCODE) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.ITEMNAME) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.ITEMNAMECHS) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.SHOWNAME) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.SHOWNAMECHS) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.ITEMECAL) + '</td>';
+                        tempHTML = tempHTML + '</tr">';
+                    });
+                    $('#tbody_MySubItem').html(tempHTML);
+
+
+                    $.each(dataObj.ResultData_RefMe, function (index, item) {
+                        //alert(unescape(item.ITEMNAMECHS));
+                        $('#tbody_RefMeItem').empty();
+                        tempHTML = tempHTML + '<tr class="text-left">';
+                        tempHTML = tempHTML + '<td>' + (index + 1).toString() + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.ITEMCODE) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.ITEMNAME) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.ITEMNAMECHS) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.SHOWNAME) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.SHOWNAMECHS) + '</td>';
+                        tempHTML = tempHTML + '<td>' + unescape(item.ITEMECAL) + '</td>';
+                        tempHTML = tempHTML + '</tr">';
+                    });
+                    $('#tbody_RefMeItem').html(tempHTML);
+
+
+
+
+                    $('#myRefItemModal').modal();
+                }
+            });
+        }
+    </script>
+
+    <!--即时保存单独每个字段控件的数据-->
+    <script type="text/javascript">
+        ///即时保存单独每个字段控件的数据
+        function SaveDataOneCtral(itemcode, CtrlId, CtrlValue) {
+            $("#lb_NoticeMsg").show().text('保存中....');
+            //ShowWaitting();
+
+            //请求服务器进行保存
+            var urlQuery = escape("M=" + Math.random() + "&param=savedataonectrl&itemcode=" + itemcode + "&ctrlid=" + CtrlId + "&ctrlvalue=" + CtrlValue);
+            var url = "PRItemIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                type: "post",
+                data: $("#formList").serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('请求服务器时出错，请联系管理员处理!');
+                },
+                success: function (data) {
+                    //alert(data);
+                    $("#txt_ResultData").val(data);
+                    if (data == "") return false;
+
+                    var dataJson = JSON.parse(data);
+
+                    if (dataJson.savedCount >= "1") {
+                        $("#lb_NoticeMsg").text('修改成功!');
+                        HideWaiting();
+                        setTimeout(function () {
+                            $("#lb_NoticeMsg").text('').hide();
+                        }, 1000);
+                    } else {
+                        $("#lb_NoticeMsg").text(showString + '失败，请联系管理员处理!');
+                        HideWaiting();
+                    }
+                }
+            });
+            HideWaiting();
+        }
+    </script>
+
+    <!--删除列表数据操作-->
+    <script type="text/javascript">
+        ///删除列表数据操作
+        function DeleteOneItem(itemcode) {
+            ShowWaitting();
+            //请求服务器进行保存
+            var urlQuery = escape("M=" + Math.random() + "&param=deleteonitem&itemcode=" + itemcode);
+            var url = "PRItemIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                type: "post",
+                data: $("#formList").serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").text('请求服务器时出错，请联系管理员处理!');
+                },
+                success: function (data) {
+                    //alert(data);
+                    $("#txt_ResultData").val(data);
+                    if (data == "") return false;
+
+                    var dataJson = JSON.parse(data);
+
+                    $("#lb_NoticeMsg").show().text(dataJson.returnMsg);
+                    setTimeout(function () {
+                        $("#lb_NoticeMsg").text('').hide();
+                        HideWaiting();
+                        if (dataJson.returnCode >= "1") {
+                            //加载列表
+                            GetAndSetListResult();
+                        }
+                    }, 2000);
+                }
+            });
+            HideWaiting();
+        }
+    </script>
+
+    <!--导出数据脚本-->
+    <script type="text/javascript">
+        ///导出数据脚本
+        function ExportDataSql(itemcode) {
+            ShowWaitting();
+            //请求服务器进行保存
+            var urlQuery = escape("M=" + Math.random() + "&param=exportdatasql_pritem&itemcode=" + itemcode);
+            var url = "PRItemIndex.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                type: "post",
+                data: $("#formList").serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").text('请求服务器时出错，请联系管理员处理!');
+                },
+                success: function (data) {
+                    //alert(data);
+                    $("#txt_ResultData").val(data);
+                    if (data == "") return false;
+
+                    var dataJson = JSON.parse(data);
+                    $("#txt_DataSql").val(unescape(dataJson.ResultData));
+                    $("#myDataSqlModal").modal();
+                }
+            });
+            HideWaiting();
+        }
+    </script>
+
+
+</body>
+</html>
+

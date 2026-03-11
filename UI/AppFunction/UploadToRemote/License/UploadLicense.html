@@ -1,0 +1,102 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>上传License</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <form id="formLicenseData" class="form-horizontal" method="post">
+
+        <input type="text" id="txt_RemoteServer" name="txt_RemoteServer" class="form-control" style="display:none" />
+        <input type="text" id="txt_ProjectId" name="txt_ProjectId" class="form-control" style="display: none" />
+        <textarea type="text" id="txt_LicenseData" name="txt_LicenseData" class="form-control" style="display: none"></textarea>
+    </form>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        ///从本地数据库中获取Lic数据
+        function LoadLocalLicenseInfo() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getlicenseinfo");
+            //var urlQuery = "M=" + Math.random() + "&param=getlicenseinfo";
+            var url = "ClientHandler.ashx?" + urlQuery;
+            //alert(url);
+            //console.log('LoadLocalLicenseInfo.url:', url)
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                type: "POST",
+                error: function (error) {
+                    //console.log('LoadLocalLicenseInfo.error:', error)
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    $("#txt_ProjectId").val(dataobj.ProjectId);
+                    $("#txt_RemoteServer").val(dataobj.RemoteServer);
+                    if (dataobj.ResultData.length == 1) {
+                        var jsonData = JSON.stringify(dataobj.ResultData[0]);
+                        $("#txt_LicenseData").val(jsonData);
+
+                        ///上传数据到远程服务器
+                        UploadSalaryDataToRemote();
+
+
+                    }
+
+
+                }
+            });
+        }
+
+        ///上传数据到远程服务器
+        function UploadSalaryDataToRemote() {
+            var returnValue = "-9";
+            var urlQuery = escape("M=" + Math.random() + "&param=uploadlicensedata&projectid=" + $("#txt_ProjectId").val());
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "/AppFunction/UploadToRemote/License/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            //console.log('UploadSalaryDataToRemote.url:', url)
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formLicenseData').serialize(), // 你的formid
+                error: function (request) {
+                    returnValue = "-9";
+                    //$("#lb_NoticeMsg").text('远程服务器发生异常，请重试！');
+                },
+                success: function (result) {
+                    //alert(result);
+                    returnValue = result;
+                }
+            });
+            return returnValue;
+        }
+
+        $(document).ready(function () {
+        });
+
+        ///从本地数据库中获取Lic数据
+        LoadLocalLicenseInfo();
+    </script>
+
+</body>
+</html>

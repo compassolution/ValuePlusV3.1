@@ -1,0 +1,344 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>员工手机号注册查询</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="alert alert-danger text-left" id="lb_PageTips" style="display:none">
+                <label id="lb_NoticeMsg" class="text-danger"></label>
+            </div>
+            <div class="span12">
+                <form id="formStaffMobileList" class="form-horizontal" method="post">
+                    <div class="jumbotron" style="padding: 25px; padding-bottom: 10px; margin-bottom: 5px ">
+                        <div>
+                            <span class="h2">电子员工手册查看确认情况列表</span> 
+                            <span>当前授权：</span><strong id="txt_ClientName"></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span>当前系统编号：</span><strong id="txt_ProjectId"></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <strong id="txt_RemoteServer" style="display:none"></strong>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div id="divCustomToolbar" class="text-center">
+                            <!--<button id="aClose" type="button" class="btn" onclick="javascript: window.close();">关闭</button>&nbsp; &nbsp;-->
+
+                            <label class="btn-group">
+                                <input type="checkbox" id="ckBox_OnJob" checked="checked"> 在职员工
+                            </label>
+                            <label class="btn-group">
+                                <input type="checkbox" id="ckBox_Dimission"> 已离职员工
+                            </label>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+                            <label class="btn-group">
+                                <input type="checkbox" id="ckBox_Confirmed" checked="checked"> 已确认
+                            </label>
+                            <label class="btn-group">
+                                <input type="checkbox" id="ckBox_NoConfirm" checked="checked"> 未确认
+                            </label>
+                        </div>
+                        <div id="divListTableNeedUpdate" class="row-fluid">
+                            <table id="tbStaffSalaryList"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="750"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size="100"
+                                   data-page-list="[10, 50,100, 200, 500, 1000]">
+                                <thead>
+                                    <tr>
+                                        <th data-width="8%" data-field="DCNO" data-sortable="true" data-align="center" data-order="asc">员工编号</th>
+                                        <!--<th data-width="10%" data-field="DCNAME" data-sortable="true" data-align="center" data-order="asc" style="display:none">英文名</th>-->
+                                        <th data-width="15%" data-field="DCNAMECHS" data-sortable="true" data-align="center" data-order="asc">中文名</th>
+                                        <th data-width="8%" data-field="DCMOBILE" data-sortable="true" data-align="center" data-order="asc">手机号</th>
+                                        <th data-width="10%" data-field="DeptNameChs" data-sortable="true" data-align="center" data-order="asc">部门</th>
+                                        <th data-width="10%" data-field="PosiNameChs" data-sortable="true" data-align="center" data-order="asc">职位</th>
+                                        <th data-width="8%" data-field="DCPLEVEL" data-sortable="true" data-align="center" data-order="asc">级别</th>
+                                        <th data-width="8%" data-field="DCJOIN" data-sortable="true" data-align="center" data-order="asc">入职日期</th>
+                                        <th data-width="8%" data-field="StatusName" data-sortable="true" data-align="center" data-order="asc">员工状态</th>
+                                        <th data-width="10%" data-field="OpUser" data-sortable="true" data-align="center" data-order="asc">确认手机号</th>
+                                        <th data-width="20%" data-field="OpTime" data-sortable="true" data-align="center" data-order="asc">确认时间</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            
+            </div>
+        </div>        
+
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body" style="font-size:larger;color:red">
+                        
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        ShowWaitting();
+        $("#myWaittingModalContent").text('页面初始化中......');
+        $(document).ready(function () {
+            ///判断是否登录
+            JudgeIsLogin();
+
+        });
+
+        $("#ckBox_OnJob").change(function () {
+            ///加载结果列表
+            GetAndSetListResult();
+        })
+        $("#ckBox_Dimission").change(function () {
+            ///加载结果列表
+            GetAndSetListResult();
+        })
+        $("#ckBox_Confirmed").change(function () {
+            ///加载结果列表
+            GetAndSetListResult();
+        })
+        $("#ckBox_NoConfirm").change(function () {
+            ///加载结果列表
+            GetAndSetListResult();
+        })
+        function queryResult() {
+        }
+
+    </script>
+    <!--加载结果-->
+    <script type="text/javascript">
+        //判断是否登录
+        function JudgeIsLogin() {
+            var urlQuery = escape("M=" + Math.random());
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-9999') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                    } else {
+                        ///加载客户基本信息
+                        LoadClientInfo();
+                    }
+                }
+            })
+        }
+        ///加载客户基本信息
+        function LoadClientInfo() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getclientinfo");
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    console.log('LoadClientInfo.data', data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ClientInfo == "") return false;
+
+                    $.each(dataobj.ClientInfo, function (idx, item) {
+                        $("#txt_ProjectId").html(unescape(item.ProjectId));
+                        $("#txt_ClientName").html(unescape(item.ClientName));
+                        $("#txt_RemoteServer").html(unescape(item.RemoteServer));
+                    });
+
+                    //$("#txt_ProjectId").html( 'VP_HR_YINNL'); 
+
+                    ShowWaitting();
+                    setTimeout(function () {
+                        ///加载结果列表
+                        GetAndSetListResult();
+
+                    }, 100);
+                }
+            });
+        }
+
+    </script>
+
+    <!--加载结果-->
+    <script type="text/javascript">
+        ///加载结果列表
+        function GetAndSetListResult() {
+            //alert($('#ckBox_OnJob').prop('checked'));
+            //alert($('#ckBox_Dimission').prop('checked'));
+            //alert($('#ckBox_Confirmed').prop('checked'));
+            //alert($('#ckBox_NoConfirm').prop('checked'));
+            //alert($('#ckBox_Dimission').val());
+            //const isChecked = ;
+
+            var projectId = $("#txt_ProjectId").html();
+            var isOnJob = $('#ckBox_OnJob').prop('checked') ? "1" : "0";
+            var isDimission = $('#ckBox_Dimission').prop('checked') ? "1" : "0";
+            var isConfirmed = $('#ckBox_Confirmed').prop('checked') ? "1" : "0";
+            var isNoConfirm = $('#ckBox_NoConfirm').prop('checked') ? "1" : "0";
+            $("#myWaittingModalContent").text('正在加载列表......');
+            var strParam = "jsonCallback=";
+            var urlQuery = escape("M=" + Math.random() + "&param=gethandbookconfirmlist&projectid=" + projectId
+                + "&isonjob=" + isOnJob + "&isdimission=" + isDimission + "&isconfirmed=" + isConfirmed + "&isnoconfirm=" + isNoConfirm
+                + "&" + strParam);
+            var url = $("#txt_RemoteServer").html() + "/AppFunction/UploadToRemote/Handbook/ServerHandler.ashx?" + urlQuery;
+            //var url = "http://localhost:2014/AppFunction/UploadToRemote/Handbook/ServerHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formStaffMobileList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_PageTips").show();
+                    $("#myWaittingModalContent").text('当前数据库加载有误，请重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    console.log('GetAndSetListResult.data',data)
+                    if ((data == "") || (data == "")) {
+                        $("#lb_PageTips").show();
+                        $("#myWaittingModalContent").text('当前数据库加载有误，请重试！');
+                        HideWaiting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+                    console.log('GetAndSetListResult.dataobj', dataobj)
+                    //alert(dataobj);
+                    //alert(dataobj.ResultData.length); //输出ResultData的子对象数量//
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+
+                    //for (var key in dataobj.ResultData[0]) {
+                    //    if (key.indexOf('注册') >= 0) {
+                    //        var cellBgColor = "green";
+                    //        if (key == '已注册') {
+                    //            cellBgColor = "red";
+                    //        }
+                    //        columns.push({
+                    //            field: key,
+                    //            title: key,
+                    //            sortable: true,
+                    //            visible: true,
+                    //            cellStyle: function (value, row, index) {
+                    //                if (value == '已注册') {
+                    //                    return { css: { "color": "green" } }
+                    //                } else {
+                    //                    return { css: { "color": "red" } }
+                    //                }
+                    //            },
+                    //            order: "desc"
+                    //        });
+                    //    } else if ('档案库手机号码'.indexOf(key) >= 0) {
+                    //        columns.push({
+                    //            field: key,
+                    //            title: key,
+                    //            sortable: true,
+                    //            visible: true,
+                    //            cellStyle: function (value, row, index) {
+                    //                return { css: { "color": "blue" } }
+                    //            },
+                    //            order: "desc"
+                    //        });
+                    //    } else {
+                    //        columns.push({
+                    //            field: key,
+                    //            title: key,
+                    //            sortable: true,
+                    //            visible: true,
+                    //            order: "desc"
+                    //        });
+                    //    }
+                    //}
+
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbStaffSalaryList').bootstrapTable('destroy').bootstrapTable({
+                        columns: columns,
+                        data: data
+                    });
+                    $('#tbStaffSalaryList').bootstrapTable('resetView');
+                    //构建表格####### End
+                    HideWaiting();
+                }
+            });
+            HideWaiting();
+        }
+
+    </script>
+
+</body>
+</html>

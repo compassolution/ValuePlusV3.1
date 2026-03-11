@@ -1,0 +1,391 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>读取身份证信息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../common/js/tableStyle.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        function GetContent() {
+            return ID100Control.ReadContent();
+        }
+        function GetJsonContent() {
+            return ID100Control.ReadContentEx();
+        }
+
+        function Connect() {
+            return ID100Control.Connect();
+        }
+
+        function Disconnect() {
+            ID100Control.DisConnect();
+        }
+    </script>
+
+    <OBJECT ID="ID100Control" CLASSID="CLSID:BAD80877-E3D2-41CC-91AE-C7FD9D019E36"></OBJECT>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <form id="formIDCard" class="form-horizontal" method="post">
+                    <div class="row-fluid">
+                        <div id="divCustomToolbar">
+                            <button id="aClose" type="button" class="btn" onclick="javascript: window.close();">关闭</button>
+                            <button id="aReadFromRearder" type="button" class="btn btn-primary" style="display:">从读卡器读取</button>
+                        </div>
+                        <div id="divListTableNeedUpdate" class="row-fluid">
+                            <table id="tbListIDCard"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="550"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true">
+                                <thead>
+                                    <tr>
+                                        <th data-width="15%" data-field="CARDNO" data-sortable="true" data-align="center" data-order="asc">身份证号码</th>
+                                        <th data-width="5%" data-field="SNAME" data-sortable="true" data-align="center" data-order="asc">姓名</th>
+                                        <th data-width="5%" data-field="SSEX" data-sortable="true" data-align="center" data-order="asc">性别</th>
+                                        <th data-width="10%" data-field="SBIRTHDAY" data-sortable="true" data-align="center" data-order="asc">出生日</th>
+                                        <th data-width="5%" data-field="SNATION" data-sortable="true" data-align="center" data-order="asc">民族</th>
+                                        <th data-width="20%" data-field="SADDRESS" data-sortable="true" data-align="center" data-order="asc">现住址</th>
+                                        <th data-width="15%" data-field="SORG" data-sortable="true" data-align="center" data-order="asc" data-visible="false">登记机关</th>
+                                        <th data-width="10%" data-field="SVALIDDATEF" data-sortable="true" data-align="center" data-order="asc" data-visible="false">有效期从</th>
+                                        <th data-width="10%" data-field="SVALIDDATET" data-sortable="true" data-align="center" data-order="asc">有效期到</th>
+                                        <th data-width="5%" data-field="photo" data-formatter="photoFormatter" data-align="center" data-events="operateEvents" data-visible="false">照片</th>
+                                        <th data-width="10%" data-field="INPUTTIME" data-sortable="true" data-align="center" data-order="asc" data-visible="false">获取时间</th>
+                                        <th data-width="5%" data-field="operate" data-formatter="operateFormatter" data-align="center" data-events="operateEvents">选择操作</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">从身份证读卡器读取身份证信息</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="thumbnail">
+                                                <img id="imgPhoto">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">身份证号码</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="txt_CardNo" name="txt_CardNo" class="form-control" readonly="readonly"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">姓名</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="txt_Name" name="txt_Name" class="form-control" readonly="readonly"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">性别</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="txt_Sex" name="txt_Sex" class="form-control" readonly="readonly"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">民族</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="txt_Nation" name="txt_Nation" class="form-control" readonly="readonly"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">出生年月</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="txt_BirthDay" name="txt_BirthDay" class="form-control" readonly="readonly"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">现住址</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="txt_Address" name="txt_Address" class="form-control" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">证件注册机关</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="txt_Org" name="txt_Org" class="form-control" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-4 control-label">证件有效期</label>
+                                                <div class="col-md-8">
+                                                    <input type="text" id="txt_ValidDate" name="txt_ValidDate" class="form-control" readonly="readonly" />
+                                                </div>
+                                            </div>
+
+                                            <input type="text" id="txt_Photo" name="txt_Photo" class="form-control" style="display:none" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="btnCancel" type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+                                    <button id="btnSave" type="button" class="btn btn-primary">保 存</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="row-fluid">
+                    <h5 style="color:red;">温馨提示：</h5>
+                    <h5>1、请使用IE浏览器，并设置该网站为兼容性视图模式。</h5>
+                    <h5>2、首次使用或者页面顶端出现空白区域请<a href="../../SysFile/Download/ZKID/ZKIDR100_ActiveX_Setup.exe">下载读卡器的控件</a>后进行安装并刷新该页面重试！</h5>
+                    <h5 id="hDriver32">3、如未安装驱动请<a href="../../SysFile/Download/ZKID/USBDrv3.0-x86.msi">下载驱动</a>后安装重试！</h5>
+                    <h5 id="hDriver64">3、如未安装驱动请<a href="../../SysFile/Download/ZKID/USBDrv3.0-x64.msi">下载驱动</a>后安装重试！</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var agent = navigator.userAgent.toLowerCase();
+            if (agent.indexOf("win64") >= 0 || agent.indexOf("wow64") >= 0) {
+                $("#hDriver32").hide();
+                $("#hDriver64").show();
+            } else {
+                $("#hDriver32").show();
+                $("#hDriver64").hide();
+            }
+
+            GetAndSetHadUpdatedList();
+
+            $('#myShowIDInfoModal').on('hidden', function () {
+                $(this).removeData('modal');
+            });
+
+            $('#aReadFromRearder').click(function () {
+                //alert(Connect());
+                if (GetIDInfo()) {
+                    $("#myModal").modal();
+                } else {
+                    alert('请重新将身份证放上后重试！');
+                }
+
+            });
+
+            function GetIDInfo() {
+                Connect();
+                var jsonData = GetJsonContent();
+                var dataobj = eval("(" + jsonData + ")");
+                if (dataobj.info != null) {
+                    var cardNo = dataobj.info.cardno;
+                    var name = dataobj.info.name;
+                    var sex = dataobj.info.sex;
+                    var nation = dataobj.info.nation;
+                    var birth = dataobj.info.birth;
+                    var address = dataobj.info.address;
+                    var org = dataobj.info.org;
+                    var validata = dataobj.info.validata;
+                    var photo = dataobj.info.photo;
+
+                    $("#imgPhoto").attr('src', 'data:image/png;base64,' + photo);
+                    $("#txt_CardNo").val(dataobj.info.cardno);
+                    $("#txt_Name").val(dataobj.info.name);
+                    $("#txt_Sex").val(dataobj.info.sex);
+                    $("#txt_Nation").val(dataobj.info.nation);
+                    $("#txt_BirthDay").val(dataobj.info.birth);
+                    $("#txt_Address").val(dataobj.info.address);
+                    $("#txt_Org").val(dataobj.info.org);
+                    $("#txt_ValidDate").val(dataobj.info.validata);
+                    $("#txt_Photo").val(dataobj.info.photo);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            $('#btnSave').click(function () {
+                var urlQuery = escape("M=" + Math.random() + "&param=submit");
+                var url = "ReadIDCard.ashx?" + urlQuery;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: url,
+                    data: $('#formIDCard').serialize(), // 你的formid
+                    async: false,
+                    error: function (request) {
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        if (data == 'error') {
+                            alert(data);
+                        } else if (data == 'success') {
+                            $("#myModal").modal('hide');
+                            GetAndSetHadUpdatedList();
+                        }
+                    }
+                });
+            });
+        });
+
+    </script>
+    <!--页面初始化区域-->
+    <script type="text/javascript">
+        //获取本地服务器中的已更新列表
+        function GetAndSetHadUpdatedList() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getlist");
+            var url = "ReadIDCard.ashx?" + urlQuery;
+
+            try {
+                $.ajax({
+                    cache: false,
+                    url: url,
+                    async: false,
+                    type: "post",
+                    data: $("#formIDCard").serialize(), // 你的formid
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        //alert(jqXHR);
+                        //alert(textStatus);
+                        //alert(errorThrown);
+                        HideLoadingLevel1();
+                    },
+                    success: function (result) {
+                        //alert(result);
+                        if (result == "") return false;
+                        var dataobj = eval("(" + result + ")");
+                        //                alert(dataobj);
+                        //alert(dataobj.ResultData.length); //输出ResultData的子对象数量//
+                        var item = dataobj.ResultData[0];
+                        var rows = dataobj.ResultData.length;
+                        //构建表格####### Start
+                        var i, j, row, columns = [], data = [];
+
+                        for (i = 0; i < rows; i++) {
+                            row = {};
+                            for (var key in dataobj.ResultData[i]) {
+                                row[key] = unescape(dataobj.ResultData[i][key]);
+                            }
+                            data.push(row);
+                        }
+
+                        $('#tbListIDCard').bootstrapTable('destroy').bootstrapTable({
+                            data: data
+                        });
+
+                        $('#tbListIDCard').bootstrapTable('review');
+                    }
+                });
+            }
+            catch (err) {
+                HideLoadingLevel1();
+                return;
+            }
+        }
+
+        //定义每列的操作事件
+        function operateFormatter(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var cardNo = RowData.CARDNO;
+            return [
+                '<a class="select ml10" href="javascript:void(0)" title="update" id ="a_' + cardNo + '">',
+                    '<i class="icon-remove"></i>选择',
+                '</a>'
+            ].join('');
+
+        }
+        window.operateEvents = {
+            'click .select': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var cardNo = RowData.CARDNO;
+                //alert(cardNo);
+
+                if (window.opener.document.getElementById("txt_OANEW_1_DCNAMECHS")) {//姓名
+                    window.opener.document.getElementById("txt_OANEW_1_DCNAMECHS").value = RowData.SNAME;
+                }
+                if (window.opener.document.getElementById("ddList_OANEW_1_DCGENDER")) {//性别
+                    var sexValue = 'M'; if (RowData.SSEX == '女') { sexValue = 'F'; }
+                    jsSelectItemByValue(window.opener.document.getElementById("ddList_OANEW_1_DCGENDER"), sexValue);
+                }
+                if (window.opener.document.getElementById("ddList_OANEW_1_DCNATION")) {//民族
+                    jsSelectItemByName(window.opener.document.getElementById("ddList_OANEW_1_DCNATION"), RowData.SNATION);
+                }
+                if (window.opener.document.getElementById("ddList_OANEW_1_DCICQ")) {//证件类型默认身份证
+                    jsSelectItemByValue(window.opener.document.getElementById("ddList_OANEW_1_DCICQ"), '001');
+                }
+                if (window.opener.document.getElementById("txt_OANEW_1_DCID")) {//证件号码
+                    window.opener.document.getElementById("txt_OANEW_1_DCID").value = RowData.CARDNO;
+                }
+                if (window.opener.document.getElementById("txt_OANEW_1_DCIDDATE")) {//证件到期日期
+                    window.opener.document.getElementById("txt_OANEW_1_DCIDDATE").value = RowData.SVALIDDATET;
+                }
+                if (window.opener.document.getElementById("txt_OANEW_1_DCRESI")) {//证件地址
+                    window.opener.document.getElementById("txt_OANEW_1_DCRESI").value = RowData.SADDRESS;
+                }
+                if (window.opener.document.getElementById("txt_OANEW_1_DCADDR")) {//现住址
+                    window.opener.document.getElementById("txt_OANEW_1_DCADDR").value = RowData.SADDRESS;
+                }
+                if (window.opener.document.getElementById("txt_OANEW_1_DCBIRTH")) {//出生日期
+                    window.opener.document.getElementById("txt_OANEW_1_DCBIRTH").value = RowData.SBIRTHDAY;
+                }
+                //alert('dd');
+                window.close();
+            }
+        };
+
+        function photoFormatter(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var photo = RowData.SPHOTO;
+            return [
+                '<img id="imgPhoto" src="data:image/png;base64,'+ photo+'">'
+            ].join('');
+
+        }
+
+        function jsSelectItemByValue(objSelect, objItemValue) {
+            for (var i = 0; i < objSelect.options.length; i++) {
+                if (objSelect.options[i].value == objItemValue) {
+                    objSelect.options[i].selected = true;
+                    break;
+                }
+            }
+        }
+        function jsSelectItemByName(objSelect, objItemText) {
+            for (var i = 0; i < objSelect.options.length; i++) {
+                if (objSelect.options[i].text.indexOf(objItemText) > -1) {
+                    objSelect.options[i].selected = true;
+                    break;
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

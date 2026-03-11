@@ -1,0 +1,461 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>薪资项目设置</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+    <link href="../../common/plugins/bootstrap-ztree3/css/bootstrapStyle/bootstrapStyle.css" type="text/css">
+</head>
+
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/plugins/bootstrap/js/bootstrap.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../common/js/stringUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/MainUtil.js" type="text/javascript"></script>
+    <script src="../../common/plugins/bootstrap-ztree3/js/jquery.ztree.core.js"></script>
+    <script src="../../common/plugins/bootstrap-ztree3/js/jquery.ztree.excheck.js"></script>
+    <script src="../../common/plugins/bootstrap-ztree3/js/jquery.ztree.exedit.js"></script>
+
+    <div class="alert alert-success text-left" id="lb_Tips">
+        <div class="row">
+            <div class="text-center col-sm-12">
+                <div class="alert alert-danger text-center" id="lb_NoticeMsg" role="alert"></div>
+                <textarea type="text" id="txt_SelectedOrderNum" name="txt_SelectedOrderNum" class="form-control text-info" style="display:none"></textarea>
+            </div>
+        </div>
+        <!--<span>提示:1、本页面可以进行批量删除</span>
+            <span>2、本页面中的可输入部分，在输入数据后会立即单独保存,请谨慎操作!</span>
+        -->
+        <button id="btnSwitchToListView" type="button" class="btn btn-warning btn-sm">切换到列表视图</button>
+        <div class="btn-group">
+            <text id="txtIsStopCode" value="" style="display:none"></text>
+            <button type="button" class="btn btn-default btn-sm " id="lbIsStopDesc">正常使用</button>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="aChangeIsStop" href="#" refData="">All-所有状态</a></li>
+                <li><a class="aChangeIsStop label-info" href="#" refData="2">正常使用</a></li>
+                <li><a class="aChangeIsStop" href="#" refData="1">已停用</a></li>
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <text id="txtIsShowPrintCode" value="" style="display:none"></text>
+            <button type="button" class="btn btn-default btn-sm " id="lbIsShowPrintDesc">所有显示状态</button>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="aChangeIsShowPrint label-info" href="#" refData="">All-所有显示状态</a></li>
+                <li><a class="aChangeIsShowPrint" href="#" refData="1">报表显示</a></li>
+                <li><a class="aChangeIsShowPrint" href="#" refData="2">报表不显示</a></li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <text id="txtItemVerifyCode" value="" style="display:none"></text>
+            <button type="button" class="btn btn-default btn-sm " id="lbItemVerifyDesc">020-验证有效</button>
+            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="aChangeItemVerify" href="#" refData="">All-所有验证状态</a></li>
+                <li><a class="aChangeItemVerify" href="#" refData="010">010-未验证</a></li>
+                <li><a class="aChangeItemVerify label-info" href="#" refData="020">020-验证有效</a></li>
+                <li><a class="aChangeItemVerify" href="#" refData="030">030-验证无效</a></li>
+            </ul>
+        </div>
+        <div class="row" style="padding-left:10px;padding-right:10px;padding-top:10px">
+            <select id="sel_Type030" name="sel_Type030" class="selectpicker" data-width="100%" data-live-search="true">
+                <option>所有公式</option>
+            </select>
+        </div>
+
+    </div>
+    <form id="formList" class="form-horizontal" method="post">
+        <div class="container-fiuled">
+            <div class="row-fiuled">
+                <div class="col-lg-3">
+                    <h4 style="margin-left:30px">当前项目涉及到的其他薪资项目</h4>
+                    <hr />
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+                <div class="col-lg-9" style="border-left:dashed">
+                    <div class="row">
+                        <div class="text-center col-sm-12">
+                            <div class="alert alert-danger text-left small" role="alert">
+                                当前项目编码：<span id="lb_CurItemCode" class="label label-primary"></span>
+                                当前项目名称：<span id="lb_CurItemName" class="label label-primary"></span>
+                                当前验证状态：<span id="lb_CurItemVerifyDesc" class="label label-primary"></span>
+                                <a id="btn_ReturnSelected" href="#" class="pull-right" style="display:none">返回公式</a>
+                            </div>
+                        </div>
+                    </div>
+                    <textarea type="text" id="txt_ItemEPPL" name="txt_ItemEPPL" rows="12" class="form-control text-info"></textarea>
+                    <div class="row text-center" style="margin: 20px">
+                        <button id="btnSave" type="button" class="btn btn-success btn-sm" style="margin-right:30px">保存</button>
+                        <button id="btnVerify" type="button" class="btn btn-warning btn-sm" style="display:none">验证</button>
+                    </div>
+                    <textarea type="text" id="txt_ItemEPPLDESC" name="txt_ItemEPPLDESC" rows="12" class="form-control text-info" readonly></textarea>
+                    <textarea type="text" id="txt_CurItemCode" name="txt_CurItemCode" style="display:none"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>-->
+                    <h4 class="modal-title" id="myWaittingModalTitle">
+                        正在处理中,请稍候.....
+                    </h4>
+                </div>
+                <div id="myWaittingModalContent" class="modal-body">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        //var varItemCode = GetUrlQueryString("P0");
+        var setting = {
+            view: {
+                addHoverDom: false,
+                removeHoverDom: false,
+                selectedMulti: false
+            },
+            check: {
+                enable: false
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            edit: {
+                enable: false
+            }
+        };
+        var zNodes = [
+            //{ id: 1, pId: 0, name: "[core] 基本功能 演示", open: true },
+            //{ id: 101, pId: 1, name: "最简单的树 --  标准 JSON 数据" },
+            //{ id: 2, pId: 0, name: "[excheck] 复/单选框功能 演示", open: true },
+            //{ id: 201, pId: 2, name: "Checkbox 勾选操作" },
+            //{ id: 3, pId: 0, name: "[exedit] 编辑功能 演示", open: true },
+            //{ id: 301, pId: 3, name: "拖拽 节点 基本控制" },
+            //{ id: 4, pId: 0, name: "大数据量 演示", open: true },
+            //{ id: 403, pId: 4, name: "分批异步加载大数据量" }
+        ];
+        $(document).ready(function () {
+            $("#lb_NoticeMsg").text('').hide();
+            $('#formList').hide();
+            $("#txtIsStopCode").val("2");
+            $("#txtIsShowPrintCode").val("");
+            $("#txtItemVerifyCode").val("020");
+            $('#btnSwitchToListView').click(function (e) {
+                ShowWaitting();
+                setTimeout(function () {
+                    window.location.href = 'PRItemIndex.html'
+                }, 300)
+            });
+            //$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            ///公式项目下拉框切换事件
+            $('#sel_Type030').change(function () {
+                ShowWaitting();
+                if ($('#sel_Type030').val() != '') {
+                    $('#formList').show();
+                    GetOneItemInfo($('#sel_Type030').val(), '030');
+
+                } else {
+                    $('#formList').hide();
+                }
+                setTimeout(function () {
+                    GetAndSetTreeByItemCode();
+                }, 100)
+            });
+            $('#btn_ReturnSelected').click(function () {
+                ShowWaitting();
+                GetOneItemInfo($('#sel_Type030').val(), '030');
+            });
+
+            $('.aChangeIsStop').click(function (e) {
+                $("#lbIsStopDesc").text($(this).html());
+                $("#txtIsStopCode").val($(this).attr("refData"));
+
+                $('.aChangeIsStop').removeClass("label-info");
+                $(this).addClass("label-info");
+
+                $('#formList').hide();
+                ///加载所有公式列表
+                GetAll030ListResult();
+            });
+
+            $('.aChangeIsShowPrint').click(function (e) {
+                $("#lbIsShowPrintDesc").text($(this).html());
+                $("#txtIsShowPrintCode").val($(this).attr("refData"));
+
+                $('.aChangeIsShowPrint').removeClass("label-info");
+                $(this).addClass("label-info");
+
+                $('#formList').hide();
+                ///加载所有公式列表
+                GetAll030ListResult();
+            });
+
+            $('.aChangeItemVerify').click(function (e) {
+                $("#lbItemVerifyDesc").text($(this).html());
+                $("#txtItemVerifyCode").val($(this).attr("refData"));
+
+                $('.aChangeItemVerify').removeClass("label-info");
+                $(this).addClass("label-info");
+
+                $('#formList').hide();
+                ///加载所有公式列表
+                GetAll030ListResult();
+            });
+
+            ///加载所有公式列表
+            GetAll030ListResult();
+
+            $('#btnSave').click(function (e) {
+                SaveDataOneCtral();
+
+                ///加载所有公式列表
+                //GetAll030ListResult();
+            });
+
+        });
+
+
+    </script>
+
+    <!--加载所有公式项目列表到下拉框-->
+    <script type="text/javascript">
+        function GetAll030ListResult() {
+            $("#lb_NoticeMsg").text('').hide();
+            var strParam = "";
+            strParam = strParam + "&isstop=" + $("#txtIsStopCode").val();
+            strParam = strParam + "&isshowprint=" + $("#txtIsShowPrintCode").val();
+            strParam = strParam + "&verifycode=" + $("#txtItemVerifyCode").val();
+            //alert(strParam);
+            var urlQuery = escape("M=" + Math.random() + "&param=queryall030&" + strParam);
+            var url = "PRItemTree.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                        HideWaiting();
+                        return false;
+                    }
+                    var dataobj = JSON.parse(data);
+                    var count = dataobj.length;
+
+                    //加载下拉列表sel_Type030
+                    $("#sel_Type030").empty();
+                    $("#sel_Type030").append("<option value=''>" + "所有公式类型的薪资项目（共" + count + "项）" + "</option>");
+                    $.each(dataobj, function (idx, item) {
+                        var showName = unescape(item.name);
+                        var eppl = item.eppl;
+                        var eppldesc = item.eppldesc;
+                        var verifydesc = item.verifydesc;
+                        $("#sel_Type030").append("<option value='" + item.id + "' verifydesc = '" + verifydesc + "' eppl = '" + eppl + "' eppldesc = '" + eppldesc + "'>" + showName + "</option>");
+                    });
+
+                    $("#sel_Type030").selectpicker('refresh');
+                    //构建表格####### End
+                    HideWaiting();
+                }
+            });
+            HideWaiting();
+        }
+    </script>
+
+    <!--实时加载某项目的明细信息-->
+    <script type="text/javascript">
+        function GetOneItemInfo(itemCode, itemType) {
+            if (itemType == '030') {
+                var strParam = "itemcode=" + itemCode;
+                //alert(strParam);
+                var urlQuery = escape("M=" + Math.random() + "&param=querylist&" + strParam);
+                var url = "PRItemIndex.ashx?" + urlQuery;
+                //alert(url);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    data: $('#formList').serialize(), // 你的formid
+                    error: function (request) {
+                        HideWaiting();
+                        $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        if ((data == "") || (data == "")) {
+                            $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                            HideWaiting();
+                            return false;
+                        }
+                        var jsonData = JSON.parse(data)
+                        $('#txt_ItemEPPL').val(unescape(jsonData.ResultData[0].ITEMEPPL));
+                        $('#txt_ItemEPPLDESC').val(unescape(jsonData.ResultData[0].EPPLDESC));
+                        $('#lb_CurItemCode').text(unescape(jsonData.ResultData[0].ITEMCODE));
+                        $('#txt_CurItemCode').val($('#lb_CurItemCode').text());
+                        $('#lb_CurItemName').text(unescape(jsonData.ResultData[0].SHOWNAMECHS));
+                        $('#lb_CurItemVerifyDesc').text(unescape(jsonData.ResultData[0].ITEMVERIFY_DESC));
+
+                        //构建表格####### End
+                        HideWaiting();
+                    }
+                });
+                if (itemCode != $("#sel_Type030").val()) {
+                    var curSelectedText = $('#sel_Type030').find("option:selected").text();
+                    $('#btn_ReturnSelected').text('返回【' + curSelectedText + '】的公式');
+                    $('#btn_ReturnSelected').show();
+                } else {
+                    $('#btn_ReturnSelected').hide();
+                }
+            }
+            HideWaiting();
+        }
+    </script>
+
+    <!--加载树形列表-->
+    <script type="text/javascript">
+        function GetAndSetTreeByItemCode() {
+            $("#lb_NoticeMsg").text('').hide();
+            var strParam = "parentcode=" + $("#sel_Type030").val();
+            //alert(strParam);
+            var urlQuery = escape("M=" + Math.random() + "&param=querytreelist&" + strParam);
+            var url = "PRItemTree.ashx?" + urlQuery;
+            //alert(url);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                        HideWaiting();
+                        return false;
+                    }
+                    //var dataobj = eval("(" + data + ")");
+                    $("#txt_SelectedOrderNum").text(data);
+                    var jsonData = JSON.parse(data)
+                    $.fn.zTree.init($("#treeDemo"), setting, jsonData);
+
+                    //构建表格####### End
+                    HideWaiting();
+                }
+            });
+            HideWaiting();
+        }
+    </script>
+
+    <!--即时保存单独每个字段控件的数据-->
+    <script type="text/javascript">
+        ///即时保存单独每个字段控件的数据
+        function SaveDataOneCtral() {
+            $("#lb_NoticeMsg").show().text('保存中....');
+            ShowWaitting();
+
+            //请求服务器进行保存escape
+            //Form提交模式
+            var urlQuery = ("M=" + Math.random() + "&param=savedataonectrl");
+            var url = "PRItemIndex.ashx?" + urlQuery;
+            //alert(CtrlValue);
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                type: "post",
+                data: $("#formList").serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('请求服务器时出错，请联系管理员处理!');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+
+                    var dataJson = JSON.parse(data);
+
+                    if (dataJson.savedCount >= "1") {
+                        HideWaiting();
+                        $('#txt_ItemEPPL').val(unescape(dataJson.savedReturnData.ResultData[0].ITEMEPPL));
+                        $('#txt_ItemEPPLDESC').val(unescape(dataJson.savedReturnData.ResultData[0].EPPLDESC));
+
+                        var verifyCode = unescape(dataJson.savedReturnData.ResultData[0].ITEMVERIFY);
+                        var verifyDesc = unescape(dataJson.savedReturnData.ResultData[0].ITEMVERIFY_DESC);
+                        $('#lb_CurItemVerifyDesc').text(verifyDesc);
+                        if (verifyCode == '030') {
+                            $("#lb_NoticeMsg").show().text('本公式设置后验证无效,请重新设置');
+                            setTimeout(function () {
+                                $("#lb_NoticeMsg").text('').hide();
+                            }, 5000);
+                        } else {
+                            $("#lb_NoticeMsg").show().text('修改成功!');
+                            setTimeout(function () {
+                                GetAndSetTreeByItemCode();
+                                $("#lb_NoticeMsg").text('').hide();
+                            }, 1000);
+                        }
+
+                    } else {
+                        $("#lb_NoticeMsg").text(showString + '失败，请联系管理员处理!');
+                        HideWaiting();
+                    }
+                }
+            });
+            HideWaiting();
+        }
+    </script>
+</body>
+</html>
+

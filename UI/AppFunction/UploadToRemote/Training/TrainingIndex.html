@@ -1,0 +1,577 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>推送同步培训记录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <form id="formStaffSalaryList" class="form-horizontal" method="post">
+                    <div class="row-fluid navbar" style="vertical-align:middle">
+                        <div class=" pull-left" style="vertical-align:middle">
+                            <h2>推送同步培训记录</h2> 
+                        </div>
+                    </div>
+                    <div class="row" style="display:none">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">当前授权</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_ClientName" name="txt_ClientName" class="form-control" readonly="readonly" />
+                                </div>
+                                <label class="col-sm-1 control-label">当前系统编号</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_ProjectId" name="txt_ProjectId" class="form-control" readonly="readonly" />
+                                </div>
+                                <div class="col-sm-4">
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" id="txt_RemoteServer" name="txt_RemoteServer" class="form-control" style="display:none" />
+                        <input type="text" id="txt_OpFlag" name="txt_OpFlag" class="form-control" style="display:none" />
+                        <textarea type="text" id="txt_SelectedTSEQ" name="txt_SelectedTSEQ" class="form-control" style="display:none"></textarea>
+                        <textarea type="text" id="txt_ResultData" name="txt_ResultData" class="form-control" style="display:none"></textarea>
+                        <textarea type="text" id="txt_ResultData_TrainingSignIn" name="txt_ResultData_TrainingSignIn" class="form-control" style="display:none"></textarea>
+                    </div>
+                    <div class="row-fluid">
+                        <div id="divCustomToolbar" class="text-center">
+                            <button id="aClose" type="button" class="btn" onclick="javascript: window.close();">关闭</button>
+                            <button id="aUploadTraining" type="button" class="btn btn-success">推送同步选中的培训记录</button>
+                            <a href="../StaffMobile/StaffMobileList.html" target="_blank" class="m-lg">查看员工手机号码</a>
+                            <label id="lb_NoticeMsg" class="text-danger"></label>
+                        </div>
+                        <div id="divListTableNeedUpdate" class="row-fluid">
+                            <table id="tbTrainingList"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="650"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size="200"
+                                   data-page-list="[10, 50,100, 200, 500, 1000]">
+                                <thead>
+                                    <tr></tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                    </div>
+                    <div class="row">
+                        <div class="text-center col-sm-12">
+                            <textarea type="text" id="txt_UploadResult" name="txt_UploadResult" class="form-control col-sm-12" rows="5"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body" style="font-size:larger;color:red">
+
+                    </div>
+                    <!--<div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            关闭
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            提交更改
+                        </button>
+                    </div>-->
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        $(document).ready(function () {
+            //判断是否登录
+            JudgeIsLogin();
+
+            ///确定推送
+            $('#aUploadTraining').click(function () {
+                $("#myWaittingModalTitle").html("正在处理中,请稍候.....");
+                $("#myWaittingModalContent").empty();
+                $("#txt_UploadResult").empty();
+                UploadTrainingByOneStaff();
+            });
+        });
+
+        //判断是否登录
+        function JudgeIsLogin() {
+            var urlQuery = escape("M=" + Math.random());
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-9999') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                    } else {
+                        ///加载当前客户相关信息
+                        LoadClientInfo();
+
+                    }
+                }
+            })
+        }
+
+        ///加载当前客户相关信息
+        function LoadClientInfo() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getclientinfo");
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        $("#txt_ProjectId").val(unescape(item.ProjectId));
+                        $("#txt_ClientName").val(unescape(item.ClientName));
+                        $("#txt_RemoteServer").val(unescape(item.RemoteServer));
+                    });
+
+                    //判断该项目是否具有此功能的授权
+                    JudgeProjectWXAuthIsValid($("#txt_ProjectId").val(), "020");
+
+                }
+            });
+        }
+
+        //判断该项目是否具有此功能的授权
+        function JudgeProjectWXAuthIsValid(ProjectId, WXMPModule) {
+            var urlQuery = escape("M=" + Math.random() + "&param=wxauthisvalid&projectid=" + ProjectId + "&wxmpmodule=" + WXMPModule);
+            var url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/CommonServerHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data != 'true') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚无此功能的操作授权或者授权已过期，请联系系统管理员咨询！');
+                    } else {
+                        //加载列表
+                        GetAndSetListResult();
+                    }
+                }
+            });
+        }
+
+        ///加载结果列表
+        function GetAndSetListResult() {
+            ShowWaitting();
+            $("#lb_NoticeMsg").text('');
+
+            $("#txt_OpFlag").val(NewClientGuid());
+            var urlQuery = escape("M=" + Math.random() + "&param=gettrainninglist");
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").text('查询出现错误，请更正查询条件后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        $("#lb_NoticeMsg").text('查询出现错误，请更正查询条件后重试！');
+                        HideWaiting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj);
+                    //alert(dataobj.ResultData.length); //输出ResultData的子对象数量//
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+
+                    columns.push({
+                        field: "check",
+                        checkbox: true,
+                        visible: true,
+                        order: "desc"
+                    });
+                    for (var key in dataobj.colNames[0]) {
+                        if ('QueryFlag;QueryUser;QueryTime'.indexOf(key) >= 0) {
+                            columns.push({
+                                field: key,
+                                title: dataobj.colNames[0][key],
+                                align:"right",
+                                sortable: true,
+                                visible: false,
+                                order: "desc"
+                            });
+                        } else {
+                            if ('最后推送时间'.indexOf(key) >= 0) {
+                                var cellBgColor = "green";
+                                if (dataobj.colNames[0][key] == '暂未推送') {
+                                    cellBgColor = "red";
+                                }
+                                columns.push({
+                                    field: key,
+                                    title: dataobj.colNames[0][key],
+                                    sortable: true,
+                                    visible: true,
+                                    align: "right",
+                                    cellStyle: function (value, row, index) {
+                                        if (value != '暂未推送') {
+                                            return { css: { "color": "green" } }
+                                        } else {
+                                            return { css: { "color": "red" } }
+                                        }
+                                    },
+                                    order: "desc"
+                                });
+                            }else if ('最后下载时间'.indexOf(key) >= 0) {
+                                var cellBgColor = "green";
+                                if (dataobj.colNames[0][key] == '暂未下载签到') {
+                                    cellBgColor = "red";
+                                }
+                                columns.push({
+                                    field: key,
+                                    title: dataobj.colNames[0][key],
+                                    sortable: true,
+                                    visible: true,
+                                    align: "right",
+                                    cellStyle: function (value, row, index) {
+                                        if (value != '暂未下载签到') {
+                                            return { css: { "color": "green" } }
+                                        } else {
+                                            return { css: { "color": "red" } }
+                                        }
+                                    },
+                                    order: "desc"
+                                });
+                            }else {
+                                columns.push({
+                                    field: key,
+                                    title: dataobj.colNames[0][key],
+                                    sortable: true,
+                                    visible: true,
+                                    align: "right",
+                                    order: "desc"
+                                });
+                            }
+                        }
+                    }
+
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbTrainingList').bootstrapTable('destroy').bootstrapTable({
+                        columns: columns,
+                        data: data
+                    });
+                    $('#tbTrainingList').bootstrapTable('resetView');
+                    //构建表格####### End
+                    HideWaiting();
+                }
+            });
+            HideWaiting();
+        }
+    </script>
+
+    <!--单个员工或批量推送上传-->
+    <script type="text/javascript">
+        //单个员工推送上传
+        function UploadTrainingByOneStaff() {
+            ShowWaitting();
+            $("#txt_SelectedTSEQ").val("");
+            var getSelectRows = JSON.stringify($("#tbTrainingList").bootstrapTable('getSelections'));
+            getSelectRows = JSON.parse(getSelectRows);
+            //alert(getSelectRows.length);
+            if (getSelectRows.length <= 0) {
+                $("#lb_NoticeMsg").text('请选择培训记录后再重试！');
+                HideWaiting();
+            } else {
+                if (confirm("是否确定推送同步选中培训记录到远程服务器?")) {
+                    $("#lb_NoticeMsg").text('推送中...请稍候...');
+                    var iTotalCount = getSelectRows.length;
+                    var iSuccessCount = 0;
+                    if (iTotalCount > 0) {
+                        //循环递归调用每行数据
+                        //需要调用ajax请求，此处不用for循环，递归能保证循环体结束后才进入下一循环中
+                        LoopGetLocalData(getSelectRows, 0, iTotalCount, iSuccessCount);
+                    }
+                } else {
+                    HideWaiting();
+                }
+            }
+        }
+
+        ///循环递归调用每行数据
+        function LoopGetLocalData(getSelectRows, iIndex, iTotalCount, iSuccessCount) {
+            var RowData = getSelectRows[iIndex];
+            var varTSEQ = RowData.培训编号;
+            var varTNAME = RowData.课程名称;
+            var curDatetime = new Date().format("yyyy-MM-dd hh:mm:ss");
+
+            var varNoticeTips = '(' + curDatetime + ')&nbsp;&nbsp正在推送培训记录:' + varTSEQ + '(培训名称' + varTNAME + ')';
+            $("#myWaittingModalContent").prepend('<br\><span style = "color:#0066FF">' + varNoticeTips+'</span>&nbsp;&nbsp;');
+
+            var urlQuery = escape("M=" + Math.random() + "&param=getonetrainingdata&tseq=" + varTSEQ);
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    $("#lb_NoticeMsg").text('推送失败，请重试！');
+                    HideWaiting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-1') {
+                        $("#lb_NoticeMsg").text('推送失败，请重试！');
+                        HideWaiting();
+                    } else {
+                        var dataobj = JSON.parse(data);
+                        var jsonData = JSON.stringify(dataobj.ResultData);
+
+                        $("#txt_ResultData").val(jsonData);
+                        //alert($("#txt_ResultData").val());
+
+                        ////上传数据到远程服务器
+                        var iReturn = UploadDataToRemote();
+                        //alert(iReturn);
+
+                        if (iReturn == '-9') {
+                            $("#myWaittingModalTitle").html('<span style = "color:red">推送数据时远程服务器出错,请联系管理员处理!</span>');
+                            $("#lb_NoticeMsg").text("推送数据时远程服务器出错,请联系管理员处理!");
+                            setTimeout(function () {
+                                HideWaiting();
+                            }, 5000);
+                            return;
+                        } else if (iReturn == '-1') {
+                            $("#myWaittingModalContent").prepend('<br\><span style = "color:red">' + varNoticeTips + '失败！</span>&nbsp;&nbsp;');
+                            $("#txt_UploadResult").prepend(varNoticeTips+'失败!<br/>');
+                        } else {
+                            iSuccessCount++;
+                            $("#myWaittingModalContent").prepend('<br\><span style = "color:green">(' + varNoticeTips + ')</span>&nbsp;&nbsp;');
+                            $("#myWaittingModalTitle").html('推送中,请稍候.....<span style = "color:red">(已完成' + (iIndex + 1) + '/' + iTotalCount + ')</span>');
+                            $("#txt_UploadResult").prepend(varNoticeTips + '成功!<br/>');
+                            //单个记录推送成功的记录
+                            RecordSendHistory(varTSEQ);
+                        }
+
+                        iIndex++;
+                        setTimeout(function () {
+                            if (iIndex < iTotalCount) {
+                                LoopGetLocalData(getSelectRows, iIndex, iTotalCount, iSuccessCount);
+                            } else {
+                                $("#myWaittingModalTitle").html('<span style = "color:red">正在进行推送的后续处理,请稍候.....</span>');
+                                //上传数据到远程服务器成功后的后续处理
+                                var iReturnSuccess = UploadSalaryDataToRemote_AfterSuccess();
+                                if (iReturn == '-9') {
+                                    $("#myWaittingModalTitle").html('<span style = "color:red">推送成功后续处理时远程服务器出错，请联系管理员处理!</span>');
+                                    $("#lb_NoticeMsg").text("推送成功后续处理时远程服务器出错，请联系管理员处理!");
+                                    setTimeout(function () {
+                                        HideWaiting();
+                                    }, 5000);
+                                    return;
+                                } else if (iReturnSuccess == '-1') {
+                                    $("#lb_NoticeMsg").text('推送操作后的后续处理失败.请联系系统管理处理!');
+
+                                    $("#myWaittingModalTitle").html('<span style = "color:red">推送操作后的后续处理失败.请联系系统管理处理!</span>');
+                                    $("#txt_UploadResult").prepend('推送操作后的后续处理失败!<br/>');
+                                    setTimeout(function () {
+                                        HideWaiting();
+                                    }, 5000);
+                                } else {
+                                    var tips = '完成推送选中的(数量' + iTotalCount.toString() + ')记录！其中成功' + iSuccessCount.toString() + '条,失败' + (iTotalCount - iSuccessCount).toString() + '条';
+                                    $("#lb_NoticeMsg").text(tips);
+
+                                    $("#myWaittingModalTitle").html('<span style = "color:red">已成功完成操作.</span>');
+                                    $("#txt_UploadResult").prepend(tips + "<br/>");
+                                    GetAndSetListResult();
+                                    setTimeout(function () {
+                                        HideWaiting();
+                                    }, 2000);
+                                }
+
+                            }
+                        }, 500);
+                    }
+                }
+            });
+        }
+
+        //单个记录推送成功的记录
+        function RecordSendHistory(varTSEQ) {
+            var urlQuery = escape("M=" + Math.random() + "&param=recordsendhistory&tseq=" + varTSEQ);
+            var url = "ClientHandler.ashx?" + urlQuery;
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: true,
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-1') {
+                    } else {
+
+                    }
+                }
+            });
+        }
+
+        明天准备写插入签到数据到本地数据库
+
+    </script>
+
+    <!--///上传数据到远程服务器-->
+    <script type="text/javascript">
+        ///上传数据到远程服务器
+        function UploadDataToRemote() {
+            var returnValue = "-9";
+            var urlQuery = escape("M=" + Math.random() + "&param=uploaddatatoremote&projectid=" + $("#txt_ProjectId").val());
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/Training/ServerHandler.ashx?" + urlQuery;
+            }
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    returnValue = "-9";
+                    //$("#lb_NoticeMsg").text('推送失败，远程服务器发生异常，请重试！');
+                },
+                success: function (result) {
+                    if (result != '') {
+                        returnValue = '1';
+                        //alert(result);
+                        //alert(JSON.stringify(result.ResultData));
+
+                        var dataobj = JSON.parse(JSON.stringify(result.ResultData));
+                        alert(dataobj.length);
+                        //返回签到数据
+                        $("#txt_ResultData_TrainingSignIn").val(JSON.stringify(result.ResultData));
+                        
+                    }
+                }
+            });
+            return returnValue;
+        }
+
+        ///上传数据到远程服务器成功后的后续处理
+        function UploadSalaryDataToRemote_AfterSuccess() {
+            var returnValue = "-9";
+            var urlQuery = escape("M=" + Math.random() + "&param=afteruploadsuccess&projectid=" + $("#txt_ProjectId").val());
+            var url = "ServerHandler.ashx?" + urlQuery;
+            if (!isTestDebug) {
+                url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/Training/ServerHandler.ashx?" + urlQuery;
+            }
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formStaffSalaryList').serialize(), // 你的formid
+                error: function (request) {
+                    returnValue = "-9";
+                },
+                success: function (result) {
+                    //alert(result);
+                    returnValue = result;
+                }
+            });
+            return returnValue;
+        }
+
+    </script>
+
+</body>
+</html>

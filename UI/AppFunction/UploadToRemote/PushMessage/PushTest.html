@@ -1,0 +1,223 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>推送微信消息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../../../common/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="../../../common/plugins/summernote/summernote.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../../../common/plugins/bootstrap-select/js/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../../common/plugins/bootstrap-select/js/i18n/defaults-zh_CN.min.js" type="text/javascript"></script>
+    <script src="../../../common/plugins/summernote/summernote.js"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row text-center" style="padding-left:10px;padding-right:30px">
+            <div class="alert alert-danger text-left" id="lb_PageTips" style="display:none">
+                <label id="lb_NoticeMsg" class="text-danger"></label>
+            </div>
+            <div class="row navbar col-sm-12" style="vertical-align:middle">
+                <h2>公众号推送微信模版消息&nbsp;<label id="lbSubTile" class="text-danger" style="font-size:smaller"></label></h2>
+            </div>
+        </div>
+        <div class="row" style="padding-left:10px;padding-right:30px">
+            <div class="col-sm-12">
+                <div class="alert alert-danger text-left" id="lb_PageTips" style="display:none">
+                    <label id="lb_NoticeMsg" class="text-danger"></label>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <form id="formPushIndex" class="form-horizontal" method="post">
+                            <div class="col-sm-offset-2 col-sm-8" style="border:1px solid #808080">
+                                <h4 class="text-info" style="font-weight:600">当前授权:</h4>
+                                <input type="text" id="txt_ClientName" name="txt_ClientName" class="form-control" readonly="readonly" />
+                                <h4 class="text-info" style="font-weight:600">当前系统编号:</h4>
+                                <input type="text" id="txt_ProjectId" name="txt_ProjectId" class="form-control" readonly="readonly" />
+                                <h4 class="text-info" style="font-weight:600">远程地址:</h4>
+                                <input type="text" id="txt_RemoteServer" name="txt_RemoteServer" class="form-control" readonly="readonly" />
+                                <h4 class="text-info" style="font-weight:600">消息通知内容:</h4>
+                                <textarea id="txt_MessageContent" name="txt_MessageContent"></textarea>
+                                <h4 class="text-info" style="font-weight:600">推送结果:</h4>
+                                <textarea type="text" id="txt_PushResult" name="txt_PushResult" class="form-control col-lg-12" style="display:" rows="10"></textarea>
+                            </div>
+                        </form>
+                        <!--<div class="col-sm-3" style="border:1px solid #000">
+                            <h4>网页预览</h4>
+                            <div id="divPreviewHtml">
+                                <iframe id="frmPreviewHtml" name="frmPreviewHtml" width="264" height="463" frameborder="0" src="" style="border: 0px solid #cecece;" scrolling="auto"></iframe>
+                            </div>
+                        </div>-->
+                    </div>
+                    <br />
+                    <div class="row text-center">
+                        <button id="aTestPushTemplate" type="button" class="btn btn-success">测试推送模版消息</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 模态框（Modal） -->
+        <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>-->
+                        <h4 class="modal-title" id="myWaittingModalTitle">
+                            正在处理中,请稍候.....
+                        </h4>
+                    </div>
+                    <div id="myWaittingModalContent" class="modal-body" style="font-size:larger;color:red">
+
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal -->
+        </div>
+
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaitting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var isTestDebug = false;//是否调试模式，否则链接跨域远程服务器
+        $(document).ready(function () {
+            $('#txt_MessageContent').summernote({
+                placeholder: 'Please input message content',
+                tabsize: 2,
+                height: 200,                 // set editor height
+                minHeight: null,             // set minimum height of editor
+                maxHeight: null,             // set maximum height of editor
+                focus: true                  // set focus to editable area after initializing summe
+            });
+
+            //判断是否登录
+            JudgeIsLogin();
+
+            $('#aTestPushTemplate').click(function () {
+                PushTestData();
+            });
+        });
+
+    </script>
+
+    <!--加载页面信息-->
+    <script type="text/javascript">
+        //判断是否登录
+        function JudgeIsLogin() {
+            var urlQuery = escape("M=" + Math.random());
+            var url = "../CommonClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                    $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '-9999') {
+                        ShowWaitting();
+                        $("#myWaittingModalContent").text('您尚未登录，请登录后重试！');
+                    } else {
+                        ///加载客户基本信息
+                        LoadClientInfo();
+                    }
+                }
+            })
+        }
+        ///加载客户基本信息
+        function LoadClientInfo() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getclientinfo");
+            var url = "ClientHandler.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                    $("#myWaittingModalContent").text('加载页面信息失败，请稍后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ClientInfo == "") return false;
+
+                    $.each(dataobj.ClientInfo, function (idx, item) {
+                        $("#txt_ProjectId").val(unescape(item.ProjectId));
+                        $("#txt_ClientName").val(unescape(item.ClientName));
+                        $("#txt_RemoteServer").val(unescape(item.RemoteServer));
+                        $("#txt_UserId").val(unescape(item.UserId));
+                    });
+                }
+            });
+        }
+    </script>
+
+
+    <!--测试推送模版消息-->
+    <script type="text/javascript">
+        function PushTestData() {
+            ShowWaitting();
+            $("#myWaittingModalContent").text('正在分析通知消息......');
+            var urlQuery = escape("M=" + Math.random() + "&param=pushtemplatetestdata");
+            var url = $("#txt_RemoteServer").val() + "AppFunction/UploadToRemote/PushMessage/PushTestServer.ashx?" + urlQuery;
+            if (isTestDebug) {
+                url = "PushTestServer.ashx?" + urlQuery;
+            }
+            //alert(url);
+            $.ajax({
+                cache: false,
+                url: url,
+                type: "POST",//json数据大时，此配置非常重要
+                async: false,
+                dataType: 'json',
+                data: $('#formPushIndex').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaitting();
+                    $("#myWaittingModalContent").text('远程服务器请求异常，请重试！');
+                },
+                success: function (data) {
+                    console.log('PushTestData.data', data)
+
+                    $("#txt_PushResult").text(JSON.stringify(data));
+                    HideWaitting();
+
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>拒绝异常调整Reject Adjustment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+    <link href="../../common/plugins/jqueryEject/css/Eject.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../common/plugins/jspreadsheet-ce/jsuites.css" type="text/css" />
+    <link rel="stylesheet" href="../../common/plugins/jspreadsheet-ce/jexcel.css" type="text/css" />
+
+</head>
+<body>
+    <script src="../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../common/plugins/jqueryEject/js/index.js" type="text/javascript"></script>
+    <script src="../../common/plugins/jspreadsheet-ce/jexcel.js"></script>
+    <script src="../../common/plugins/jspreadsheet-ce/jsuites.js"></script>
+    <script src="../../common/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../../common/js/MainUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/stringUtil.js" type="text/javascript"></script>
+    <script src="../../common/js/customObject.js" type="text/javascript"></script>
+
+    <div id="divMaxArea" class="container-fluid">
+        <div class="row-fluid" style="margin:20px">
+            <div class="col-sm-8 col-sm-offset-2">
+                <div class="list-group">
+                    <div class="alert alert-danger" role="alert">
+                        不同意<strong id="lbSectionUserId">varPostSectionUserId</strong>
+                        针对员工<strong id="lbStaffNo">varPostStaffNo</strong>
+                        在<strong id="lbDate">varPostDate</strong> 
+                        当天的异常调整.
+                    </div>
+                </div>
+            </div>
+            <form id="formSave" class="form-horizontal" method="post">
+                <div class="form-group form-group-lg">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <textarea id="txt_RejectIdea" name="txt_RejectIdea" class="form-control" rows="3" maxlength="200" placeholder="请输入不同意此调整的意见"></textarea>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-sm-offset-4">
+                    <button id="btnSaveIdea" type="button" class="btn btn-primary btn-lg btn-block">保存意见</button>
+                    <a href="#" class="list-group-item list-group-item-success">保存后，即刻恢复为异常状态，且同时告知做调整的考勤员</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //弹出框的实例化
+        var Ealt = new Eject();
+        //页面传递参数
+        var varPostSectionUserId = GetUrlQueryString("sectionuserid");
+        var varPostLoginUserId = GetUrlQueryString("loginuserid");
+        var varPostYearMonth = GetUrlQueryString("yearmonth");
+        var varPostStaffNo = GetUrlQueryString("staffno");
+        var varPostDate = GetUrlQueryString("date");
+        var varPostUserType = GetUrlQueryString("usertype");//0或者空为小部门用户,1为人事部审核
+        if (varPostSectionUserId == null || varPostSectionUserId == 'null') { varPostSectionUserId = ''; }
+        if (varPostLoginUserId == null || varPostLoginUserId == 'null') { varPostLoginUserId = ''; }
+        if (varPostYearMonth == null || varPostYearMonth == 'null') { varPostYearMonth = ''; }
+        if (varPostStaffNo == null || varPostStaffNo == 'null') { varPostStaffNo = ''; }
+        if (varPostDate == null || varPostDate == 'null') { varPostDate = ''; }
+        if (varPostUserType == null || varPostUserType == 'null') { varPostUserType = ''; }
+
+        $("#lbSectionUserId").html(varPostSectionUserId);
+        $("#lbStaffNo").html(varPostStaffNo);
+        $("#lbDate").html(varPostDate);
+
+    </script>
+    <script>
+        $('#btnSaveIdea').on('click', function () {
+            var urlQuery = "M=" + Math.random() + "&param=saverejectidea";
+            urlQuery = urlQuery + "&sectionuserid=" + varPostSectionUserId;
+            urlQuery = urlQuery + "&loginuserid=" + varPostLoginUserId;
+            urlQuery = urlQuery + "&yearmonth=" + varPostYearMonth;
+            urlQuery = urlQuery + "&usertype=" + varPostUserType;
+            urlQuery = urlQuery + "&staffno=" + varPostStaffNo;
+            urlQuery = urlQuery + "&oneday=" + varPostDate;
+            urlQuery = urlQuery + "&rejectidea=" + $("#txt_RejectIdea").val();
+            //alert(urlQuery);
+            urlQuery = escape(urlQuery);
+            var url = "RejectAdjustException.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    //console.log('btnSaveIdea.data', data);
+                    if (data == "") return false;
+                    var dataJson = eval("(" + data + ")");
+                    //alert(dataJson);
+
+                    if (dataJson.ReturnCode) {
+                        if (dataJson.ReturnCode == '1') {
+                            Ealt.Etoast(dataJson.ReturnMsg, 2)
+                            setTimeout(function () {
+                                window.close();
+                            },2500)
+                        } else {
+                            Ealt.Etoast(dataJson.ReturnMsg, 3)
+                        }
+                    } else {
+                        Ealt.Etoast('操作出错，请关闭页面后重试!', 3)
+                    }
+                }
+            });
+        })
+    </script>
+</body>
+</html>

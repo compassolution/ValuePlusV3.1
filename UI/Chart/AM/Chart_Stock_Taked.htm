@@ -1,0 +1,65 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title></title>
+</head>
+<script src="../../common/JS/echarts.min.js" type="text/javascript"></script>  
+<body>
+
+    <!-- 为 ECharts 准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 1300px;height:600px;"></div>
+    
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        option = {
+            title: {
+                text: '资产盘到分布',
+                subtext: '2015四季度',
+                x: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['总经办', '财务部', '人力资源部', '市场传媒部', '房务部', '餐饮部', '员工餐厅', '保安部', '工程部', '水疗及健身']
+            },
+            series: [
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: [
+                { value: 335, name: '总经办' },
+                { value: 310, name: '财务部' },
+                { value: 234, name: '人力资源部' },
+                { value: 135, name: '市场传媒部' },
+                { value: 215, name: '房务部' },
+                { value: 165, name: '餐饮部' },
+                { value: 125, name: '员工餐厅' },
+                { value: 125, name: '保安部' },
+                { value: 225, name: '工程部' },
+                { value: 648, name: '水疗及健身' }
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+</body>
+</html>

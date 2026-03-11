@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B20476F5-B0D8-4386-907D-1E06B270638F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Com.ValuePlus.DAL</RootNamespace>
+    <AssemblyName>Com.ValuePlus.DAL</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppFuction\OverTimeRestVerify\OTRestVerifyDao.cs" />
+    <Compile Include="DALFactory.cs" />
+    <Compile Include="DicDao\DicDetailDao.cs" />
+    <Compile Include="DicDao\DicListDao.cs" />
+    <Compile Include="Manager\AutoCodeDao.cs" />
+    <Compile Include="MenuDao\MenuInfoDao.cs" />
+    <Compile Include="MenuDao\UserMenuInfoDao.cs" />
+    <Compile Include="Notice\NoticeDao.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\QueryMainDao.cs" />
+    <Compile Include="Query\QuerySelectDao.cs" />
+    <Compile Include="Query\SPQueryDao.cs" />
+    <Compile Include="Regist\RegistDao.cs" />
+    <Compile Include="Report\ReportMainDao.cs" />
+    <Compile Include="SqlParamDao.cs" />
+    <Compile Include="UerErrDao.cs" />
+    <Compile Include="UserInfoDao.cs" />
+    <Compile Include="UserManagerDao\UserManagerDao.cs" />
+    <Compile Include="UserManagerDao\UserRoleDao.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WinForm\AdjustStaffPayDAO.cs" />
+    <Compile Include="WinForm\KQPaiBanDAO.cs" />
+    <Compile Include="WinForm\KQPaiBanResultDao.cs" />
+    <Compile Include="WinForm\KQPerdDao.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WinForm\KQUnNormalResultDao.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Com.ValuePlus.Common\Com.ValuePlus.Common.csproj">
+      <Project>{AB169A8B-104A-4ED5-9B75-871CF2C9A654}</Project>
+      <Name>Com.ValuePlus.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Database\Com.ValuePlus.Database.csproj">
+      <Project>{7358970A-8BF6-4182-B9F9-68DBF921C6E7}</Project>
+      <Name>Com.ValuePlus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Entity\Com.ValuePlus.Entity.csproj">
+      <Project>{1D6C17CF-7C93-4980-9637-9635498E23BE}</Project>
+      <Name>Com.ValuePlus.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Log\Com.ValuePlus.Log.csproj">
+      <Project>{EBA12249-1413-4354-A324-0B6ED7B33B30}</Project>
+      <Name>Com.ValuePlus.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Utils\Com.ValuePlus.Utils.csproj">
+      <Project>{D7DEB6B8-77CF-45C7-8172-30B728E17733}</Project>
+      <Name>Com.ValuePlus.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

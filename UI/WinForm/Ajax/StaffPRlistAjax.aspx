@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="StaffPRlistAjax.aspx.cs" Inherits="WinForm_Ajax_StaffPRlistAjax" %>

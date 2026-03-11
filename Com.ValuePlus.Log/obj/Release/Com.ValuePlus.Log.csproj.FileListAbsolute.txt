@@ -1,0 +1,14 @@
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\bin\Release\Com.ValuePlus.Log.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\bin\Release\Com.ValuePlus.Log.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\bin\Release\log4net.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\obj\Release\Com.ValuePlus.Log.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\obj\Release\Com.ValuePlus.Log.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\obj\Release\Com.ValuePlus.Log.csprojResolveAssemblyReference.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Log\bin\Release\Com.ValuePlus.Log.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Log\bin\Release\Com.ValuePlus.Log.pdb
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Log\bin\Release\log4net.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Log\obj\Release\Com.ValuePlus.Log.csproj.CoreCompileInputs.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Log\obj\Release\Com.ValuePlus.Log.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Log\obj\Release\Com.ValuePlus.Log.pdb
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Log\obj\Release\Com.ValuePlus.Log.csproj.AssemblyReference.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.Log\obj\Release\Com.Valu.4D276BCD.Up2Date

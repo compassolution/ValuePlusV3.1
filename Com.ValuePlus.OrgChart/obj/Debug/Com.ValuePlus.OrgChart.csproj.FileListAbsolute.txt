@@ -1,0 +1,10 @@
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.OrgChart\obj\Debug\ResolveAssemblyReference.cache
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.OrgChart\bin\Debug\Com.ValuePlus.OrgChart.dll
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.OrgChart\bin\Debug\Com.ValuePlus.OrgChart.pdb
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.OrgChart\obj\Debug\Com.ValuePlus.OrgChart.dll
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.OrgChart\obj\Debug\Com.ValuePlus.OrgChart.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\bin\Debug\Com.ValuePlus.OrgChart.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\bin\Debug\Com.ValuePlus.OrgChart.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Debug\Com.ValuePlus.OrgChart.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Debug\Com.ValuePlus.OrgChart.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Debug\Com.ValuePlus.OrgChart.csprojResolveAssemblyReference.cache

@@ -1,0 +1,12 @@
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.Log\bin\Debug\Com.ValuePlus.Log.dll
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.Log\bin\Debug\Com.ValuePlus.Log.pdb
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.Log\bin\Debug\log4net.dll
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.Log\obj\Debug\ResolveAssemblyReference.cache
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.Log\obj\Debug\Com.ValuePlus.Log.dll
+D:\work\ValuePlus\Program\ValuePlusV3\Com.ValuePlus.Log\obj\Debug\Com.ValuePlus.Log.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\bin\Debug\Com.ValuePlus.Log.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\bin\Debug\Com.ValuePlus.Log.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\bin\Debug\log4net.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\obj\Debug\Com.ValuePlus.Log.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\obj\Debug\Com.ValuePlus.Log.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.Log\obj\Debug\Com.ValuePlus.Log.csprojResolveAssemblyReference.cache

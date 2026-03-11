@@ -1,0 +1,11 @@
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\bin\Release\Com.ValuePlus.OrgChart.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\bin\Release\Com.ValuePlus.OrgChart.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Release\Com.ValuePlus.OrgChart.dll
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Release\Com.ValuePlus.OrgChart.pdb
+D:\Work\ValuePlus\Program\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Release\Com.ValuePlus.OrgChart.csprojResolveAssemblyReference.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.OrgChart\bin\Release\Com.ValuePlus.OrgChart.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.OrgChart\bin\Release\Com.ValuePlus.OrgChart.pdb
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Release\Com.ValuePlus.OrgChart.csproj.CoreCompileInputs.cache
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Release\Com.ValuePlus.OrgChart.dll
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Release\Com.ValuePlus.OrgChart.pdb
+D:\Work\Sources\CSharp\ValuePlusV3.1\Com.ValuePlus.OrgChart\obj\Release\Com.ValuePlus.OrgChart.csproj.AssemblyReference.cache

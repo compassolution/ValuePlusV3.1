@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="colDATE" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="colDCNAME" xml:space="preserve">
+    <value>英文名</value>
+  </data>
+  <data name="colDCNAMECHS" xml:space="preserve">
+    <value>中文名</value>
+  </data>
+  <data name="colDNUM" xml:space="preserve">
+    <value>日期索引</value>
+  </data>
+  <data name="colEM_NO" xml:space="preserve">
+    <value>员工编号</value>
+  </data>
+  <data name="colSJBHOUR" xml:space="preserve">
+    <value>加班小时数</value>
+  </data>
+  <data name="colSREMARK" xml:space="preserve">
+    <value>调整说明</value>
+  </data>
+  <data name="colSTAFFID" xml:space="preserve">
+    <value>员工编号</value>
+  </data>
+  <data name="colSTXHOUR" xml:space="preserve">
+    <value>调休小时数</value>
+  </data>
+  <data name="tipCurPeriod" xml:space="preserve">
+    <value>当前期间</value>
+  </data>
+  <data name="tipFilterNameC" xml:space="preserve">
+    <value>请输入员工中文名进行过滤</value>
+  </data>
+  <data name="tipFilterNameE" xml:space="preserve">
+    <value>请输入员工英文名进行过滤</value>
+  </data>
+  <data name="tipFilterStaff" xml:space="preserve">
+    <value>请输入员工编号进行过滤</value>
+  </data>
+  <data name="tipGridColumnsText" xml:space="preserve">
+    <value>显示/隐藏列</value>
+  </data>
+  <data name="tipGridSortAscText" xml:space="preserve">
+    <value>正序排列</value>
+  </data>
+  <data name="tipGridSortDescText" xml:space="preserve">
+    <value>倒序排列</value>
+  </data>
+  <data name="tipMsg" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="tipOTValidtorMsg" xml:space="preserve">
+    <value>加班小时数请输入正数值</value>
+  </data>
+  <data name="tipPagingNoRecord" xml:space="preserve">
+    <value>没有记录</value>
+  </data>
+  <data name="tipPagingShowMsg" xml:space="preserve">
+    <value>显示第{0} 条到{1} 条记录，一共{2} 条</value>
+  </data>
+  <data name="tipTip" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="tipTitleTip" xml:space="preserve">
+    <value>提示：您可以在此页面中对单击员工信息在右边列表中对其加班调休小时数进行批量调整</value>
+  </data>
+  <data name="tipTXValidtorMsg" xml:space="preserve">
+    <value>调休小时数请输入正数值</value>
+  </data>
+  <data name="colBISTONORMAL" xml:space="preserve">
+    <value>是否异常</value>
+  </data>
+  <data name="colExceptionChs" xml:space="preserve">
+    <value>异常描述</value>
+  </data>
+  <data name="colShift" xml:space="preserve">
+    <value>班次</value>
+  </data>
+</root>

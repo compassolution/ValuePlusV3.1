@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="confirm" xml:space="preserve">
+    <value>Do you confirm to do it?</value>
+  </data>
+  <data name="yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="no" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="parameter" xml:space="preserve">
+    <value>Parameter</value>
+  </data>
+  <data name="value" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="alert" xml:space="preserve">
+    <value>Alert-These tasks need be handled.</value>
+  </data>
+  <data name="TDESC" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="RDESC" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="SDESC" xml:space="preserve">
+    <value>Scene</value>
+  </data>
+  <data name="count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="TREECLR" xml:space="preserve">
+    <value>Func. Tree Color</value>
+  </data>
+  <data name="WORKCLR" xml:space="preserve">
+    <value>Workplace Color</value>
+  </data>
+  <data name="ISALERT" xml:space="preserve">
+    <value>Show Alert?</value>
+  </data>
+  <data name="save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="succ" xml:space="preserve">
+    <value>Successfully!!!</value>
+  </data>
+  <data name="default" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="smsip" xml:space="preserve">
+    <value>SMS ip</value>
+  </data>
+  <data name="smsport" xml:space="preserve">
+    <value>SMS port</value>
+  </data>
+  <data name="smsuser" xml:space="preserve">
+    <value>SMS User</value>
+  </data>
+  <data name="smspwd" xml:space="preserve">
+    <value>SMS Password</value>
+  </data>
+  <data name="smsenable" xml:space="preserve">
+    <value>SMS Enabled</value>
+  </data>
+  <data name="mobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="sendtest" xml:space="preserve">
+    <value>Send Test</value>
+  </data>
+  <data name="strmessage" xml:space="preserve">
+    <value>Message can not be blank!</value>
+  </data>
+  <data name="strerror" xml:space="preserve">
+    <value>Error code:</value>
+  </data>
+  <data name="strmobile" xml:space="preserve">
+    <value>Key can not be blank!</value>
+  </data>
+  <data name="strsave" xml:space="preserve">
+    <value>Please save the data first!</value>
+  </data>
+  <data name="strtest" xml:space="preserve">
+    <value>Test only</value>
+  </data>
+  <data name="type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="emip" xml:space="preserve">
+    <value>Email Server</value>
+  </data>
+  <data name="emport" xml:space="preserve">
+    <value>Email Address</value>
+  </data>
+  <data name="emuser" xml:space="preserve">
+    <value>Email User</value>
+  </data>
+  <data name="empwd" xml:space="preserve">
+    <value>Email Password</value>
+  </data>
+  <data name="emenable" xml:space="preserve">
+    <value>Email Enabled</value>
+  </data>
+  <data name="email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="relogin" xml:space="preserve">
+    <value>Please login again</value>
+  </data>
+  <data name="selkey" xml:space="preserve">
+    <value>Please select the end key no.</value>
+  </data>
+  <data name="key" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="execute" xml:space="preserve">
+    <value>Execute</value>
+  </data>
+  <data name="select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="return" xml:space="preserve">
+    <value>Return</value>
+  </data>
+  <data name="report" xml:space="preserve">
+    <value>Report</value>
+  </data>
+  <data name="action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="show" xml:space="preserve">
+    <value>Show/Hide</value>
+  </data>
+  <data name="prior" xml:space="preserve">
+    <value>Prior</value>
+  </data>
+  <data name="next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="SKIN" xml:space="preserve">
+    <value>Skin Folder</value>
+  </data>
+  <data name="error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="bridge" xml:space="preserve">
+    <value>Bridge</value>
+  </data>
+  <data name="arrange" xml:space="preserve">
+    <value>Arrange Shift</value>
+  </data>
+  <data name="noparent" xml:space="preserve">
+    <value>Can not find parent for </value>
+  </data>
+  <data name="user" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="disconnect" xml:space="preserve">
+    <value>Disconnect</value>
+  </data>
+  <data name="disconnectcfm" xml:space="preserve">
+    <value>Do you confirm disconnecting this user?</value>
+  </data>
+  <data name="dcadmin" xml:space="preserve">
+    <value>Do not disconnect youself!</value>
+  </data>
+  <data name="selchild" xml:space="preserve">
+    <value>Please select child node!</value>
+  </data>
+  <data name="dataedit" xml:space="preserve">
+    <value>Data Edit</value>
+  </data>
+  <data name="process" xml:space="preserve">
+    <value>Process</value>
+  </data>
+  <data name="sent" xml:space="preserve">
+    <value>Sent</value>
+  </data>
+  <data name="SMTP" xml:space="preserve">
+    <value>Please Config SMTP server!</value>
+  </data>
+  <data name="started" xml:space="preserve">
+    <value>Already started!</value>
+  </data>
+  <data name="RTXIP" xml:space="preserve">
+    <value>RTX IP</value>
+  </data>
+  <data name="RTXPORT" xml:space="preserve">
+    <value>RTX Port</value>
+  </data>
+  <data name="RTXPWD" xml:space="preserve">
+    <value>RXT Password</value>
+  </data>
+  <data name="RTXUSER" xml:space="preserve">
+    <value>RTX User</value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="filename" xml:space="preserve">
+    <value>Filename</value>
+  </data>
+  <data name="refresh" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="savetodisk" xml:space="preserve">
+    <value>Save To Disk</value>
+  </data>
+  <data name="savetohtml" xml:space="preserve">
+    <value>Save As HTML</value>
+  </data>
+  <data name="verify" xml:space="preserve">
+    <value>Email Verified?</value>
+  </data>
+  <data name="newrecord" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="username" xml:space="preserve">
+    <value>UserName</value>
+  </data>
+  <data name="patherr" xml:space="preserve">
+    <value>Invalid report file path</value>
+  </data>
+  <data name="afilter" xml:space="preserve">
+    <value>Filter...</value>
+  </data>
+  <data name="ifilter" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="locate" xml:space="preserve">
+    <value>Locate</value>
+  </data>
+  <data name="distinct" xml:space="preserve">
+    <value>Distinct</value>
+  </data>
+  <data name="pendingedit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="confirmprintinfo" xml:space="preserve">
+    <value>may be slowing ,confirm print?</value>
+  </data>
+  <data name="multiprintbtninfo" xml:space="preserve">
+    <value>multiple print</value>
+  </data>
+  <data name="printdcnoinfo" xml:space="preserve">
+    <value>dcno:</value>
+  </data>
+  <data name="printfailinfo" xml:space="preserve">
+    <value>print fail or not found this dcno!</value>
+  </data>
+  <data name="singleprintbtninfo" xml:space="preserve">
+    <value>print</value>
+  </data>
+  <data name="successprintinfo" xml:space="preserve">
+    <value>Successfully!!!</value>
+  </data>
+</root>

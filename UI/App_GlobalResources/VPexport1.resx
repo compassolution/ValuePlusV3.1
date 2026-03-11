@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.3102.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.3102.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="edit">
+		<value>Edit</value>
+	</data>
+	<data name="delete">
+		<value>Delete</value>
+	</data>
+	<data name="update">
+		<value>Update</value>
+	</data>
+	<data name="cancel">
+		<value>Cancel</value>
+	</data>
+	<data name="add">
+		<value>Detail</value>
+	</data>
+	<data name="confirm">
+		<value>Do you confirm to delete the record?</value>
+	</data>
+	<data name="filter">
+		<value>Criteria</value>
+	</data>
+	<data name="field">
+		<value>Fields</value>
+	</data>
+	<data name="save">
+		<value>Save</value>
+	</data>
+	<data name="open">
+		<value>Open</value>
+	</data>
+	<data name="query">
+		<value>Query</value>
+	</data>
+	<data name="export">
+		<value>Export to Excel</value>
+	</data>
+	<data name="f0">
+		<value>Field</value>
+	</data>
+	<data name="f1">
+		<value>Sign</value>
+	</data>
+	<data name="f2">
+		<value>Value</value>
+	</data>
+	<data name="f3">
+		<value>Logical Sign</value>
+	</data>
+	<data name="f4">
+		<value>Edit</value>
+	</data>
+	<data name="label1">
+		<value>File Name</value>
+	</data>
+	<data name="label2">
+		<value>Select File</value>
+	</data>
+	<data name="button1">
+		<value>Save</value>
+	</data>
+	<data name="button2">
+		<value>Open</value>
+	</data>
+	<data name="group">
+		<value>Group</value>
+	</data>
+	<data name="succ">
+		<value>Successfully!</value>
+	</data>
+	<data name="use">
+		<value>Use</value>
+	</data>
+	<data name="totext">
+		<value>To Text</value>
+	</data>
+	<data name="download">
+		<value>Download</value>
+	</data>
+</root>

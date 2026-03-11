@@ -1,0 +1,279 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btnAdd" xml:space="preserve">
+    <value>新增页面</value>
+  </data>
+  <data name="btnBack" xml:space="preserve">
+    <value>返回列表</value>
+  </data>
+  <data name="btnClose" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="btnDelete" xml:space="preserve">
+    <value>删除当前用户</value>
+  </data>
+  <data name="btnSave" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="btnSearch" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Err1" xml:space="preserve">
+    <value>读取失败，请稍后重试！</value>
+  </data>
+  <data name="Err2" xml:space="preserve">
+    <value>读取数据失败，请关闭当前页面重试！</value>
+  </data>
+  <data name="Err3" xml:space="preserve">
+    <value>保存信息失败！</value>
+  </data>
+  <data name="Err4" xml:space="preserve">
+    <value>删除信息失败！</value>
+  </data>
+  <data name="Err_noCode" xml:space="preserve">
+    <value>用户ID参数错误！</value>
+  </data>
+  <data name="imBtn1" xml:space="preserve">
+    <value>明细</value>
+  </data>
+  <data name="IsAlertItem1" xml:space="preserve">
+    <value>未变更过</value>
+  </data>
+  <data name="IsAlertItem2" xml:space="preserve">
+    <value>已变更过</value>
+  </data>
+  <data name="IsGroupItem1" xml:space="preserve">
+    <value>酒店用户</value>
+  </data>
+  <data name="IsGroupItem2" xml:space="preserve">
+    <value>集团用户</value>
+  </data>
+  <data name="IsStopItem1" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="IsStopItem2" xml:space="preserve">
+    <value>停用</value>
+  </data>
+  <data name="lbDesc1" xml:space="preserve">
+    <value>用户ID</value>
+  </data>
+  <data name="lbDesc10" xml:space="preserve">
+    <value>职位中文名</value>
+  </data>
+  <data name="lbDesc11" xml:space="preserve">
+    <value>是否并更过？</value>
+  </data>
+  <data name="lbDesc12" xml:space="preserve">
+    <value>是否集团用户</value>
+  </data>
+  <data name="lbDesc13" xml:space="preserve">
+    <value>是否被停用</value>
+  </data>
+  <data name="lbDesc2" xml:space="preserve">
+    <value>登录帐号</value>
+  </data>
+  <data name="lbDesc3" xml:space="preserve">
+    <value>登录密码</value>
+  </data>
+  <data name="lbDesc4" xml:space="preserve">
+    <value>员工编码</value>
+  </data>
+  <data name="lbDesc5" xml:space="preserve">
+    <value>用户英文名</value>
+  </data>
+  <data name="lbDesc6" xml:space="preserve">
+    <value>用户中文名</value>
+  </data>
+  <data name="lbDesc7" xml:space="preserve">
+    <value>所在部门英文名</value>
+  </data>
+  <data name="lbDesc8" xml:space="preserve">
+    <value>所在部门中文名</value>
+  </data>
+  <data name="lbDesc9" xml:space="preserve">
+    <value>职位英文名</value>
+  </data>
+  <data name="lbTitle1" xml:space="preserve">
+    <value>系统用户详细信息</value>
+  </data>
+  <data name="Success1" xml:space="preserve">
+    <value>保存成功！</value>
+  </data>
+  <data name="Success2" xml:space="preserve">
+    <value>删除成功！</value>
+  </data>
+  <data name="Success3" xml:space="preserve">
+    <value>更新成功！</value>
+  </data>
+  <data name="Tip1" xml:space="preserve">
+    <value>已经存在，请重新输入并重试！</value>
+  </data>
+  <data name="Tip2" xml:space="preserve">
+    <value>是否确定要删除？</value>
+  </data>
+  <data name="Tip3" xml:space="preserve">
+    <value>您的输入不能为空！</value>
+  </data>
+  <data name="Tip4" xml:space="preserve">
+    <value>操作失败！</value>
+  </data>
+  <data name="Tip_confirmModify" xml:space="preserve">
+    <value>是否确定要修改？</value>
+  </data>
+  <data name="Tip5" xml:space="preserve">
+    <value>登录帐号已经存在，请重新输入！</value>
+  </data>
+  <data name="btnAssign" xml:space="preserve">
+    <value>分配授权</value>
+  </data>
+  <data name="Success4" xml:space="preserve">
+    <value>授权成功！</value>
+  </data>
+  <data name="Tip6" xml:space="preserve">
+    <value>请选择要授权的栏目！</value>
+  </data>
+  <data name="btnRefresh" xml:space="preserve">
+    <value>重新加载数据</value>
+  </data>
+  <data name="btnSelAll" xml:space="preserve">
+    <value>全      选</value>
+  </data>
+  <data name="btnUnSelAll" xml:space="preserve">
+    <value>全 不 选</value>
+  </data>
+  <data name="lbWarmTip1" xml:space="preserve">
+    <value>用户信息管理：请点击选择用户列表进行操作！</value>
+  </data>
+  <data name="lbWarmTip2" xml:space="preserve">
+    <value>用户栏目授权：请点击选择用户列表进行操作！</value>
+  </data>
+  <data name="lbWarmTip3" xml:space="preserve">
+    <value>用户角色分配：请点击选择用户列表进行操作！</value>
+  </data>
+  <data name="Tip7" xml:space="preserve">
+    <value>当前用户可分配角色列表：</value>
+  </data>
+  <data name="Tip8" xml:space="preserve">
+    <value>需分配用户的角色列表：</value>
+  </data>
+  <data name="lbDept" xml:space="preserve">
+    <value>所在部门</value>
+  </data>
+</root>

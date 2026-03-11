@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.3102.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.3102.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="check">
+		<value>检查</value>
+	</data>
+	<data name="solve">
+		<value>解决</value>
+	</data>
+	<data name="tables">
+		<value>表</value>
+	</data>
+	<data name="use">
+		<value>引用</value>
+	</data>
+	<data name="useas">
+		<value>别名引用</value>
+	</data>
+	<data name="fields">
+		<value>字段</value>
+	</data>
+	<data name="query">
+		<value>查询</value>
+	</data>
+	<data name="command">
+		<value>命令</value>
+	</data>
+	<data name="succ">
+		<value>成功</value>
+	</data>
+	<data name="copy">
+		<value>复制</value>
+	</data>
+	<data name="from">
+		<value>从</value>
+	</data>
+	<data name="close">
+		<value>关闭</value>
+	</data>
+	<data name="save">
+		<value>保存</value>
+	</data>
+	<data name="add">
+		<value>添加</value>
+	</data>
+	<data name="notfind">
+		<value>找不到该编码！</value>
+	</data>
+	<data name="return">
+		<value>返回</value>
+	</data>
+	<data name="desc">
+		<value>描述</value>
+	</data>
+	<data name="file">
+		<value>文件</value>
+	</data>
+	<data name="backup">
+		<value>备份</value>
+	</data>
+	<data name="backupc0">
+		<value>序号</value>
+	</data>
+	<data name="backupc1">
+		<value>时间</value>
+	</data>
+	<data name="backupc2">
+		<value>描述</value>
+	</data>
+	<data name="backupc3">
+		<value>文件名</value>
+	</data>
+	<data name="restore">
+		<value>恢复</value>
+	</data>
+	<data name="confirm">
+		<value>您确认要进行这项处理吗？</value>
+	</data>
+	<data name="backupat">
+		<value>备份于</value>
+	</data>
+	<data name="delete">
+		<value>删除</value>
+	</data>
+	<data name="import">
+		<value>导入</value>
+	</data>
+	<data name="export">
+		<value>导出</value>
+	</data>
+	<data name="download">
+		<value>下载</value>
+	</data>
+	<data name="blankfile">
+		<value>请您选择一个正确的文件！</value>
+	</data>
+	<data name="rdata">
+		<value>远程数据库</value>
+	</data>
+	<data name="open">
+		<value>打开</value>
+	</data>
+	<data name="selectfile">
+		<value>选择文件</value>
+	</data>
+	<data name="edit">
+		<value>编辑</value>
+	</data>
+	<data name="select">
+		<value>选择</value>
+	</data>
+</root>

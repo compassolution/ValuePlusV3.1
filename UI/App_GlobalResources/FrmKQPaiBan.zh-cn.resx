@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btnLoadInfo" xml:space="preserve">
+    <value>加载排班信息</value>
+  </data>
+  <data name="btnSave" xml:space="preserve">
+    <value>保存排班结果</value>
+  </data>
+  <data name="colBISTONORMAL" xml:space="preserve">
+    <value>是否正常</value>
+  </data>
+  <data name="colCNAME" xml:space="preserve">
+    <value>中文名</value>
+  </data>
+  <data name="colDCNAMEC" xml:space="preserve">
+    <value>中文名</value>
+  </data>
+  <data name="colDCNAMEE" xml:space="preserve">
+    <value>英文名</value>
+  </data>
+  <data name="colr_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="colearly" xml:space="preserve">
+    <value>早退工时</value>
+  </data>
+  <data name="colEMPDEPT" xml:space="preserve">
+    <value>部门</value>
+  </data>
+  <data name="colEMPLOYEE" xml:space="preserve">
+    <value>工号</value>
+  </data>
+  <data name="colEM_NO" xml:space="preserve">
+    <value>工号</value>
+  </data>
+  <data name="colENAME" xml:space="preserve">
+    <value>英文名</value>
+  </data>
+  <data name="colFactIn" xml:space="preserve">
+    <value>实际上班1</value>
+  </data>
+  <data name="colFactOut" xml:space="preserve">
+    <value>实际下班1</value>
+  </data>
+  <data name="colIN1" xml:space="preserve">
+    <value>进1</value>
+  </data>
+  <data name="colIN2" xml:space="preserve">
+    <value>进2</value>
+  </data>
+  <data name="colInTime" xml:space="preserve">
+    <value>上班时间</value>
+  </data>
+  <data name="colLate" xml:space="preserve">
+    <value>迟到工时</value>
+  </data>
+  <data name="colLVhrs" xml:space="preserve">
+    <value>请假工时</value>
+  </data>
+  <data name="colOUT1" xml:space="preserve">
+    <value>出1</value>
+  </data>
+  <data name="colOUT2" xml:space="preserve">
+    <value>出2</value>
+  </data>
+  <data name="colOuTime" xml:space="preserve">
+    <value>下班时间</value>
+  </data>
+  <data name="colOverTime" xml:space="preserve">
+    <value>加班工时</value>
+  </data>
+  <data name="colSHCODE" xml:space="preserve">
+    <value>编号</value>
+  </data>
+  <data name="colSHNAME" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="colSJBHOUR" xml:space="preserve">
+    <value>加班小时数</value>
+  </data>
+  <data name="colSREMARK" xml:space="preserve">
+    <value>调整说明</value>
+  </data>
+  <data name="colSTXHOUR" xml:space="preserve">
+    <value>调休小时数</value>
+  </data>
+  <data name="colYEARMONTH" xml:space="preserve">
+    <value>月份</value>
+  </data>
+  <data name="colYmonth" xml:space="preserve">
+    <value>月份</value>
+  </data>
+  <data name="tipCanCopy" xml:space="preserve">
+    <value>您可双击班次区域将班次编号复制到剪贴板，然后再双击排班区域自动粘贴！</value>
+  </data>
+  <data name="tipGridColumnsText" xml:space="preserve">
+    <value>显示/隐藏列</value>
+  </data>
+  <data name="tipGridSortAscText" xml:space="preserve">
+    <value>正序排列</value>
+  </data>
+  <data name="tipGridSortDescText" xml:space="preserve">
+    <value>倒序排列</value>
+  </data>
+  <data name="tipMsg" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="tipNoSave" xml:space="preserve">
+    <value>您未做任何修改，无需保存！</value>
+  </data>
+  <data name="tipSaveSuccess" xml:space="preserve">
+    <value>数据保存成功！</value>
+  </data>
+  <data name="tipSelectMonth" xml:space="preserve">
+    <value>请选择排班月份</value>
+  </data>
+  <data name="tipTip" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="tipTitle" xml:space="preserve">
+    <value>提示：您可在此页面中对多个员工进行排班！</value>
+  </data>
+  <data name="btnAdjustResult" xml:space="preserve">
+    <value>调整考勤结果</value>
+  </data>
+  <data name="tipListNormal" xml:space="preserve">
+    <value>调为正常</value>
+  </data>
+  <data name="tipListUnNormal" xml:space="preserve">
+    <value>异常</value>
+  </data>
+  <data name="tipMenuCopyShifCode" xml:space="preserve">
+    <value>复制班次编码</value>
+  </data>
+  <data name="tipMenuCopyThisRow" xml:space="preserve">
+    <value>复制本行</value>
+  </data>
+  <data name="tipMenuPasteToRow" xml:space="preserve">
+    <value>粘贴至本行</value>
+  </data>
+  <data name="tipMenuShowUnNormalGird" xml:space="preserve">
+    <value>显示异常考勤</value>
+  </data>
+  <data name="tipMenuViewResultGrid" xml:space="preserve">
+    <value>查看考勤结果</value>
+  </data>
+  <data name="btnExcuteSp_Analyse" xml:space="preserve">
+    <value>分析考勤结果</value>
+  </data>
+  <data name="tipNoAnalyseData" xml:space="preserve">
+    <value>未进行任何考勤数据的分析</value>
+  </data>
+  <data name="tipNoAnalyseSuccess" xml:space="preserve">
+    <value>考勤数据分析成功！</value>
+  </data>
+  <data name="colFactIn1" xml:space="preserve">
+    <value>实际上班2</value>
+  </data>
+  <data name="colFactOut1" xml:space="preserve">
+    <value>实际下班2</value>
+  </data>
+  <data name="tipBatchAdjustResult" xml:space="preserve">
+    <value>批量调整异常考勤结果</value>
+  </data>
+  <data name="tipBtnClose" xml:space="preserve">
+    <value>关   闭</value>
+  </data>
+  <data name="tipBtnSaveAdjust" xml:space="preserve">
+    <value>保存调整结果信息</value>
+  </data>
+  <data name="tipLabelToNormalInfo" xml:space="preserve">
+    <value>已调整正常考勤数据</value>
+  </data>
+  <data name="tipLabelUnNormalInfo" xml:space="preserve">
+    <value>异常考勤数据</value>
+  </data>
+  <data name="tipLabelUnNormalList" xml:space="preserve">
+    <value>员工异常考勤信息调整列表</value>
+  </data>
+  <data name="tipLableYoucanAdjust" xml:space="preserve">
+    <value>提示：您可以在此页面中对员工异常考勤信息进行手工调整</value>
+  </data>
+  <data name="tipLVOVMustInt" xml:space="preserve">
+    <value>"调休工时"及"加班工时调整"字段请输入正数</value>
+  </data>
+  <data name="btnAdjustOTREST" xml:space="preserve">
+    <value>调整加班调休时间</value>
+  </data>
+  <data name="tipPagingNoRecord" xml:space="preserve">
+    <value>没有记录</value>
+  </data>
+  <data name="tipPagingShowMsg" xml:space="preserve">
+    <value>显示第{0} 条到{1} 条记录，一共{2} 条</value>
+  </data>
+  <data name="tipNoAnalyseFailed" xml:space="preserve">
+    <value>考勤数据分析失败！</value>
+  </data>
+  <data name="tipPeriodLocked" xml:space="preserve">
+    <value>当前期间被锁定!</value>
+  </data>
+  <data name="tipTobeAnalyse" xml:space="preserve">
+    <value>此操作可能需要等待一段时间，是否确定？</value>
+  </data>
+  <data name="tipAnalysStatus1" xml:space="preserve">
+    <value>考勤分析状态为部门排班</value>
+  </data>
+  <data name="tipAnalysStatus2" xml:space="preserve">
+    <value>考勤分析状态为人事部审核</value>
+  </data>
+  <data name="tipAnalysStatus3" xml:space="preserve">
+    <value>考勤分析状态为已完成</value>
+  </data>
+  <data name="colDCPOSI" xml:space="preserve">
+    <value>职位英文</value>
+  </data>
+  <data name="colDCPOSICHS" xml:space="preserve">
+    <value>职位中文</value>
+  </data>
+  <data name="tipMenuAnalyzeTheStaff" xml:space="preserve">
+    <value>分析该员工考勤</value>
+  </data>
+  <data name="tipMenuAttendanceAnalysisResult" xml:space="preserve">
+    <value>考勤统计分析结果</value>
+  </data>
+  <data name="tipMenuAttendanceExceptionReport" xml:space="preserve">
+    <value>考勤异常表</value>
+  </data>
+  <data name="tipMenuAttendanceReport" xml:space="preserve">
+    <value>考勤报表</value>
+  </data>
+  <data name="tipMenuAttendanceSummary" xml:space="preserve">
+    <value>考勤汇总记录</value>
+  </data>
+  <data name="tipMenuCheckInOutRecord" xml:space="preserve">
+    <value>考勤打卡记录</value>
+  </data>
+  <data name="tipMenuFillCheckInOut" xml:space="preserve">
+    <value>补打卡记录</value>
+  </data>
+  <data name="tipMenuLeaveDocument" xml:space="preserve">
+    <value>休假单</value>
+  </data>
+  <data name="tipMenuLVOTRecord" xml:space="preserve">
+    <value>加班休假记录</value>
+  </data>
+  <data name="tipMenuOvertimeBalanceReport" xml:space="preserve">
+    <value>加班调休余额表</value>
+  </data>
+  <data name="tipMenuOvertimeDocument" xml:space="preserve">
+    <value>加班单</value>
+  </data>
+  <data name="colDeptName" xml:space="preserve">
+    <value>部门英文名</value>
+  </data>
+  <data name="colDeptNameChs" xml:space="preserve">
+    <value>部门中文名</value>
+  </data>
+  <data name="tipShiftCodeFilter" xml:space="preserve">
+    <value>输入条件过滤班次</value>
+  </data>
+</root>

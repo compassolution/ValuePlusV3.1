@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.3102.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.3102.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="label2">
+		<value>Please input</value>
+	</data>
+	<data name="button1">
+		<value>Login</value>
+	</data>
+	<data name="imagebuton1">
+		<value>Change Password</value>
+	</data>
+	<data name="label1a0">
+		<value>Successful</value>
+	</data>
+	<data name="label3">
+		<value>User Code</value>
+	</data>
+	<data name="label4">
+		<value>Password</value>
+	</data>
+	<data name="label5">
+		<value>Old Password</value>
+	</data>
+	<data name="label6">
+		<value>New Password</value>
+	</data>
+	<data name="label7">
+		<value>Confirm</value>
+	</data>
+	<data name="label10">
+		<value>S/N:</value>
+	</data>
+	<data name="label8">
+		<value>Licensed to:</value>
+	</data>
+	<data name="label9">
+		<value>Expire at:</value>
+	</data>
+	<data name="button3">
+		<value>Change</value>
+	</data>
+	<data name="button4">
+		<value>Close</value>
+	</data>
+	<data name="label1a1">
+		<value>Invalid User code</value>
+	</data>
+	<data name="label1a2">
+		<value>Invalid Password</value>
+	</data>
+	<data name="label1a3">
+		<value>Invalid Old Password</value>
+	</data>
+	<data name="label1a4">
+		<value>Invalid New Password</value>
+	</data>
+	<data name="HyperLink1">
+		<value>Logout</value>
+	</data>
+	<data name="expired">
+		<value>Expired</value>
+	</data>
+	<data name="duplicate">
+		<value>This user already logged on!</value>
+	</data>
+</root>

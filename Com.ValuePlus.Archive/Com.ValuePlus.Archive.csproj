@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{732356D8-57AA-43C6-BD5F-3105F27FC317}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Com.ValuePlus.Archive</RootNamespace>
+    <AssemblyName>Com.ValuePlus.Archive</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FreeTextBox, Version=3.3.1.12354, Culture=neutral, PublicKeyToken=5962a4e684a48b87, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UI\Bin\FreeTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Admin\ExportArchiveConfig.cs" />
+    <Compile Include="BLL\ActionMainActionBll.cs" />
+    <Compile Include="BLL\ArchiveActionBll.cs" />
+    <Compile Include="BLL\ArchiveAlertBll.cs" />
+    <Compile Include="BLL\ArchiveBaseBll.cs" />
+    <Compile Include="BLL\ArchiveEventBll.cs" />
+    <Compile Include="BLL\ArchiveFontSetterBll.cs" />
+    <Compile Include="BLL\ArchiveGridActionBll.cs" />
+    <Compile Include="BLL\ArchiveMainDealBll.cs" />
+    <Compile Include="BLL\TMPSQSGetterBll.cs" />
+    <Compile Include="BLL\ArchiveStyleGetterBll.cs" />
+    <Compile Include="BLL\AutoIncreaseFiledBll.cs" />
+    <Compile Include="BLL\GetArchiveSettingBll.cs" />
+    <Compile Include="BLL\ParamOperationBll.cs" />
+    <Compile Include="BLL\ParamSqlStringGetterBll.cs" />
+    <Compile Include="BLL\ReplaceSqlIncludeTBLSTD.cs" />
+    <Compile Include="BLL\ServerCtrlIDGetterBll.cs" />
+    <Compile Include="BLL\SetDataToEntityBll.cs" />
+    <Compile Include="BLL\TmpdPMastBll.cs" />
+    <Compile Include="BLL\WebControlCreateBll.cs" />
+    <Compile Include="Entity\Entity_AjaxPMastObject.cs" />
+    <Compile Include="Entity\Entity_ArchiveStyle.cs" />
+    <Compile Include="Entity\SpParamEntity.cs" />
+    <Compile Include="Entity\SpXmlEntity.cs" />
+    <Compile Include="Flow\FLUserSMS.cs" />
+    <Compile Include="Flow\MultiApproveBll.cs" />
+    <Compile Include="Property\PMASTProperty.cs" />
+    <Compile Include="Property\TB_HRLSTDProperty.cs" />
+    <Compile Include="Config\ArchiveSqlConfig.cs" />
+    <Compile Include="Config\ArchiveStyleConfig.cs" />
+    <Compile Include="DAL\ArchiveBaseDao.cs" />
+    <Compile Include="DAL\DALFactory.cs" />
+    <Compile Include="DAL\SqlParamDao.cs" />
+    <Compile Include="Entity\Entity_CreateAction.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPA.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPAR.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPD.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPDS.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPE.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPG.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPGA.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPR.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPRD.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPS.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPSA.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPSD.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPSE.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPSG.cs" />
+    <Compile Include="Entity\Entity_TB_HRTMPSGA.cs" />
+    <Compile Include="Entity\Entity_ToDBObject.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tree\BiuldTreeDataBll.cs" />
+    <Compile Include="Tree\TreeActionBll.cs" />
+    <Compile Include="Utils\ArchiveDataValidator.cs" />
+    <Compile Include="Utils\PagingSqlUtil.cs" />
+    <Compile Include="WebCtrls\AttachmentCtrl.cs" />
+    <Compile Include="WebCtrls\DetailLinkButtion.cs" />
+    <Compile Include="WebCtrls\GeneralCheckBox.cs" />
+    <Compile Include="WebCtrls\GeneralDropDownList.cs" />
+    <Compile Include="WebCtrls\GeneralTextBox.cs" />
+    <Compile Include="WebCtrls\ImageTextBox.cs" />
+    <Compile Include="WebCtrls\DBTextBox.cs" />
+    <Compile Include="WebCtrls\MyFreeTextBox.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Com.ValuePlus.BLL\Com.ValuePlus.BLL.csproj">
+      <Project>{b461499a-cbf3-4fa0-90ea-b0b3aca656df}</Project>
+      <Name>Com.ValuePlus.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Common\Com.ValuePlus.Common.csproj">
+      <Project>{AB169A8B-104A-4ED5-9B75-871CF2C9A654}</Project>
+      <Name>Com.ValuePlus.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Config\Com.ValuePlus.Config.csproj">
+      <Project>{B7C73649-C462-453B-84AA-6FE1389F015A}</Project>
+      <Name>Com.ValuePlus.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Database\Com.ValuePlus.Database.csproj">
+      <Project>{7358970A-8BF6-4182-B9F9-68DBF921C6E7}</Project>
+      <Name>Com.ValuePlus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Log\Com.ValuePlus.Log.csproj">
+      <Project>{EBA12249-1413-4354-A324-0B6ED7B33B30}</Project>
+      <Name>Com.ValuePlus.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.SysParams\Com.ValuePlus.SysParams.csproj">
+      <Project>{DB7A54CE-A851-41C0-BEB3-5E126E6CF9B9}</Project>
+      <Name>Com.ValuePlus.SysParams</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Utils\Com.ValuePlus.Utils.csproj">
+      <Project>{D7DEB6B8-77CF-45C7-8172-30B728E17733}</Project>
+      <Name>Com.ValuePlus.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

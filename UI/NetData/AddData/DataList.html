@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>流量爽</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	
+	<!--清除缓存的头-->
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<link rel="stylesheet" href="../Common/css/mui.min.css">
+	<link rel="stylesheet" href="../Common/css/mui.indexedlist.css" rel="stylesheet" />
+	<style>
+		html,
+		body {
+			height: 100%;
+			overflow:inherit;
+		}
+		.mui-bar {
+			-webkit-box-shadow: none;
+			box-shadow: none;
+		}
+		#done.mui-disabled{
+			color: gray;
+		}
+		.mui-card .mui-control-content {
+			padding: 10px;
+		}
+	</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav mui-badge-green">
+		<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left" style="color: black;">
+			<span class="mui-icon mui-icon-left-nav"></span><span id='lbHome'>返回</span>
+		</button>
+		<a class="mui-icon mui-icon-bars mui-pull-left mui-plus-visible"></a>
+		<h1 class="mui-title">流量列表</h1>
+	</header>
+	<div class="mui-content">
+		<div style="padding: 10px 10px;overflow:hidden">
+			<div id="segmentedControl" class="mui-segmented-control">
+				<a id = "aNative" class="mui-control-item mui-active" href="#item1">
+					全国流量<span id = 'spanCompanyName'></span>
+				</a>
+				<a id="aProvince" class="mui-control-item" href="#item2">
+					<span>省流量</span>
+				</a>
+			</div>
+		</div>
+		<div>
+			<h5 id="lb_NationLoading" class="mui-text-center"></h5>
+			<div id="item1" class="mui-control-content mui-active mui-card">
+				<ul id = "ulNationDataView" class="mui-table-view ">
+				</ul>
+			</div>
+			<div id="item2" class="mui-control-content mui-card">
+				<ul id = "ulShowProvinceName" class="mui-table-view ">
+		            <li class="mui-table-view-cell" style="background-color:#EFEFF4;">
+		            	<span id = "spanProvinceName" style = "font-size:small;"></span>
+		            	<button id="btnSwitchProvince" type="button" style="height:28px;font-weight:bold" class="mui-btn mui-btn-primary">切换省份</button>
+		            </li>
+				</ul>
+				<ul id = "ulProvinceDataView" class="mui-table-view ">
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<script src="../Common/js/mui.min.js"></script>
+	<script src="../Common/Scripts/Const.js"></script>
+	<script src="../Common/Scripts/Main.js"></script>
+	<script src="../Common/Scripts/LocalStorage.js"></script>
+	<script src="../Common/Scripts/BuildDataList.js"></script>
+	<script src="../Common/js/mui.indexedlist.js"></script>
+			
+	<script>
+		mui.init({
+			swipeBack: true //启用右滑关闭功能
+		});
+		
+		
+		(function($, doc) {
+			//获取运营商类型参数
+			var mobileNo = GetUrlParamValue("MobileNo");
+			var companyType = GetUrlParamValue("CardType");
+			var provinceName = unescape(GetUrlParamValue("Province"));
+			var provinceCode = unescape(GetUrlParamValue("ProvinceCode"));
+			var companyName = '';
+			switch (companyType){
+				case '001':
+					companyName = '中国移动';
+					break;
+				case '002':
+					companyName = '中国联通';
+					break;
+				case '003':
+					companyName = '中国电信';
+					break;
+				default:
+					break;
+			}
+			
+			document.getElementById("spanCompanyName").innerText = '('+companyName+')';
+			if (provinceName!=''){
+				document.getElementById("spanProvinceName").innerText = provinceName;
+			}else{
+				document.getElementById("spanProvinceName").innerText = '未知省份';
+			}
+			//加载全国流量列表
+			BuildNationDataList(companyType);
+			
+			document.getElementById("aProvince").addEventListener('tap', function() {
+//				document.getElementById("lb_NationLoading").value = 'jiazaizhong';
+//				document.getElementById("lb_NationLoading").style.display = "";
+				if(provinceCode!=''){
+					
+				}else{
+					document.getElementById('btnSwitchProvince').value = '选择省份';
+				}
+			});
+			
+		}(mui, document));
+		
+		
+		mui.ready(function() {
+			var header = document.querySelector('header.mui-bar');
+			var list = document.getElementById('list');
+			//calc hieght
+			list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+			//create
+			window.indexedList = new mui.IndexedList(list);
+		});
+		
+	</script>
+	
+</body>
+</html>

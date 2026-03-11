@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--360浏览器优先以webkit内核解析-->
+
+    <title> Dashboard</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../common/Portal/Portal1/App-Portal.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="container wrapper wrapper-content animated">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row row-sm text-center">
+                    <div class="col-xs-2">
+                        <div class="widget style1">
+                            <div class="row">
+                                <div class="col-xs-4 text-center">
+                                    <i class="fa fa-trophy fa-5x"></i>
+                                </div>
+                                <div class="col-xs-8 text-right">
+                                    <span> 今日</span>
+                                    <h2 class="font-bold">2020-05-08</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="panel padder-v item bg-primary">
+                            <div class="h1 text-fff font-thin h1">5600</div>
+                            <span class="text-muted text-xs">今天游客人数</span>
+                            <div class="top text-right w-full">
+                                <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="panel padder-v item bg-info">
+                            <div class="h1 text-fff font-thin h1">2010</div>
+                            <span class="text-fff text-xs">寄存行李数</span>
+                            <div class="top text-right w-full">
+                                <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="panel padder-v item bg-primary">
+                            <div class="h1 text-fff font-thin h1">1001</div>
+                            <span class="text-muted text-xs">现存行李数</span>
+                            <div class="top text-right w-full">
+                                <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-2">
+                        <div class="panel padder-v item bg-info">
+                            <div class="h1 text-fff font-thin h1">1300</div>
+                            <span class="text-fff text-xs">行李转运次数</span>
+                            <div class="top text-right w-full">
+                                <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row row-sm text-center">
+                    <div class="col-xs-6">
+                        <div class="ibox-content">
+                            <div>
+                                <div>
+                                    <span class="pull-left">主题公园入口寄存点</span>&nbsp;&nbsp;&nbsp;
+                                    <small class="pull-right">1200/1600</small>
+                                </div>
+                                <div class="progress progress-small">
+                                    <div style="width: 75%;" class="progress-bar"></div>
+                                </div>
+                                <div>
+                                    <span class="pull-left">主停车场寄存点</span>&nbsp;&nbsp;&nbsp;
+                                    <small class="pull-right">300/600</small>
+                                </div>
+                                <div class="progress progress-small">
+                                    <div style="width: 50%;" class="progress-bar"></div>
+                                </div>
+                                <div>
+                                    <span class="pull-left">地铁站寄存点</span>&nbsp;&nbsp;&nbsp;
+                                    <small class="pull-right">200/600</small>
+                                </div>
+                                <div class="progress progress-small">
+                                    <div style="width: 30%;" class="progress-bar"></div>
+                                </div>
+                                <div>
+                                    <span class="pull-left">环球大酒店行李房</span>&nbsp;&nbsp;&nbsp;
+                                    <small class="pull-right">80/100</small>
+                                </div>
+                                <div class="progress progress-small">
+                                    <div style="width: 80%;" class="progress-bar progress-bar-danger"></div>
+                                </div>
+                                <div>
+                                    <span class="pull-left">诺度假村行李房</span>&nbsp;&nbsp;&nbsp;
+                                    <small class="pull-right">70/80</small>
+                                </div>
+                                <div class="progress progress-small">
+                                    <div style="width: 90%;" class="progress-bar progress-bar-danger"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-5">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="echarts" id="echarts-pie-chart1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="echarts" id="echarts-line-chart1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="echarts" id="echarts-line-chart2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="col-xs-5">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="echarts" id="echarts-pie-chart2"></div>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 全局js -->
+    <script src="../../common/JQuery/jquery-1.10.2.js"></script>
+    <script src="../../common/plugins/bootstrap/js/bootstrap.min.js?v=3.3.7"></script>
+    <script src="../../common/layer/layer.min.js"></script>
+    <!-- ECharts -->
+    <script src="../../common/plugins/echarts/echarts.js"></script>
+
+    <!-- ECharts demo data -->
+    <script src="../Pages/echarts-demo.js"></script>
+</body>
+</html>

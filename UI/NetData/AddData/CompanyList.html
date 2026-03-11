@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>流量爽</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../Common/css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+	</head>
+
+	<body>
+
+		<header class="mui-bar mui-bar-nav mui-badge-green">
+		    <h1 class="mui-title">运营商</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-input-row mui-password" style=" padding-left: 10px;padding-right: 10px;padding-top: 5px">
+				<input id = "txtMobileNo" type="text" placeholder="请输入手机号码">
+				<h5 id = 'lbMobileInfo'></h5>
+			</div>
+			<div>
+		        <ul class="mui-table-view mui-grid-view mui-grid-9 mui-text-center">
+		            <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-10">
+		                <a id = "aTo_Yidong" href="javascript:void();">
+			                <img src="../Common/image/yidong.jpg" class="mui-col-sm-12"/>
+			                <div class="mui-media-body">中国移动</div>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-10">
+		            	<a id = "aTo_Liantong" href="javascript:void();">
+			                <img src="../Common/image/liantong.jpg" class="mui-col-sm-12" />
+			                <div class="mui-media-body">中国联通</div>
+		            	</a>
+		            </li>
+		            <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-10">
+		            	<a id = "aTo_Dianxin" href="javascript:void();">
+			                <img src="../Common/image/dianxin.jpg" class="mui-col-sm-12" />
+			                <div class="mui-media-body">中国电信</div>
+		            	</a>
+		            </li>
+		        </ul> 
+	        </div>
+		</div>
+	</body>
+	<script src="../Common/js/mui.min.js"></script>
+	<script src="../Common/Scripts/Const.js"></script>
+	<script src="../Common/Scripts/Main.js"></script>
+	<script src="../Common/Scripts/LocalStorage.js"></script>
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		
+		(function($, doc) {
+			function ToDataListPage(MobileNo,CardType,Province,ProvinceCode){
+				RedirectNewPage('DataList','DataList.html','MobileNo='+MobileNo+'&CardType='+CardType+'&Province='+escape(Province)+'&ProvinceCode='+ProvinceCode);
+			}
+			
+			var mask = mui.createMask();//callback为用户点击蒙版时自动执行的回调；
+		
+			 //进入页面按钮
+			document.getElementById("aTo_Yidong").addEventListener('tap', function() {
+				ToDataListPage('','001','','');
+			});
+			 //进入页面按钮
+			document.getElementById("aTo_Liantong").addEventListener('tap', function() {
+				ToDataListPage('','002','','');
+			});
+			 //进入页面按钮
+			document.getElementById("aTo_Dianxin").addEventListener('tap', function() {
+				ToDataListPage('','003','','');
+			});
+			
+			 //手机号码输入键盘事件
+			document.getElementById("txtMobileNo").addEventListener('keyup', function() {
+				var inputValue = document.getElementById("txtMobileNo").value;
+				
+				if((inputValue.length)==11){
+					mask.show();//显示遮罩
+					var url = Const_ServiceUrl+'/NetData/Handler/MobileHandler.ashx';
+//					var url = '../Handler/MobileHandler.ashx';
+					mui.ajax(url,{
+						data:{
+							param:'querymobileinfo',
+							mobileno:inputValue
+						},
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；
+						success:function(data){
+//							mui.alert(data);
+//							document.getElementById("lbMobileInfo").innerText = data;
+							
+//							//服务器返回响应，根据响应结果，分析是否登录成功；
+			                if (data == "") return false;
+			                var dataobj = eval("(" + data + ")");
+//							mui.alert(dataobj);
+							var rows = dataobj.ResultData.length;
+							var sCardType = unescape(dataobj.ResultData[0]["CardType"]);
+							var sProvince = unescape(dataobj.ResultData[0]["Province"]);
+							var sProvinceCode = unescape(dataobj.ResultData[0]["ProvinceCode"]);
+//							mui.alert(sCardType);
+							
+							var sCardTypeCode = '';
+							switch (sCardType){
+								case '移动':
+									sCardTypeCode = '001';
+									break;
+								case '联通':
+									sCardTypeCode = '002';
+									break;
+								case '电信':
+									sCardTypeCode = '003';
+									break;
+								default:
+									break;
+							}
+							ToDataListPage(inputValue,sCardTypeCode,sProvince,sProvinceCode);
+//			
+						},
+						error:function(xhr,type,errorThrown){
+							mui.toast(GetStringByLanguage('CULTURE_Login_ServerUrlError'));
+							//异常处理；
+							console.log(type);
+						}
+					});
+					mask.close();//关闭遮罩
+				}
+			});
+		}(mui, document));
+	</script>
+</html>

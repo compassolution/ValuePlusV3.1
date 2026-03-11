@@ -1,0 +1,635 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>出货申请材料清单</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+    <link href="../common/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet">
+</head>
+
+<body>
+    <script src="../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../common/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="../common/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../common/js/tableStyle.js" type="text/javascript"></script>
+    <script src="../common/js/stringUtil.js" type="text/javascript"></script>
+    <script src="../common/js/MainUtil.js" type="text/javascript"></script>
+
+    <div class="container-fluid ">
+        <div class="row-fluid">
+            <div class="alert alert-success text-left" id="lb_Tips">
+                <span>提示:1、本页面可以进行批量删除</span>
+                <span>2、本页面中的可输入部分，在输入数据后会立即单独保存,请谨慎操作!</span>
+            </div>
+            <div class="col-sm-12">
+                <form id="formList" class="form-horizontal" method="post">
+                    <div class="row">
+                        <div id="divCustomToolbar">
+                            <div class="left-block">
+                                <label id="lb_PageTile" class="" style="font-size:large">出货申请材料清单</label>
+                                <label id="lb_PageSubTile" class="text-danger" style="font-size:large"></label>
+                                <button id="btnDelete" type="button" class="btn btn-danger btn-sm">删除选中材料清单</button>
+                                <button id="btnMultiModify" type="button" class="btn btn-primary btn-sm">批量修改</button>
+                            </div>
+                        </div>
+                        <div id="divListTable" class="row-fluid">
+                            <table id="tbListTable"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="700"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size="200"
+                                   data-page-list="[20, 50,100, 200, 500, 1000]">
+                                <thead>
+                                    <tr>
+                                        <th data-width="3%" data-field="check" data-checkbox="true" data-align="center" data-order="asc"></th>
+                                        <th data-width="10%" data-field="TPOUTRequest" data-sortable="true" data-align="center" data-order="asc" data-visible="false">出货申请单号</th>
+                                        <th data-width="5%" data-field="ORDERNUM" data-sortable="true" data-align="center" data-order="asc">序号</th>
+                                        <th data-width="10%" data-field="GCODE" data-sortable="true" data-align="center" data-order="asc">货品编号</th>
+                                        <th data-width="10%" data-field="ITEMCODE" data-sortable="true" data-align="center" data-order="asc" data-visible="false">Accpac货品编码</th>
+                                        <th data-width="5%" data-field="BOMCODE" data-sortable="true" data-align="center" data-order="asc" data-visible="false">所属BOM</th>
+                                        <th data-width="20%" data-field="DDESC" data-sortable="true" data-align="center" data-order="asc">货品描述</th>
+                                        <th data-width="5%" data-field="UNITS" data-sortable="true" data-align="center" data-order="asc">单位</th>
+                                        <th data-width="8%" data-field="NTOTAL" data-sortable="true" data-align="center" data-order="asc">料单数量</th>
+                                        <th data-width="8%" data-field="CanRequestQty" data-sortable="true" data-align="center" data-order="asc">可申请数量</th>
+                                        <th data-width="8%" data-field="RequestQty" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterRequestQty" data-events="EventsRequestQty">出货申请数量</th>
+                                        <th data-width="8%" data-field="UNITRATE" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterUNITRATE" data-events="EventsUNITRATE">单价</th>
+                                        <th data-width="8%" data-field="TATOLCOST" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterTATOLCOST" data-events="EventsTATOLCOST">合价</th>
+                                        <th data-width="8%" data-field="ExpectDate" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterExpectDate" data-events="EventsExpectDate">期望到货日期</th>
+                                        <th data-width="20%" data-field="REMARK" data-sortable="true" data-align="center" data-order="asc" data-formatter="FormatterREMARK" data-events="EventsREMARK">出货备注</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="text-center col-sm-12">
+                            <div class="alert alert-danger text-center" id="lb_NoticeMsg" role="alert"></div>
+                            <textarea type="text" id="txt_SelectedOrderNum" name="txt_SelectedOrderNum" class="form-control text-info" style="display:none"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModifyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h5 class="modal-title">批量修改</h5>
+                </div>
+
+                <div class="modal-body row">
+                    <form id="formLanguageConfig" class="form-horizontal" method="post">
+                        <div class="modal-body row">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="control-label col-sm-3">期望到货日期：</label>
+                                        <div class="col-sm-6">
+                                            <input id="txt_Modify_ExpectDate" name="txt_Modify_ExpectDate" class="form-control input-sm form-date-input" maxlength="50">
+                                        </div>
+                                        <!--<div class="col-sm-3">
+                                            <h6>不录入则不修改该字段</h6>
+                                        </div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button id="btnCancelSave" class="btn btn-danger btn-sm" type="button" data-dismiss="modal">取消</button>
+                        <button id="btnConfirmSave" class="btn btn-success btn-sm disabled-after-click" type="button">确定批量修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 等待遮罩模态框（Modal） -->
+    <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>-->
+                    <h4 class="modal-title" id="myWaittingModalTitle">
+                        正在处理中,请稍候.....
+                    </h4>
+                </div>
+                <div id="myWaittingModalContent" class="modal-body">
+
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+    </div>
+    <script type="text/javascript">
+        //日期格式配置选项
+        var dateFormatOptions = {
+            language: 'zh-CN',
+            weekStart: 7, //一周开始
+            todayBtn: 1, //快速定位今天的按钮显示
+            autoclose: true, //选择后是否自动关闭
+            todayHighlight: 1, //今天日期是否高显
+            startView: 2, //默认开始视图
+            minView: 2, //时间视图(2为只选日期)
+            forceParse: 1, //是否强制转换
+            showMeridian: false,
+            format: 'yyyy-mm-dd'
+        };
+        function ShowWaitting() {
+            $('#myWaittingModal').modal();
+        }
+        function HideWaiting() {
+            $('#myWaittingModal').modal('hide');
+        }
+    </script>
+
+    <script type="text/javascript">
+        var varKeyValue = GetUrlQueryString("P0");
+
+        $(document).ready(function () {
+            $("#lb_NoticeMsg").text('').hide();
+            $("#lb_PageSubTile").text('（出货申请单号:' + varKeyValue + '）');
+
+            $('#btnMultiModify').click(function () {
+                $('#myModifyModal').modal();
+                $("#lb_NoticeMsg").text('').hide();
+            });
+            $('#btnConfirmSave').click(function () {
+                MuiltiModifyData();
+            });
+
+            //加载列表
+            GetAndSetListResult(varKeyValue);
+            
+            ///删除操作
+            $('#btnDelete').click(function () {
+                DeleteDataList(varKeyValue);
+            });
+
+            //初始化日期格式字段
+            $(".form-date-input").datetimepicker(dateFormatOptions);
+            //$(".form-date-input").attr("readonly", true);
+            $(".form-date-input").val(new Date().getFullYear() + '-' + padleft0(new Date().getMonth() + 1) + "-" + new Date().getDate());
+        });
+
+    </script>
+    <!--//批量保存输入的数据-->
+    <script type="text/javascript">
+        function MuiltiModifyData() {
+            var varInputExpectDate = $("#txt_Modify_ExpectDate").val();
+            var SaveCtrlId = "";
+            var SaveCtrlValue = "";
+            var i = 0;
+            $(".inputExpectDate").each(function () {
+                if (i == 0) {
+                    SaveCtrlId = $(this).attr("id");
+                    SaveCtrlValue = varInputExpectDate.toString();
+                } else {
+                    SaveCtrlId = SaveCtrlId + "*" + $(this).attr("id");
+                    SaveCtrlValue = SaveCtrlValue + "*" + varInputExpectDate.toString();
+                }
+                i++;
+            });
+            setTimeout(function () {
+                if (SaveCtrlId != '') {
+                    SaveDataOneCtral(varKeyValue, SaveCtrlId, SaveCtrlValue);
+                    setTimeout(function () {
+                        $(".inputExpectDate").each(function () {
+                            $(this).attr("OldValue", varInputExpectDate);
+                            $(this).val(varInputExpectDate);
+                        });
+                        $('#myModifyModal').modal('hide');
+                        $("#txt_Modify_ExpectDate").val("")
+                        $("#lb_NoticeMsg").text('').hide();
+                    }, 500);
+                }
+            }, 500);
+        }
+    </script>
+
+    <!--///加载结果列表-->
+    <script type="text/javascript">
+        ///加载结果列表
+        function GetAndSetListResult(keyvalue) {
+            $("#lb_NoticeMsg").text('').hide();
+            ShowWaitting();
+            var strParam = "keyvalue=" + keyvalue;
+            var urlQuery = escape("M=" + Math.random() + "&param=querylist&" + strParam);
+            var url = "ModifyTPOUTREQUEST_2.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                async: false,
+                data: $('#formList').serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if ((data == "") || (data == "")) {
+                        $("#lb_NoticeMsg").show().text('查询出现错误，请更正查询条件后重试！');
+                        HideWaiting();
+                        return false;
+                    }
+                    var dataobj = eval("(" + data + ")");
+                    var item = dataobj.ResultData[0];
+                    var rows = dataobj.ResultData.length;
+                    //构建表格####### Start
+                    var i, j, row, columns = [], data = [];
+
+
+                    for (i = 0; i < rows; i++) {
+                        row = {};
+                        for (var key in dataobj.ResultData[i]) {
+                            //对值进行编码处理特殊字符，如引号等//
+                            row[key] = unescape(dataobj.ResultData[i][key]);
+                        }
+                        data.push(row);
+                    }
+
+                    $('#tbListTable').bootstrapTable('destroy').bootstrapTable({
+                        data: data
+                    });
+                    $('#tbListTable').bootstrapTable('resetView');
+
+                    ///设置表格自适应高度
+                    SetBootstrapAutoHeight($('#tbListTable'));
+
+                    //构建表格####### End
+                    HideWaiting();
+                }
+            });
+            //反向赋值select控件
+            $("#tbListTable select").each(function () {
+                //alert($(this).attr("OldValue"));
+                $(this).val($(this).attr("OldValue"));
+            });
+            //反向赋值Checkbox控件
+            $("#tbListTable input[type='checkbox']").each(function () {
+                if ($(this).attr("OldValue") == "true") {
+                    $(this).attr("checked", "true");
+                }else {
+                    $(this).removeAttr("checked");
+                }
+            });
+
+            HideWaiting();
+        }
+        ///设置表格自适应高度
+        function SetBootstrapAutoHeight($table) {
+            var documentHeight = $(document).height();
+            var varHeight = documentHeight - 140;
+            $table.bootstrapTable('refreshOptions', {
+                height: varHeight
+            })
+        }
+
+    </script>
+
+    <!--//定义每行的出货申请数量文本框-->
+    <script type="text/javascript">
+        //定义每行的出货申请数量文本框
+        function FormatterRequestQty(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var RowId = RowData.ORDERNUM;
+            var RequestQty = RowData.RequestQty;
+            return [
+                '<input type="text" id="txt_Item_' + RowId + '_RequestQty" OldValue = "' + RequestQty.toString() + '" class="form-control text-right input-sm inputRequestQty btn-info" value = "' + RequestQty + '"/>'
+            ].join('');
+
+        }
+
+        //定义出货申请数量的事件
+        window.EventsRequestQty = {
+            'blur .inputRequestQty': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var RowId = RowData.ORDERNUM;
+                var AllQty = RowData.CanRequestQty;
+                var RequestQty = RowData.RequestQty;
+                var InputRequestQty = $(this).val();
+                //校验为数值
+                var pattern = /^([-]){0,1}([0-9]){1,}([.]){0,1}([0-9]){0,}$/;
+                var flag = pattern.test(InputRequestQty);
+                if (flag) {
+                    $("#lb_NoticeMsg").text('').hide();
+                    $(this).removeClass('btn-warning');
+                    var inputValue = parseFloat(InputRequestQty);
+                    var canInputQty = parseFloat(AllQty);
+
+                    if (parseFloat($(this).val()) != parseFloat($(this).attr("OldValue"))) {
+                        if (inputValue > canInputQty) {
+                            if (confirm("输入的出货申请数量不能大于可申请数量，是否确认?")) {
+                            } else {
+                                $(this).val(canInputQty);
+                            }
+                        }
+                        //计算当前行的含税总价
+                        ComputeTotalAmount(RowId);
+
+                        //即时保存单独每个字段控件的数据(同时保存含税总价字段)(多个控件ID和值中间用*隔开)
+                        var CtrlId_TATOLCOST = "txt_Item_" + RowId + "_TATOLCOST";
+                        var SaveCtrlId = $(this).attr("id") + "*" + CtrlId_TATOLCOST;
+                        var SaveCtrlValue = $(this).val().toString() + "*" + $("#" + CtrlId_TATOLCOST).val().toString();
+                        SaveDataOneCtral(varKeyValue, SaveCtrlId, SaveCtrlValue);
+                        $(this).attr("OldValue", $(this).val());
+                    }
+                } else {
+                    $("#lb_NoticeMsg").show().text('颜色标记出的输入框请输入数值型');
+                    $(this).addClass('btn-warning');
+                    $(this).addClass('focus');
+                    $(this).val("0");
+                }
+            }
+        };
+    </script>
+    
+    <!--//定义每行的单价文本框-->
+    <script type="text/javascript">
+        //定义每行的单价文本框
+        function FormatterUNITRATE(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var RowId = RowData.ORDERNUM;
+            var UNITRATE = RowData.UNITRATE;
+            return [
+                '<input type="text" id="txt_Item_' + RowId + '_UNITRATE" OldValue = "' + UNITRATE.toString() + '" class="form-control text-right input-sm inputUNITRATE btn-info" value = "' + UNITRATE + '"/>'
+            ].join('');
+
+        }
+
+        //定义单价的事件
+        window.EventsUNITRATE = {
+            'blur .inputUNITRATE': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var RowId = RowData.ORDERNUM;
+                var AllQty = RowData.CanRequestQty;
+                var UNITRATE = RowData.UNITRATE;
+                var InputUNITRATE = $(this).val();
+                //校验为数值
+                var pattern = /^([-]){0,1}([0-9]){1,}([.]){0,1}([0-9]){0,}$/;
+                var flag = pattern.test(InputUNITRATE);
+                if (flag) {
+                    $("#lb_NoticeMsg").text('').hide();
+                    $(this).removeClass('btn-warning');
+                    var inputValue = parseFloat(InputUNITRATE);
+                    var canInputQty = parseFloat(100.00);
+
+                    if (parseFloat($(this).val()) != parseFloat($(this).attr("OldValue"))) {
+                        //计算当前行的含税总价
+                        ComputeTotalAmount(RowId);
+
+                        //即时保存单独每个字段控件的数据(同时保存含税总价字段)(多个控件ID和值中间用*隔开)
+                        var CtrlId_TATOLCOST = "txt_Item_" + RowId + "_TATOLCOST";
+                        var SaveCtrlId = $(this).attr("id") + "*" + CtrlId_TATOLCOST;
+                        var SaveCtrlValue = $(this).val().toString() + "*" + $("#" + CtrlId_TATOLCOST).val().toString();
+                        SaveDataOneCtral(varKeyValue, SaveCtrlId, SaveCtrlValue);
+                        $(this).attr("OldValue", $(this).val());
+                    }
+                } else {
+                    $("#lb_NoticeMsg").show().text('颜色标记出的输入框请输入数值型');
+                    $(this).addClass('btn-warning');
+                    $(this).addClass('focus');
+                    $(this).val("0");
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的合价-->
+    <script type="text/javascript">
+        //定义每行的合价
+        function FormatterTATOLCOST(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var RowId = RowData.ORDERNUM;
+            var TATOLCOST = RowData.TATOLCOST;
+            //alert(ctrlId);
+            return [
+                '<input type="text" id="txt_Item_' + RowId + '_TATOLCOST" OldValue = "' + TATOLCOST.toString() + '" class="form-control text-right input-sm inputTATOLCOST" readonly value = "' + TATOLCOST + '"/>'
+            ].join('');
+        }
+
+        //定义合价的事件
+        window.EventsTATOLCOST = {
+            'blur .inputTATOLCOST': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                if ($(this).val() != $(this).attr("OldValue")) {
+                    //即时保存单独每个字段控件的数据
+                    SaveDataOneCtral(varKeyValue, $(this).attr("id"), $(this).val());
+                    $(this).attr("OldValue", $(this).val());
+                }
+            }
+        };
+
+        //每行的合价的计算逻辑事件
+        function ComputeTotalAmount(RowId) {
+            var RowValue_RequestQty = $("#txt_Item_" + RowId + "_RequestQty").val();
+            var RowValue_UNITRATE = $("#txt_Item_" + RowId + "_UNITRATE").val();
+
+            var RowValue_TATOLCOST = parseFloat(RowValue_RequestQty) * parseFloat(RowValue_UNITRATE);
+            $("#txt_Item_" + RowId + "_TATOLCOST").val(RowValue_TATOLCOST);
+        }
+    </script>
+
+    <!--//定义每行的期望到货日期文本框-->
+    <script type="text/javascript">
+        //定义每行的期望到货日期文本框
+        function FormatterExpectDate(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var RowId = RowData.ORDERNUM;
+            var ExpectDate = RowData.ExpectDate;
+            return [
+                '<input type="text" id="txt_Item_' + RowId + '_ExpectDate" OldValue = "' + ExpectDate.toString() + '" class="form-control text-center input-sm inputExpectDate form-date-input btn-info" value = "' + ExpectDate + '"/>'
+            ].join('');
+
+        }
+
+        //定义期望到货日期的事件
+        window.EventsExpectDate = {
+            'change .inputExpectDate': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var ExpectDate = RowData.ExpectDate;
+                var InputExpectDate = $(this).val();
+                if ($(this).val() != $(this).attr("OldValue")) {
+                    //即时保存单独每个字段控件的数据
+                    SaveDataOneCtral(varKeyValue, $(this).attr("id"), $(this).val());
+                    $(this).attr("OldValue", $(this).val());
+                }
+            }
+        };
+    </script>
+
+    <!--//定义每行的备注文本框-->
+    <script type="text/javascript">
+        //定义每行的备注文本框
+        function FormatterREMARK(value, row, index) {
+            var RowData = JSON.parse(JSON.stringify(row));
+            var RowId = RowData.ORDERNUM;
+            var REMARK = RowData.REMARK;
+            return [
+                '<textarea type="text" id="txt_Item_' + RowId + '_REMARK" OldValue = "' + REMARK.toString() + '" class="form-control input-sm inputREMARK btn-info" maxlength = "500">' + REMARK + '</textarea>'
+            ].join('');
+
+        }
+
+        //定义备注的事件
+        window.EventsREMARK = {
+            'blur .inputREMARK': function (e, value, row, index) {
+                var RowData = JSON.parse(JSON.stringify(row));
+                var REMARK = RowData.REMARK;
+                var InputREMARK = $(this).val();
+
+				if ($(this).val() != $(this).attr("OldValue")) {
+					//即时保存单独每个字段控件的数据
+					SaveDataOneCtral(varKeyValue, $(this).attr("id"), $(this).val());
+					$(this).attr("OldValue", $(this).val());
+				}
+            }
+        };
+    </script>
+
+
+    <!--即时保存单独每个字段控件的数据-->
+    <script type="text/javascript">
+        ///即时保存单独每个字段控件的数据
+        function SaveDataOneCtral(keyvalue, CtrlId, CtrlValue) {
+            $("#lb_NoticeMsg").show().text('保存中....');
+            ShowWaitting();
+
+            //请求服务器进行保存
+            var urlQuery = escape("M=" + Math.random() + "&param=savedataonectrl&keyvalue=" + keyvalue + "&ctrlid=" + CtrlId + "&ctrlvalue=" + CtrlValue);
+            var url = "ModifyTPOUTREQUEST_2.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                url: url,
+                async: false,
+                type: "post",
+                data: $("#formList").serialize(), // 你的formid
+                error: function (request) {
+                    HideWaiting();
+                    $("#lb_NoticeMsg").show().text('请求服务器时出错，请联系管理员处理!');
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == "") return false;
+
+                    if (data >= "1") {
+                        $("#lb_NoticeMsg").text('修改成功!');
+                        setTimeout(function () {
+                            HideWaiting();
+                            $("#lb_NoticeMsg").text('').hide();
+                        }, 500);
+                    } else {
+                        $("#lb_NoticeMsg").text(showString + '失败，请联系管理员处理!');
+                        HideWaiting();
+                    }
+                }
+            });
+            HideWaiting();
+        }
+    </script>
+
+    <!--删除列表数据操作-->
+    <script type="text/javascript">
+        ///删除列表数据操作
+        function DeleteDataList(keyvalue) {
+            ShowWaitting();
+            $("#lb_NoticeMsg").show().text('批量删除中....');
+            var getSelectRows = JSON.stringify($("#tbListTable").bootstrapTable('getSelections'));
+            getSelectRows = JSON.parse(getSelectRows);
+            var iTotalCount = getSelectRows.length;
+            //alert(iTotalCount);
+            if (iTotalCount <= 0) {
+                $("#lb_NoticeMsg").show().text('请至少选择一条记录后重试！');
+                HideWaiting();
+            } else {
+                if (confirm("已选择" + iTotalCount + "条记录，是否确认删除？")) {
+                    $("#lb_NoticeMsg").show().text('请稍候...');
+
+                    var varSelectedOrderNum = "";
+                    $("#txt_SelectedOrderNum").val("");
+                    for (var i = 0; i < iTotalCount; i++) {
+                        var RowData = getSelectRows[i];
+                        var OrderNum = RowData.ORDERNUM;
+                        if (i == 0) {
+                            varSelectedOrderNum = OrderNum;
+                        } else {
+                            varSelectedOrderNum = varSelectedOrderNum + "," + OrderNum;
+                        }
+                        $("#txt_SelectedOrderNum").val(varSelectedOrderNum);
+                    }
+
+                    //请求服务器进行删除
+                    var urlQuery = escape("M=" + Math.random() + "&param=deletelist&keyvalue=" + keyvalue);
+                    var url = "ModifyTPOUTREQUEST_2.ashx?" + urlQuery;
+                    $.ajax({
+                        cache: false,
+                        url: url,
+                        async: false,
+                        type: "post",
+                        data: $("#formList").serialize(), // 你的formid
+                        error: function (request) {
+                            HideWaiting();
+                            $("#lb_NoticeMsg").show().text('请求服务器时出错，请联系管理员处理!');
+                        },
+                        success: function (data) {
+                            //alert(data);
+                            if (data == "") return false;
+
+                            if (data >= "1") {
+                                $("#lb_NoticeMsg").text('成功删除:' + iTotalCount + '条记录!2秒钟后自动刷新列表.....');
+                                setTimeout(function () {
+                                    HideWaiting();
+                                    //加载列表
+                                    GetAndSetListResult(varKeyValue);
+                                }, 2000);
+                            } else {
+                                $("#lb_NoticeMsg").text(showString + '操作失败，请联系管理员处理!');
+                            }
+                        }
+                    });
+
+                } else {
+                    $("#lb_NoticeMsg").show().hide();
+                }
+                HideWaiting();
+            }
+
+            HideWaiting();
+        }
+    </script>
+
+</body>
+</html>
+

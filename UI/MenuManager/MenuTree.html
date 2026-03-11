@@ -1,0 +1,86 @@
+<html style="height:100%">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>栏目树管理页面</title>
+<link rel="STYLESHEET" type="text/css" href="../common/codebase/dhtmlxtree.css">
+<link rel="STYLESHEET" type="text/css" href="../common/codebase/dhtmlxtabbar.css">
+
+<script language="javascript"  src="../common/codebase/dhtmlxcommon.js"></script>
+<script language="javascript"  src="../common/codebase/dhtmlxtabbar.js"></script>
+<script language="javascript"  src="../common/codebase/dhtmlxtree.js"></script>
+<script language="javascript"  src="../common/codebase/dhtmlxtabbar_start.js"></script>
+
+<script language="javascript"  src="../common/js/biuldTree.js"></script>
+<link href="../common/css/main.css" rel="stylesheet" type="text/css" />
+<link href="../common/css/button.css" type="text/css" rel="stylesheet" /> 
+<script  src="../common/js/waitProcess.js"></script>
+
+</head>
+
+<body onLoad="loadTree()" style="padding: 0; margin: 0;overflow:hidden;height:100%;">
+<!--#include   file= "../common/WaitProccess.htm"-->
+<script language="javascript" >
+	
+	/* init tree */
+	var tree_menu;
+	var tree_smpl
+	function loadTree(){
+		tree_menu=new dhtmlXTreeObject("doctree_box","100%","100%",0);
+		tree_menu.setImagePath("../common/images/treeIcon/");
+		tree_menu.setOnClickHandler(function(id){openPathDocs(id);});
+		tree_menu.attachEvent("onOpenEnd",updateTreeSize);
+		tree_menu.loadXML("../HandleData/MenuManagerTreeHandle.ashx?nu=1",autoselectNode);
+	}	
+ 
+</script>
+	
+<!--- <a href="javascript:void(0)" onclick="updateTreeSize()">update Size</a> --->
+
+<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout:fixed;">
+<tr>
+	<td width="100%" height="100%" colspan="3">
+		<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+			<tr height="18" align="center">
+	              <TD align ="left" colspan="2">
+				      <div class="top_table_area">
+  				      </div>
+	              </TD>
+                </tr>
+			<tr>
+				<td valign="top" width="25%" id=frmTitle>
+						<div id="a_tabbar" 
+							class="dhtmlxTabBar"
+							tabstyle="scbr"
+							tabheight="0"
+							imgpath="../common/codebase/imgs/" 
+							style="width: 100%; height: 100%;"
+							skinColors="#FFFFFF,#F4F3EE"
+							mode="left"
+							offset="3"
+							oninit="a_tabbar.setTabActive(type01+'tab')"
+							select="doctab">
+								<div id="doctab" width="80" name="
+									<table width='90%' height='100%' cellspacing='0' cellpadding='0' border='0' style='margin-left: 3px;'>
+										<tr>
+											<td width='100%' height='100%' valign='middle' align='center'>
+												<img src='../common/codebase/imgs/null.gif' class='tab_docs'>
+											</td>
+										</tr>
+									</table>" style="padding: 8px 8px 0 8px;display:none;">
+									<div id="doctree_box" style="width: 226px; height: 100%; "></div>
+								</div>								
+						</div>
+				
+				</td>
+				<td align="center">
+					<iframe id="contentFrame" name="contentFrame" width="100%" height="99%" frameborder="0" src="MenuList.aspx" style="border: 0px solid #cecece;"></iframe>
+				</td>
+			    
+			</tr>
+		</table>
+	</td>
+</tr>
+</table>
+</body>
+</html>
+

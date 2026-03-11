@@ -1,0 +1,511 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>外包工签到</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../../../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../../../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../../../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../../../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../../../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../../../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../../../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../../../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../../../common/js/stringUtil.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        function GetContent() {
+            return ID100Control.ReadContent();
+        }
+        function GetJsonContent() {
+            return ID100Control.ReadContentEx();
+        }
+
+        function Connect() {
+            return ID100Control.Connect();
+        }
+
+        function Disconnect() {
+            ID100Control.DisConnect();
+        }
+    </script>
+    <OBJECT ID="ID100Control" CLASSID="CLSID:BAD80877-E3D2-41CC-91AE-C7FD9D019E36"></OBJECT>
+    
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="row-fluid">
+                    <div id="divRecord" class="col-lg-6 row-fluid">
+                        <button id="aCurTime" type="button" class="btn btn-default btn-lg btn-block" style="display:" disabled>
+                            <span class="text-danger pull-left">当前用户：<span id="lbCurUserCode">未登录</span></span>
+                            <span class="text-danger pull-right">当前时间：<span id="lbCurTime"></span></span>
+                        </button>
+                        <br />
+                        <div id="divRecordContent" class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title" id="myModalLabel" style="font-size:large">即时签到签出记录</span>
+                                <a id="aToQuery" class="btn btn-sm btn-info pull-right">更多签到记录</a>
+                            </div>
+                            <div id="divRecordBody" class="modal-body" style="overflow-y:auto;height:610px;">
+                                <!--<div class="row text-success" style="margin-left:20px"><h5>2020-04-08 15:45:30 222033232334442333-王思敏签到 缘由：餐饮服务帮工</h5></div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divReadIDCard" class="col-lg-6 row-fluid ">
+                        <div class="">
+                            <button id="aReadFromRearder" type="button" class="btn btn-primary btn-lg btn-block" style="display:">开始读取</button>
+                            <br />
+                            <div id="divReadIDCardContent" class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">从身份证读卡器读取身份证信息<small class="text-info">&nbsp;&nbsp;如无法读取请将身份证拿下后重新放上重试</small></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="formIDCard" class="form-horizontal" method="post">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="thumbnail">
+                                                    <img id="imgPhoto">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">身份证号码</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="txt_CardNo_Show" name="txt_CardNo_Show" class="form-control" readonly="readonly" />
+                                                        <input type="text" id="txt_CardNo" name="txt_CardNo" class="form-control" readonly="readonly" style="display:none" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">姓名</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="txt_Name" name="txt_Name" class="form-control" readonly="readonly" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">性别</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="txt_Sex" name="txt_Sex" class="form-control" readonly="readonly" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">民族</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="txt_Nation" name="txt_Nation" class="form-control" readonly="readonly" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">出生年月</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="txt_BirthDay" name="txt_BirthDay" class="form-control" readonly="readonly" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">现住址</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="txt_Address" name="txt_Address" class="form-control" readonly="readonly" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">证件注册机关</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="txt_Org" name="txt_Org" class="form-control" readonly="readonly" />
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-md-4 control-label">证件有效期</label>
+                                                    <div class="col-md-8">
+                                                        <input type="text" id="txt_ValidDate" name="txt_ValidDate" class="form-control" readonly="readonly" />
+                                                    </div>
+                                                </div>
+
+                                                <input type="text" id="txt_Photo" name="txt_Photo" class="form-control" style="display:none" />
+                                                <input type="text" id="txt_AttType" name="txt_AttType" class="form-control" style="display:none" />
+                                                <input type="text" id="txt_CurTime" name="txt_CurTime" class="form-control" style="display:none" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer row">
+                                    <div class="col-md-6">
+                                        <button id="btnCheckIn" type="button" class="btn btn-lg btn-success pull-left" disabled>入&nbsp;&nbsp;场&nbsp;&nbsp;签&nbsp;&nbsp;到</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button id="btnCheckOut" type="button" class="btn btn-lg btn-danger" disabled>离&nbsp;&nbsp;场&nbsp;&nbsp;签&nbsp;&nbsp;出</button>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            <div id="divReadIDCardTips" class="row-fluid">
+                                <h5 style="color:red;">温馨提示：</h5>
+                                <h5>1、请使用IE浏览器，设置该网站为<font color="red">兼容性视图</font>，并将此网站添加到<font color="red">受信任的站点</font>中。</h5>
+                                <h5 id="hDriver32">2、如未安装驱动请<a href="../../../SysFile/Download/ZKID/USBDrv3.0-x86.msi">下载驱动</a>后安装重试！</h5>
+                                <h5 id="hDriver64">2、如未安装驱动请<a href="../../../SysFile/Download/ZKID/USBDrv3.0-x64.msi">下载驱动</a>后安装重试！</h5>
+                                <h5>3、首次使用或者页面顶端出现空白区域请<a href="../../../SysFile/Download/ZKID/ZKIDR100_ActiveX_Setup.exe">下载读卡器的控件</a>后进行安装并刷新该页面重试！</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myWaittingModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>-->
+                    <h4 class="modal-title text-center" id="myWaittingModalTitle">
+                        正在处理中,请稍候.....
+                    </h4>
+                </div>
+                <div id="myWaittingModalContent" class="modal-body">
+
+                </div>
+                <div id="divCloseWaitting" class="modal-footer row">
+                    <div class="col-md-12">
+                        <button id="btnCloseWaitting" data-dismiss="modal" type="button" class="btn">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.modal -->
+    </div>
+    <script type="text/javascript">
+        function ShowWaitting() {
+            $("#divCloseWaitting").hide();
+            $("#myWaittingModalTitle").removeClass("text-success").removeClass("text-danger");
+            $("#myWaittingModalTitle").html("正在处理中,请稍候.....");
+            $('#myWaittingModal').modal();
+        }
+        function HideWaitting() {
+            $('#myWaittingModal').modal('hide');
+        }
+        function ShowSuccessNotice(msg, subMsg) {
+            ShowFailedNotice(msg, subMsg);
+            $("#myWaittingModalTitle").removeClass("text-success").removeClass("text-danger").addClass("text-success");
+            setTimeout(function () { HideWaitting ()}, 5000);
+        }
+        function ShowFailedNotice(msg, subMsg) {
+            ShowWaitting();
+            $("#myWaittingModalTitle").html(msg);
+            if (!(subMsg == 'undefined' || subMsg == '')) {
+                var subContent = "<div class=\"row text-info col-md-offset-3\"><h5>" + subMsg + "</h5></div>";
+                $("#myWaittingModalContent").html(subContent);
+            } else {
+                $("#myWaittingModalContent").hide();
+            }
+            $("#divCloseWaitting").show();
+            $("#myWaittingModalTitle").removeClass("text-success").removeClass("text-danger").addClass("text-danger");
+        }
+    </script>
+    <script type="text/javascript">
+        //签证是否登录
+        GetLoginUserCode();
+        function GetLoginUserCode() {
+            var urlQuery = escape("M=" + Math.random() + "&param=getloginusercode");
+            var url = "CheckInOut.ashx?" + urlQuery;
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: url,
+                data: $('#formIDCard').serialize(), // 你的formid
+                async: false,
+                error: function (request) {
+                    HideWaitting();
+                },
+                success: function (data) {
+                    //alert(data);
+                    if (data == '') {
+                        ShowFailedNotice("请登录系统后进行操作!","");
+                        $("button").attr("disabled", true);
+                    }else {
+                        $('#lbCurUserCode').html(data);
+                    }
+                }
+            });
+        };
+    </script>
+
+
+    <script type="text/javascript">
+        var IsDemo = false;
+        var DemoObjectJson = {
+            cardno: '22230119******1019',
+            name: '张易芬',
+            sex: '女',
+            nation: '中国',
+            birth: '1990年12月01日',
+            address: '广州市天河区****路109号',
+            org: '广州市公安局天河分局',
+            validata: '2009.01.02-2029.04.09',
+            photo: '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',
+        };
+
+        var curTimeInterval;
+        var curTime;
+
+        var clockInterval;
+        var clockSecond = 0;
+        var isReading = false;
+        $(document).ready(function () {
+            //ShowWaitting();
+            //实时显示当前时间
+            curTimeInterval = setInterval(function () {
+                curTime = new Date().format("yyyy-MM-dd hh:mm:ss");
+                $('#lbCurTime').html(curTime);
+            }, 1000); //一秒执行一次
+
+            //设置左侧div的高度
+            var setHeigth = $('#divReadIDCardContent').height() + $('#divReadIDCardTips').height();
+            //alert(setHeigth);
+            $('#divRecordContent').height(setHeigth);
+
+            $(window).unload(function () {
+                clearInterval(curTimeInterval); //清除js定时器
+                clearInterval(clockInterval); //清除js定时器
+            });
+
+            //判断当前系统指向不同的驱动
+            var agent = navigator.userAgent.toLowerCase();
+            if (agent.indexOf("win64") >= 0 || agent.indexOf("wow64") >= 0) {
+                $("#hDriver32").hide();
+                $("#hDriver64").show();
+            } else {
+                $("#hDriver32").show();
+                $("#hDriver64").hide();
+            }
+
+            $('#myShowIDInfoModal').on('hidden', function () {
+                $(this).removeData('modal');
+            });
+
+
+            //开始读取事件绑定
+            $('#aReadFromRearder').click(function () {
+                if (!isReading) {
+                    startRead();
+                } else {
+                    stopRead();
+                }
+            });
+            //开始读取
+            function startRead() {
+                clockSecond = 0;
+                if (Connect()) {
+                    isReading = true;
+                    clockInterval = setInterval(function () {
+                        clockSecond++;
+                        $('#aReadFromRearder').text("阅读器准备就绪,请放上身份证件...." + (clockSecond.toString()));
+                        $('#aReadFromRearder').removeClass("btn-primary").removeClass("btn-danger").addClass("btn-success");
+                        GetIDInfo();
+                    }, 1000); //一秒执行一次
+                } else {
+                    $('#aReadFromRearder').text("阅读器连接失败，请按照温馨提示指引操作后重试!");
+                    $('#aReadFromRearder').removeClass("btn-primary").removeClass("btn-success").addClass("btn-danger");
+                    //stopRead();
+                }
+            }
+
+            //停止读取
+            function stopRead() {
+                isReading = false;
+                clockSecond = 0;
+                Disconnect();
+                clearInterval(clockInterval); //清除js定时器
+                $('#aReadFromRearder').text("点击开始读取");
+                $('#aReadFromRearder').removeClass("btn-danger").removeClass("btn-success").addClass("btn-primary");
+                resetFormContent();
+            }
+
+            //获取身份证信息并写入到页面
+            function GetIDInfo() {
+                var jsonData = GetJsonContent();
+                //alert(jsonData);
+                var dataobj = eval("(" + jsonData + ")");
+                if (dataobj.info != null) {
+                    var DataInfo = dataobj.info;
+                    if (IsDemo) {
+                        DataInfo = DemoObjectJson;
+                    }
+
+                    $("#txt_CardNo").val(dataobj.info.cardno);
+                    $("#txt_CardNo_Show").val(DataInfo.cardno);
+
+                    $("#imgPhoto").attr('src', 'data:image/png;base64,' + DataInfo.photo);
+                    $("#txt_Name").val(DataInfo.name);
+                    $("#txt_Sex").val(DataInfo.sex);
+                    $("#txt_Nation").val(DataInfo.nation);
+                    $("#txt_BirthDay").val(DataInfo.birth);
+                    $("#txt_Address").val(DataInfo.address);
+                    $("#txt_Org").val(DataInfo.org);
+                    $("#txt_ValidDate").val(DataInfo.validata);
+                    $("#txt_Photo").val(DataInfo.photo);
+
+                    $("#btnCheckIn").attr("disabled", false);
+                    $("#btnCheckOut").attr("disabled", false);
+                    return true;
+                } else {
+                    //$('#aReadFromRearder').text("请重新放上身份证件....");
+                    //$('#aReadFromRearder').removeClass("btn-primary").removeClass("btn-success").addClass("btn-danger");
+                    return false;
+                }
+            }
+
+            //清空表单中身份证读取内容
+            function resetFormContent() {
+                $("#imgPhoto").attr('src', '');
+                $("#txt_CardNo").val("");
+                $("#txt_CardNo_Show").val("");
+                $("#txt_Name").val("");
+                $("#txt_Sex").val("");
+                $("#txt_Nation").val("");
+                $("#txt_BirthDay").val("");
+                $("#txt_Address").val("");
+                $("#txt_Org").val("");
+                $("#txt_ValidDate").val("");
+                $("#txt_Photo").val("");
+                $("#btnCheckIn").attr("disabled", true);
+                $("#btnCheckOut").attr("disabled", true);
+                clockSecond = 0;
+            }
+            //跳转查询更多记录
+            $('#aToQuery').click(function () {
+                var url = "QueryRecord.html";
+                var obj = new Object();
+                obj.name = "QueryRecord";
+                var varWidth = screen.availWidth - 30;
+                var varHeight = screen.availHeight - 30;
+                var varParam = "dialogWidth=" + varWidth + "px;dialogHeight=" + varHeight + "px";
+                window.showModalDialog(url, obj, varParam);
+                //window.open(url, obj, varParam);
+            });
+
+
+            //签到按钮事件绑定
+            $('#btnCheckIn').click(function () {
+                if ($("#txt_CardNo").val() == '') {
+                    this.attr("disabled", true);
+                    ShowFailedNotice("未读取到正确的身份证件","");
+                    //alert('未读取到正确的身份证件!');
+                } else {
+                    ShowWaitting();
+                    $("#txt_CurTime").val(curTime);
+                    var urlQuery = escape("M=" + Math.random() + "&param=checkinout&atttype=010");
+                    var url = "CheckInOut.ashx?" + urlQuery;
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: url,
+                        data: $('#formIDCard').serialize(), // 你的formid
+                        async: false,
+                        error: function (request) {
+                            HideWaitting();
+                        },
+                        success: function (data) {
+                            //alert(data);
+                            var dataobj = eval("(" + data + ")");
+                            var objReturnStatus = dataobj.ReturnStatus;
+                            var objResultData = dataobj.ResultData;
+                            if (objReturnStatus.ReturnCode != '1') {
+                                ShowFailedNotice(objReturnStatus.ReturnMsg,"");
+                            } else {
+                                var varShowDesc_Main = $("#txt_Name").val() + "入场签到成功!";
+                                var EmployDept_Name = dataobj.ResultData[0]["EmployDept_Name"].toString();
+                                var EmployItem_Name = dataobj.ResultData[0]["EmployItem_Name"].toString();
+                                var varShowDesc_Sub = "<font color = 'black'>用工部门名称：</font>" + EmployDept_Name + "<br/><br/>";
+                                varShowDesc_Sub = varShowDesc_Sub + "<font color = 'black'>用工事项说明：</font>" + EmployItem_Name + "<br/><br/>";
+                                varShowDesc_Sub = varShowDesc_Sub + "<font color = 'black'>工单起始时间：</font>" + dataobj.ResultData[0]["EmployTimeFrom"].toString() + "<br/><br/>";
+                                varShowDesc_Sub = varShowDesc_Sub + "<font color = 'black'>工单结束时间：</font>" + dataobj.ResultData[0]["EmployTimeTo"].toString() + "<br/><br/>";
+                                varShowDesc_Sub = varShowDesc_Sub + "<font color = 'black'>进场起始时间：</font>" + dataobj.ResultData[0]["EntryStartTime"].toString() + "<br/><br/>";
+                                ShowSuccessNotice(varShowDesc_Main, varShowDesc_Sub);
+                                AppendCheckRecordToDiv("010", curTime, EmployDept_Name, EmployItem_Name);
+                                $("#myModal").modal('hide');
+                            }
+                        }
+                    });
+
+                    //清空表单中身份证读取内容
+                    resetFormContent();
+                }
+            });
+            //签出按钮事件绑定
+            $('#btnCheckOut').click(function () {
+                if ($("#txt_CardNo").val() == '') {
+                    this.attr("disabled", true);
+                    ShowFailedNotice("未读取到正确的身份证件","");
+                } else {
+                    ShowWaitting();
+                    $("#txt_CurTime").val(curTime);
+                    var urlQuery = escape("M=" + Math.random() + "&param=checkinout&atttype=020");
+                    var url = "CheckInOut.ashx?" + urlQuery;
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: url,
+                        data: $('#formIDCard').serialize(), // 你的formid
+                        async: false,
+                        error: function (request) {
+                            HideWaitting();
+                        },
+                        success: function (data) {
+                            //alert(data);
+                            var dataobj = eval("(" + data + ")");
+                            var objReturnStatus = dataobj.ReturnStatus;
+                            var objResultData = dataobj.ResultData;
+                            if (objReturnStatus.ReturnCode != '1') {
+                                ShowFailedNotice(objReturnStatus.ReturnMsg,"");
+                            } else {
+                                var varShowDesc_Main = $("#txt_Name").val() + "离场签出成功!";
+                                var EmployDept_Name = dataobj.ResultData[0]["EmployDept_Name"].toString();
+                                var EmployItem_Name = dataobj.ResultData[0]["EmployItem_Name"].toString();
+                                var varShowDesc_Sub = "<font color = 'black'>用工部门名称：</font>" + EmployDept_Name + "<br/><br/>";
+                                varShowDesc_Sub = varShowDesc_Sub + "<font color = 'black'>用工事项说明：</font>" + EmployItem_Name + "<br/><br/>";
+                                varShowDesc_Sub = varShowDesc_Sub + "<font color = 'black'>工单起始时间：</font>" + dataobj.ResultData[0]["EmployTimeFrom"].toString() + "<br/><br/>";
+                                varShowDesc_Sub = varShowDesc_Sub + "<font color = 'black'>工单结束时间：</font>" + dataobj.ResultData[0]["EmployTimeTo"].toString() + "<br/><br/>";
+                                varShowDesc_Sub = varShowDesc_Sub + "<font color = 'black'>进场起始时间：</font>" + dataobj.ResultData[0]["EntryStartTime"].toString() + "<br/><br/>";
+                                ShowSuccessNotice(varShowDesc_Main, varShowDesc_Sub);
+                                AppendCheckRecordToDiv("020", curTime, EmployDept_Name, EmployItem_Name);
+                                $("#myModal").modal('hide');
+                            }
+                        }
+                    });
+                    //清空表单中身份证读取内容
+                    resetFormContent();
+                }
+            });
+        });
+
+    </script>
+    <!--页面初始化区域-->
+    <script type="text/javascript">
+        function AppendCheckRecordToDiv(checkType, checkTime, deptName, itemName) {
+            var checkTypeName = checkType == "010" ? "入场签到" : "离场签出";
+            var textStyle = checkType == "010" ? "text-success" : "text-danger";
+            var cardNo = $("#txt_CardNo_Show").val();
+            var name = $("#txt_Name").val();
+            var sex = $("#txt_Sex").val();
+            var showDesc = checkTime + " " + cardNo + "-" + name + "(" + sex + ")" + checkTypeName + "---部门：" + deptName + "---事项：" + itemName;
+
+            var tempHtml = "<div class=\"row " + textStyle + "\" style=\"margin-left:20px\"><h5>" + showDesc + "</h5></div>";
+
+            $("#divRecordBody").prepend(tempHtml);
+
+        }
+
+    </script>
+
+</body>
+</html>

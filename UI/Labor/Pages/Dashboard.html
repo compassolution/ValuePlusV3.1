@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--360浏览器优先以webkit内核解析-->
+
+    <title> Dashboard</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="../../common/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../common/Portal/Portal1/App-Portal.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="container wrapper wrapper-content">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row row-sm text-center">
+                    <div class="col-xs-3">
+                        <div class="panel padder-v item bg-primary">
+                            <div class="h1 text-fff font-thin h1">15</div>
+                            <span class="text-muted text-xs">昨天到岗</span>
+                            <div class="top text-right w-full">
+                                <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="panel padder-v item bg-info">
+                            <div class="h1 text-fff font-thin h1">20</div>
+                            <span class="text-muted text-xs">今天到岗</span>
+                            <div class="top text-right w-full">
+                                <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="panel padder-v item bg-primary">
+                            <div class="h1 text-fff font-thin h1">11</div>
+                            <span class="text-muted text-xs">明天应到</span>
+                            <div class="top text-right w-full">
+                                <i class="fa fa-caret-down text-warning m-r-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="echarts" id="echarts-line-chart1"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-5">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="echarts" id="echarts-pie-chart1"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="echarts" id="echarts-line-chart2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-5">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div class="echarts" id="echarts-pie-chart2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 全局js -->
+    <script src="../../common/JQuery/jquery-1.10.2.js"></script>
+    <script src="../../common/plugins/bootstrap/js/bootstrap.min.js?v=3.3.7"></script>
+    <script src="../../common/layer/layer.min.js"></script>
+    <!-- ECharts -->
+    <script src="../../common/plugins/echarts/echarts.js"></script>
+
+    <!-- ECharts demo data -->
+    <script src="../Pages/echarts-demo.js"></script>
+</body>
+</html>

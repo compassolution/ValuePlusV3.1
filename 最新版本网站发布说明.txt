@@ -1,0 +1,11 @@
+
+使用Vs2022及以上版本都可能面临的问题，IDE升级时有可能将SDK升级到最新的比如4.8,从而使得在IDE中Merge源码时使用的aspnet_merge.exe也是4.8，而VP3.1的项目适用的打包aspnet_merge.exe应该是.net 2.0
+解决办法，需要尽量保持用2.0的aspnet_merge.exe，否则如果升级的化工作量太大（用到了很多第三方的dll不知道能不能升级，升级后需要做全面测试，然后再升级所有客户服务器）：
+
+1、由于Visual Studio 发布网站时，aspnet_merge.exe 总是优先用高版本 SDK 路径，那就删除4.8 的 aspnet_merge.exe，或者改个名字，
+	路径一般是：C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\aspnet_merge.exe
+2、保证.net 2.0 SDK已经成功安装，如果没有，可通过安装VS2008时进行安装；
+3、修改VS2022编译发布时使用的aspnet_merge.exe路径为2.0指向的路径，
+	在文件C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VisualStudio\v17.0\Web\Transform\Microsoft.Web.Publishing.AspNetCompileMerge.targets中
+	修改AspnetMergePath节点为2.0的路径，如：
+	<AspnetMergePath>C:\Program Files\Microsoft SDKs\Windows\v6.0A\Bin\</AspnetMergePath>

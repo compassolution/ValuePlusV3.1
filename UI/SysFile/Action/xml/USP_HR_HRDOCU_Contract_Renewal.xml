@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<NewDataSet>
+	<Fields>
+		<alias>To</alias>
+		<TID>OACT</TID>
+		<GID>1</GID>
+		<SID>View</SID>
+		<PID>CTLDATE</PID>
+	</Fields>
+	<Fields>
+		<alias>From</alias>
+		<TID>OACT</TID>
+		<GID>1</GID>
+		<SID>View</SID>
+		<PID>CTDATEG</PID>
+	</Fields>
+</NewDataSet>

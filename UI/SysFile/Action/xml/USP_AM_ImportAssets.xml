@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NewDataSet>
+	<Fields>
+		<alias>filename</alias>
+		<TID>XMLHELPER</TID>
+		<GID>1</GID>
+		<SID>main</SID>
+		<PID>ImportAssetFile</PID>
+	</Fields>
+</NewDataSet>

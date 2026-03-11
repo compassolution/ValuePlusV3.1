@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<NewDataSet>
+
+	<Fields>
+		<alias>YearMonth</alias>
+		<TID>KQTOE</TID>
+		<GID>2</GID>
+		<SID>MAIN</SID>
+		<PID>YEARMONTH</PID>
+	</Fields>
+</NewDataSet>

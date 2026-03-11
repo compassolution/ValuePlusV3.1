@@ -1,0 +1,448 @@
+<?xml version="1.0" standalone="yes"?>
+<DocumentElement>
+  <!-- 基本验证提示 -->
+  <dtTips>
+    <Name>IllegalOperation</Name>
+    <Values>非法的操作，请勿非法操作！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>ParamIllegal</Name>
+    <Values>非法的参数，请勿非法操作！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>RequestTimesTooLarge</Name>
+    <Values>您操作太频繁，请稍候再试！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>IsBusy</Name>
+    <Values>
+      尊敬的客户：系统忙，请稍候再试！ {0}
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>IsNotLogin</Name>
+    <Values>尊敬的客户：您未登录或登录已过期，请先登录！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>UserNumberIsError</Name>
+    <Values>尊敬的客户：您的邮箱帐号输入错误，手机号就是邮箱号，请重新输入手机号！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>PasswordIsError</Name>
+    <Values>尊敬的客户：您的邮箱密码输入错误，请重新输入！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>VerifyCodeIsError</Name>
+    <Values>尊敬的客户：您的验证码输入错误，请重新输入！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>UserNumberNotMobile</Name>
+    <Values>尊敬的客户：您输入的帐号不存在或是非移动手机号码，请输入中国移动手机号码和对应的139邮箱密码参与活动，感谢您的参与！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>AccountIsFrozen</Name>
+    <Values>尊敬的客户：您输入的帐号已被冻结！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>AccountLose</Name>
+    <Values>尊敬的客户：您输入的帐号已注销！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>TimestampError</Name>
+    <Values>尊敬的客户：操作超时！请稍候再试！</Values>
+  </dtTips>
+  <!--==============LJ添加的Tips   开始  ===============-->
+  <!--搜索相关-->
+  <dtTips>
+    <Name>SearchTypeIsError</Name>
+    <Values>
+      尊敬的客户：搜索类型错误，请勿非法操作！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>SearchKeywordIsError</Name>
+    <Values>
+      尊敬的客户：请检查搜索关键字，搜索关键字不能为空或大于1000个字符！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>SearchResultListPageCodeIsError</Name>
+    <Values>
+      尊敬的客户：当前搜索结果页不存在，请重试搜索！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>SearchResultListPageNumIsError</Name>
+    <Values>
+      尊敬的客户：当前搜索结果页不存在，请重试搜索！
+    </Values>
+  </dtTips>
+  <!--首页工具列表排序相关-->
+  <dtTips>
+    <Name>UserToolsUrlListIsError3</Name>
+    <Values>
+      尊敬的客户：您需要排序的常用工具列表不存在或错误！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>MoreThanMaxUserToolsNum2</Name>
+    <Values>
+      尊敬的客户：常用工具不能超过{0}个，请先取消部分常用工具！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>UserToolsOrderListIsError</Name>
+    <Values>
+      尊敬的客户：排序错误，请勿非法操作！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>MoreThanMaxUserToolsOrder</Name>
+    <Values>
+      尊敬的客户：排序错误，请勿非法操作！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>UserToolsOrder</Name>
+    <Values>
+      尊敬的客户：常用工具排序保存成功！
+    </Values>
+  </dtTips>
+  <!--行为相关-->
+  <dtTips>
+    <Name>ActNoIsError</Name>
+    <Values>
+      尊敬的客户：行为类型错误，请勿非法操作！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>IdCodeIsError</Name>
+    <Values>
+      尊敬的客户：被访问的ID错误，请勿非法操作！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>NotesIsIsNullOrEmpty</Name>
+    <Values>
+      尊敬的客户：被访问的信息不能为空！
+    </Values>
+  </dtTips>
+  <!--添加和取消工具相关-->
+  <dtTips>
+    <Name>BeyondMaxUserTools</Name>
+    <Values>
+      尊敬的客户：您所拥有的常用工具已经达到了{0}个，无法再添加了！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>AddTypeIsError</Name>
+    <Values>
+      尊敬的客户：添加类型错误，添加类型必须大于等于0！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>UserToolsUrlListIsError</Name>
+    <Values>
+      尊敬的客户：您需要添加的常用工具列表不存在或错误！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>MoreThanMaxUserToolsNum</Name>
+    <Values>
+      尊敬的客户：常用工具不能超过{0}个！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>AddUserTools</Name>
+    <Values>
+      尊敬的客户：您成功添加了该常用工具！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>UserToolsUrlListIsError2</Name>
+    <Values>
+      尊敬的客户：您需要取消的常用工具列表不存在或错误！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>DelUserTools</Name>
+    <Values>
+      尊敬的客户：您成功取消了该常用工具！
+    </Values>
+  </dtTips>
+  <!--工具列表相关-->
+  <dtTips>
+    <Name>ToolsListCategoryIdIsError</Name>
+    <Values>
+      尊敬的客户：常用工具分类类别ID必须大于或等于0！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>ToolsListOrderIsError</Name>
+    <Values>
+      尊敬的客户：常用工具列表的排序方式必须大于或等于0！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>ToolsListPageCodeIsError</Name>
+    <Values>
+      尊敬的客户：常用工具列表的分页页码必须大于0！
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>ToolsListPageNumIsError</Name>
+    <Values>
+      尊敬的客户：常用工具列表的分页中每页显示的行数必须大于0！
+    </Values>
+  </dtTips>
+  <!--分类专题相关-->
+  <dtTips>
+    <Name>TopicCategoryIdIsError</Name>
+    <Values>
+      尊敬的客户：分类专题ID必须大于或等于0！
+    </Values>
+  </dtTips>
+  <!--==============LJ添加的Tips   结束  ===============-->
+  <!-- 推荐 -->
+  <dtTips>
+    <Name>TjAddressIsNullOrEmpty</Name>
+    <Values>您推荐的网址尚未输入，请填写完整，谢谢！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>TjAddressLengthIsTooLarge</Name>
+    <Values>您推荐的网址过长，请适当删减，保持在1000字符（500字中文）以内，谢谢！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>TjAddressFormaterIsWrong</Name>
+    <Values>您推荐的网址格式不正确，请重新输入，谢谢！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>TjWebTitleInfoIsNullOrEmpty</Name>
+    <Values>您推荐的网址尚未填写标题，请输入，谢谢！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>TjWebTitleIsTooLarge</Name>
+    <Values>您填写的网址标题过长，请适当删减，保持在40字符（20字中文）以内，谢谢！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>TjWebContentIsTooLarge</Name>
+    <Values>您填写的推荐理由过长，请适当删减，保持在500字符（250字中文）以内，谢谢！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>TjInfoSuccess</Name>
+    <Values>推荐成功。</Values>
+  </dtTips>
+  <!-- 编辑我的收藏网址 -->
+  <dtTips>
+    <Name>FavEditAddressIsNullOrEmpty</Name>
+    <Values>请输入网址地址。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditAddressIsTooLarge</Name>
+    <Values>请适当删减网址长度，保持在1000字符（500字中文）以内。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditAddressFormaterIsWrong</Name>
+    <Values>网址格式不正确,请重新输入。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditAddressIsAlreadyExists</Name>
+    <Values>{0} 已添加到收藏中。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditTitleIsNullOrEmpty</Name>
+    <Values>请输入网址标题。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditTitleIsTooLarge</Name>
+    <Values>请适当删减标题长度，保持在200字符（100字中文）以内。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditContentIsTooLarge</Name>
+    <Values>请适当删减备注长度，保持在500字符（250字中文）以内</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditTagCountIsTooMany</Name>
+    <Values>输入太多分类了，请删减到10个以内。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditTagLengthIsTooMany</Name>
+    <Values>{0} 超长，请删减到80字符（40字中文）以内。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavEditSuccess</Name>
+    <Values>编辑成功。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavAddSuccess</Name>
+    <Values>添加成功。</Values>
+  </dtTips>
+  <!-- 邮件共享 -->
+  <dtTips>
+    <Name>EmailReceiverIsNullOrEmpty</Name>
+    <Values>请输入收件人邮箱地址。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>EmailReceiverFormatError</Name>
+    <Values>请输入收件人邮箱地址，多个邮箱地址可以用“,”间隔。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>EmailReceiverSeparatorError</Name>
+    <Values>请输入收件人邮箱地址，多个邮箱地址可以用“,”间隔。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>EmailReceiverCountLimit</Name>
+    <Values>每次最多只能向3个朋友群发Email，请分批发送。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>EmailEveryDayLimitCount</Name>
+    <Values>每天最多只能向8个朋友群发Email，明天再发送给朋友吧。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>EmailSendTitleInfo</Name>
+    <Values>{0}向您推荐一个网址</Values>
+  </dtTips>
+  <dtTips>
+    <Name>EmailSendContentInfo</Name>
+    <Values>
+  <![CDATA[
+      您好：<br/>    我在139邮箱网络书签收藏了几个比较好的网址，与您一同分享。 <br/> {0}]]></Values>
+  </dtTips>
+  <dtTips>
+    <Name>EmailSendSuccess</Name>
+    <Values>书签发送成功。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>SMSShareSendMessage</Name>
+    <Values>您好！我在网上发现一个好东东，想与你一起共享！去看看吧。地址：</Values>
+  </dtTips>
+  <!--导入收藏 -->
+  <dtTips>
+    <Name>FavImportSuccess</Name>
+    <Values>书签导入成功。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavImportFileFormaterError</Name>
+    <Values>您导入的文件格式不正确，请重新选择文件。</Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavImportFileFormaterError</Name>
+    <Values>您导入的文件内容不符合XML规范，请重新选择文件。</Values>
+  </dtTips>
+  <!--添加到收藏-->
+  <dtTips>
+    <Name>FavAddToMyFavSuccess</Name>
+    <Values>
+      <![CDATA[您已收藏 {0} 到“<a href="MyFavorites.aspx?TagId={1}"> 未分类</a>”中。]]>
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>FavAddToMyFavAlreadyExist</Name>
+    <Values>{0} 已经收藏到网址收藏中,不能重复收藏。</Values>
+  </dtTips>
+  <!-- 系统错误提示信息 Error页面显示 -->
+  <dtTips>
+    <Name>SystemRequestTooMuch</Name>
+    <Values>
+      <![CDATA[<div style="width:120px;height:160px;float:left;margin-right:25px;background:url(template/tips/baocuo_icon01.png) center top no-repeat;"></div>
+      <b>目前网络太过拥挤，无法访问您请求的页面。</b>
+      <br />
+      <span>
+        请您耐心等待一段时间再来！ <br /><br />
+        等待期间，去 <a href="javascript:top.Links.show('help','&param1=1');void(0)">帮助中心</a> 看看.
+      </span>]]>
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>SystemRequestLost</Name>
+    <Values>
+      <![CDATA[<div style="width:120px;height:160px;float:left;margin-right:25px;background:url(template/tips/baocuo_icon02.png) center top no-repeat;"></div>
+      <b>努力找过了，您查看的页面似乎找不到……</b><br />
+      <span>
+      最可能的原因是：<br />
+      在地址中可能存在键入错误。<br />
+      当您点击某个链接时，它可能已过期。<br /><br />
+      点击以下链接继续使用139邮箱 <a href="{0}">返回首页</a> | <a href="javascript:top.Links.show('help','&param1=1');void(0)">帮助中心</a>
+      </span>]]>
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>SystemMaintenance</Name>
+    <Values>
+      <![CDATA[<div style="width:120px;height:160px;float:left;margin-right:25px;background:url(template/tips/baocuo_icon03.png) center top no-repeat;"></div>
+      <b>稍等，现在是加油时间！</b><br />
+      <span>
+      服务器正在维护中，请稍候再来。 <br /><br />
+      休息一下，先去 <a href="javascript:top.Links.show('help','&param1=1');void(0)">帮助中心</a> 看看  或  <a href="{0}">返回首页</a>
+      </span>]]>
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>SystemStayTooLong</Name>
+    <Values>
+      <![CDATA[<div style="width:120px;height:160px;float:left;margin-right:25px;background:url(template/tips/baocuo_icon04.png) center top no-repeat;"></div>
+      <b>您操作的页面闲置太久了……</b><br />
+      <span>
+      让人家等了那么久，记得下次不要再冷落ta了哦!<br /><br />
+      现在，您只需 <a href="{0}">重新登录</a> 即可
+      </span>]]>
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>SystemRequestNotAuthSmall</Name>
+    <Values>
+      <![CDATA[<div style="width:120px;height:160px;float:left;margin-right:25px;background:url(template/tips/baocuo_icon01.png) center top no-repeat;"></div>
+      <b>您操作方式非法,请勿非法操作！</b><br />
+      <span>
+     最可能的原因是：<br />
+      您没有通过正规渠道发起此请求。<br />
+      或您直接刷新此请求页面，但它可能已过期。<br /><br />
+      点击以下链接继续使用139邮箱 <a href="{0}">返回网址收藏</a> 
+      </span>]]>
+    </Values>
+  </dtTips>
+  <dtTips>
+    <Name>SystemRequestNotAuthLarge</Name>
+    <Values>
+      <![CDATA[<div style="width:120px;height:160px;float:left;margin-right:25px;background:url(template/tips/baocuo_icon01.png) center top no-repeat;"></div>
+      <b>您操作方式非法,请勿非法操作！</b><br />
+      <span>
+     最可能的原因是：<br />
+      您没有通过正规渠道发起此请求。<br />
+      或您直接刷新此请求页面，但它可能已过期。<br /><br />
+      点击以下链接继续使用139邮箱 <a href="{0}">返回首页</a> 
+      </span>]]>
+    </Values>
+  </dtTips>
+  <!-- 后台 Error页面显示 -->
+  <dtTips>
+    <Name>AdminLoginNotGrant</Name>
+    <Values>对不起，您没有权限登陆！</Values>
+  </dtTips>
+  <!-- 后台 公告编辑-->
+  <dtTips>
+    <Name>AdminNoticeContentIsNullOrEmpty</Name>
+    <Values>对不起，公告内容不能为空！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>AdminNoticeAddSuccess</Name>
+    <Values>添加公告成功！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>AdminNoticeEditSuccess</Name>
+    <Values>修改公告成功！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>AdmiToolsCatagoryNameIsNullOrEmpty</Name>
+    <Values>工具分类名称不能为空！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>AdmiToolsCatagoryAddSuccess</Name>
+    <Values>添加工具分类成功！</Values>
+  </dtTips>
+  <dtTips>
+    <Name>AdmiToolsCatagoryEditSuccess</Name>
+    <Values>修改工具分类成功！</Values>
+  </dtTips>
+</DocumentElement>
+

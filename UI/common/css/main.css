@@ -1,0 +1,204 @@
+*
+{
+	scrollbar-face-color: #FFFFFF; 
+	scrollbar-shadow-color: #666; 
+	scrollbar-highlight-color: #666; 
+	scrollbar-3dlight-color: #FFFFFF; 
+	scrollbar-darkshadow-color: #FFFFFF; 
+	scrollbar-track-color: #FFFFFF; 
+	scrollbar-arrow-color: #666
+}
+
+.login_top_bg {
+	background-image: url(login-top-bg.gif);
+	background-repeat: repeat-x;
+}
+.body {
+	background-color: #EEF2FB;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+}
+
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	background-color: #FAFBFC;
+}
+
+.warp_table {border-collapse:collapse; border:1px solid #4d9ab0;margin:0 auto;}
+.warp_table td {border:1px solid #4d9ab0}
+
+
+.top_table_area {
+	clear:both;
+	border-top:2px solid #f70;
+	border-bottom:2px solid #f70;
+	padding:5px 0 3px 0;
+	margin:0 0 17px 0;
+}
+
+.line_table {
+	border: 1px solid #CCCCCC;
+}
+
+.main_tab {
+	COLOR: #000000;
+	BACKGROUND-COLOR: #e2e7ed;
+	border: 1px solid #e2e7ed;
+}
+.left_txt {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	color: #666666;
+}
+.left_ts {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	font-weight: bold;
+	color: #FF6600;
+	cursor:hand;
+    text-decoration:undeline;
+}
+.left_topbg {
+	background-image: url(content-bg.gif);
+	background-repeat: repeat-x;
+}
+.titlebt {
+	font-size: 12px;
+	line-height: 26px;
+	font-weight: bold;
+	color: #000000;
+	background-image: url(top_bt.jpg);
+	background-repeat: no-repeat;
+	display: block;
+	text-indent: 15px;
+	padding-top: 5px;
+	float:left;
+}
+.left_bt {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #395a7b;
+}
+
+.left_bt2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #395a7b;
+}
+
+.sec1 {
+	CURSOR: hand;
+	COLOR: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	border: 1px solid #B5D0D9;
+	background-image: url(right_smbg.jpg);
+	background-repeat: repeat-x;
+}
+.sec2 {
+	FONT-WEIGHT: bold;
+	CURSOR: hand;
+	COLOR: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	background-color: #e2e7ed;
+	border: 1px solid #e2e7ed;
+}
+
+.sec1_temp {
+	CURSOR: hand;
+	border: 1px solid #ccd1dc;
+	padding:2px 8px;
+	margin-left:5px; 
+	background-color:#edfcfe;
+	background-image: url(right_smbg.jpg);
+}
+
+.sec2_temp {
+	FONT-WEIGHT: bold;
+	CURSOR: hand;
+	border: 1px solid #ccd1dc;
+	padding:2px 8px;
+	margin-left:5px; 
+	background-color:#CAE1FF;
+	background-image: url(right_smbg.jpg);
+}
+
+.small_title2 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	font-weight: bold;
+	color: #333333;
+	algin:right
+}
+
+.edit_label {
+	font-family: Arial, Helvetica;
+	font-size: 12px;
+	font-weight: bold;
+	background-color:#CCFFFF;
+}
+
+
+.tableTitle {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	font-weight: bold;
+    white-space:nowrap;
+    word-break:keep-all;
+    word-wrap:normal;
+}
+
+.tableContent {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	align:center;
+}
+
+
+
+.warp_table_Template /*单据页面表格样式*/
+{
+	border-collapse:collapse; 
+	border:1px solid #4d9ab0;
+	background-color:#FCEFE8
+}
+.edit_Template_top { /*单据页面顶部样式*/
+	font-family: Arial, Helvetica;
+	font-size: 12px;
+	font-weight: bold;
+	background-color:#3D6BC0;
+}
+.edit_label_Template { /*单据页面字段label样式*/
+	font-family: Arial, Helvetica;
+	font-size: 12px;
+	font-weight: bold;
+	background-color:#BFEFFF;
+}
+.smallTitle_label_Template { /*单据页面小标题样式*/
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 25px;
+	font-weight: bold;
+	background-color: #D4F2E7
+}
+div.TempBar{height:7px;background:url(../images/tempBar.gif) repeat-x;}
+
+.tdNoborder
+{
+	border:0px solid #ccd1dc;
+}

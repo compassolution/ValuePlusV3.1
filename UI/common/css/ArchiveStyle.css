@@ -1,0 +1,247 @@
+﻿*
+{
+	scrollbar-face-color: #FFFFFF; 
+	scrollbar-shadow-color: #D2E5F4; 
+	scrollbar-highlight-color: #D2E5F4; 
+	scrollbar-3dlight-color: #FFFFFF; 
+	scrollbar-darkshadow-color: #FFFFFF; 
+	scrollbar-track-color: #FFFFFF; 
+	scrollbar-arrow-color: #D2E5F4
+}
+
+a { color:#000; text-decoration:none;}
+a:hover { color:#ff0000; text-decoration:none;}
+img, table, td, th { border:0;}
+body { font:12px/18px Arial, "宋体", Verdana, sans-serif; margin:5px;  background:#F2F2F2;	}
+
+.td_Frame1
+{background:url(../images/thead_bg.gif) repeat-x left bottom; height:20px; color: #555; font-weight:bold;  padding-left:5px; border-bottom:1px solid #333399;}
+.td_Frame2
+{background:url(../images/thead_bg.gif) repeat-x left bottom; height:20px; color: #555; font-weight:bold;  padding-left:5px; border-bottom:1px solid #333399;}
+.td_Frame3
+{background:url(../images/thead_bg.gif) repeat-x left bottom; height:20px; color: #555;padding-left:5px; border-bottom:1px solid #333399;}
+
+.a_Right
+{margin-left:5px; border:1px solid #ccd1dc; background:#edfcfe; padding:2px 8px;}
+.a_Right:hover {background:#3970CE;color:#EEF6FC; cursor:hand;}
+.a_Left
+{margin-left:5px; border:1px solid #ccd1dc; background:#edfcfe; padding:2px 8px; }
+.a_Left:hover {background:#3970CE;color:#EEF6FC; cursor:hand;}
+.a_Center
+{margin-left:5px; border:1px solid #ccd1dc; background:#edfcfe; padding:2px 8px;font-weight:bold; }
+.a_Center:hover {background:#3970CE;color:#EEF6FC; cursor:hand;font-weight:bold;}
+
+.tdNowrap{border-bottom:1px solid #bddbef; padding:3px; color:#000;white-space:nowrap}
+
+/*固定在顶端的div样式*/
+.topBox{
+	padding:5px;
+	border:1px solid #aaa;
+	background-color:#ddd;
+	font-size:12px;
+	width:100%;
+	left:0px;
+	top:0px;
+	position:fixed;	
+}
+/*固定在底端的div样式*/
+.bottomBox{
+	padding:2px;
+	border:1px solid #aaa;
+	background-color:#fee;
+	font-size:12px;
+	width:100%;
+	left:0px;
+	bottom:0px;	
+	position:fixed;	
+}
+
+/*单据页面常规页面table样式*/
+.table_archive {width:100%; margin:0 auto; border:1px solid #bddbef; border-collapse:collapse;background: #ddd; border: 2px groove #fff;}
+
+
+/*单据页面常规页面行TR样式*/
+.tr_Normal {
+	 width:100%; height:25px;text-align:center;
+}
+
+/*单据页面常规页面普通label列的td样式*/
+.td_Normal_Label {
+	 text-align:left;
+	 border-bottom:1px solid #bddbef; 
+	 padding:3px; 
+	 color:#000;
+	 border: 2px groove #fff;
+	 background: #ddd;
+}
+
+/*单据页面常规页面普通控件字段列的td样式*/
+.td_Normal_Field {
+	 text-align:left;
+	 border-bottom:1px solid #bddbef; 
+	 padding:3px; 
+	 color:#000;
+	 border: 2px groove #fff;
+	 background: #ddd;
+}
+
+/*单据页面常规页面页眉列的td样式*/
+.td_CH_Label {
+	 text-align:right;
+	 border-bottom:1px solid #bddbef; 
+	 padding:3px; 
+	 color:#000;
+	 border: 2px groove #fff;
+}
+
+/*单据页面页眉label样式*/
+.label_CH_Archive { 
+	font-family: Arial, Helvetica;
+	font-size: 11px;
+    width:100%;
+    text-decoration:underline;
+	font-weight:bolder;
+}
+
+/*单据页面字段普通label样式*/
+.label_edit_Archive { 
+	font-family: Arial, Helvetica;
+	font-size: 12px;
+	font-weight:bolder;
+    text-align:center;
+}
+
+/*单据页面【文本输入框】样式（可编辑）*/
+.Text_edit_Archive  
+{
+    border-style:solid;
+    border: 1px #93bee2 solid;
+    border-width:1;
+    width:90%;
+    height:17px;
+    border-color: #ddd; 
+}
+.Text_edit_Archive:hover {border-color:#3D6BC0;}
+
+/*单据页面【文本输入框】样式（只读）*/
+.Text_readonly_Archive  
+{
+    border-style:solid;
+    border-width:0;
+    width:90%;
+    border-color: #ddd;
+    background-color:#ddd;
+    height:17px;
+    overflow:hidden;
+}
+
+/*单据页面【下拉框】样式（可编辑）*/
+.Select_edit_Archive  
+{
+	font-family: "tahoma", "宋体";
+    font-size: 9pt; 
+    color: #0066cc;
+    border: 1px #93bee2 solid;
+    background-color: #ffffff;
+    cursor: hand;
+    font-style: normal ;
+    width:90%;
+    height:22px;
+ 
+}
+
+/*单据页面【下拉框】样式（只读）*/
+.Select_readonly_Archive  
+{
+    border-width:0;
+    width:90%;
+    height:22px;
+    border-color: #ddd;
+    border:none;
+    background-color:#ddd;
+    margin:-2px;
+ 
+}
+
+/*单据页面【复选框】样式（可编辑）*/
+.CheckBox_edit_Archive  
+{
+	
+}
+
+/*单据页面【复选框】样式（只读）*/
+.CheckBox_readonly_Archive  
+{
+	
+}
+
+/*单据页面【默认图片】样式（可编辑）*/
+.Image_IMAGETEXT_Archive  
+{
+	width:20px;
+	height:20px;
+	cursor: hand;
+}
+
+/*DATAGRID表格样式*/
+.DataGrid_Style { 
+	font-family: Arial, Helvetica;
+	font-size: 12px;
+    width:100%;
+}
+.DataGrid_Style td{border-bottom:1px solid #bddbef; padding:3px; color:#000;border: 2px groove #fff;}
+
+/*DATAGRID表格表头样式*/
+.DataGrid_HeaderStyle { 
+	font-family: Arial, Helvetica;
+	font-size: 12px;
+    width:100%;
+    text-decoration:underline;
+	font-weight:bolder;
+}
+
+/*DATAGRID表格内容项目样式*/
+.DataGrid_ItemStyle { 
+	font-family: Arial, Helvetica;
+	font-size: 11px;
+    width:100%;
+    cursor:pointer;
+}
+
+/*DIV全屏半透明遮罩*/
+.divCover 
+{
+	float:left;
+	z-index:100;
+	position:absolute;
+	width:100%;
+	height:100%;
+	filter:alpha(opacity=80);
+	background-color:#ddd;
+}
+
+/*DIV屏幕居中*/
+.divCenter 
+{
+	width:500px;
+	height:600px;
+	position:fixed;
+	left:50%;top:50%;
+	margin-top:-300px;
+	margin-left:-250px;
+	border:solid #000 1px;
+	background-color:#ddd;
+	overflow:auto;
+}
+
+/*明细页面分组标题区域div*/
+.divGroupTitle
+{
+	background:url(../images/thead_bg.gif) repeat-x left bottom; 
+	height:30px; 
+	font-size: 13px; 
+	color: #555; 
+	font-weight:bolder;  
+	padding-left:5px; 
+	border-bottom:1px solid #333399;
+}

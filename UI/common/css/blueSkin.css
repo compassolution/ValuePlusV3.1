@@ -1,0 +1,11 @@
+.navPoint { 
+	COLOR: white; CURSOR: hand; FONT-FAMILY: Webdings; FONT-SIZE: 9pt 
+} 
+
+.navTd{
+	width:8px; valign:middle; background:1873aa
+}
+
+.cSkinTr{
+	width:100%; background:#1873aa
+}

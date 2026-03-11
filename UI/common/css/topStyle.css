@@ -1,0 +1,77 @@
+
+a { color:#000; text-decoration:none;}
+a:hover { color:#ff0000; text-decoration:none;}
+img, table, td, th { border:0;}
+body { font:12px/18px Arial, "宋体", Verdana, sans-serif; margin:5px;  background:#fff;	}
+
+.menu {background:url(../images/menu_bg.gif) repeat-x; height:34px; }
+.menu a {color:#fff; padding:0 15px; font-weight:bold; float:left; display:block; border-left:1px solid #f1f1f1;}
+.menu a:hover {color:#FFFF00}
+.menu a:active {color:red}
+.menu div a:active {color:red}
+.menu .noline {border:0px;}
+        
+
+.table {width:98%; margin:0 auto; border:1px solid #bddbef; border-collapse:collapse;}
+.table img {vertical-align:middle; margin:2px;}
+.table td{border-bottom:1px solid #bddbef; padding:3px; color:#000;}
+.table th{border-bottom:1px solid #bddbef; padding:3px; color:#000; font-weight:normal; text-align:right; }
+.table td .note,.table th .note {display:block; color:#0099ff; margin-left:4px;}
+.table table tr:hover {background-color:#E3EEFD;}
+.table table td {margin:0; border:1px solid #ccc;}
+.table .hover {background:#EEF6FC;}
+
+.table td a:hover {background:#3970CE;color:#EEF6FC;}
+
+.tableDetail {width:100%; margin:0 auto; border:1px solid #bddbef; border-collapse:collapse;background:#EEF6FC;}
+.tableDetail img {vertical-align:middle; margin:2px;}
+.tableDetail td{border:1px solid #bddbef; padding:1px; color:#000;}
+.tableDetail table tr:hover {background-color:#E3EEFD;}
+.tableDetail table td {margin:0; border:1px solid #ccc;}
+.tableDetail .hover {background:#EEF6FC;}
+
+.tableNoHover {width:98%; margin:0 auto; border:1px solid #bddbef; border-collapse:collapse;}
+.tableNoHover img {vertical-align:middle; margin:2px;}
+.tableNoHover td{border-bottom:1px solid #bddbef; padding:3px; color:#000;}
+.tableNoHover th{border-bottom:1px solid #bddbef; padding:3px; color:#000; font-weight:normal; text-align:right; }
+.tableNoHover td .note,.table th .note {display:block; color:#0099ff; margin-left:4px;}
+.tableNoHover table td {margin:0; border:1px solid #ccc;}
+
+.td_Frame1
+{background:url(../images/thead_bg.gif) repeat-x left bottom; height:20px; color: #555; font-weight:bold;  padding-left:5px; border-bottom:1px solid #333399;}
+.td_Frame2
+{background:url(../images/thead_bg.gif) repeat-x left bottom; height:20px; color: #555; font-weight:bold;  padding-left:5px; border-bottom:1px solid #333399;}
+.td_Frame3
+{background:url(../images/thead_bg.gif) repeat-x left bottom; height:20px; color: #555;padding-left:5px; border-bottom:1px solid #333399;}
+.a_Right
+{margin-left:5px; border:1px solid #ccd1dc; background:#edfcfe; padding:2px 8px;}
+.a_Right:hover {background:#3970CE;color:#EEF6FC; cursor:hand;}
+.a_Left
+{margin-left:5px; border:1px solid #ccd1dc; background:#edfcfe; padding:2px 8px; }
+.a_Left:hover {background:#3970CE;color:#EEF6FC; cursor:hand;}
+.a_Center
+{margin-left:5px; border:1px solid #ccd1dc; background:#edfcfe; padding:2px 8px;font-weight:bold; }
+.a_Center:hover {background:#3970CE;color:#EEF6FC; cursor:hand;font-weight:bold;}
+
+.tdNowrap{border-bottom:1px solid #bddbef; padding:3px; color:#000;white-space:nowrap}
+
+.tableList{width:98%; margin:0 auto; border:1px solid #bddbef; border-collapse:collapse;}
+
+
+.navMenu ul{background:url(gray-navMenu-bg.gif) top left repeat-x;list-style:none;margin:0;padding:0;}
+.navMenu li{float:left;padding:0px 8px 0px 8px;}
+.navMenu li a{display:block;font-weight:normal;text-align:center;text-decoration:none;}
+.navMenu li a:hover{background:#3970CE;color:#EEF6FC; cursor:hand;text-decoration:none;}
+.navMenu li ul{
+    background:#e0e0e0;border-left:2px solid #9f9f9f;
+    border-right:2px solid #9f9f9f;
+    border-bottom:2px solid #9f9f9f;
+    display:none;height:auto;filter:alpha(opacity=95);
+    opacity:0.95;position:absolute;width:225px;
+    z-index:200;}
+.navMenu li ul span {margin-left:5px; border:1px solid #ccd1dc; background:white; padding:2px 8px; float:left;width:200px; color:#3970CE; text-align:left;} 
+.navMenu li:hover ul{display:block;}
+.navMenu li:hover li{background:#3970CE;margin:0; padding:0;}
+.navMenu li li {display:block;float:none;padding:0px;width:225px;}
+.navMenu li ul a{display:block;font-size:12px;font-style:normal;padding:0px 10px 0px 15px;text-align:left;}
+.navMenu li ul a:hover{background:#3970CE;color:#EEF6FC; cursor:hand;opacity:1.0;filter:alpha(opacity=100);}

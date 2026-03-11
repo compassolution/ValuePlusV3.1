@@ -1,0 +1,385 @@
+﻿
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>修改资产盘到地址</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+    <link href="../common/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="../common/css/button.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/topStyle.css" rel="stylesheet" type="text/css" />
+    <link href="../common/css/fixAreaStyle.css" type="text/css" rel="stylesheet" />
+    <link href="../common/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/bootstrap-table/bootstrap-table.css" rel="stylesheet" />
+    <link href="../common/bootstrapSelect/bootstrap-select.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="../common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="../common/layer/layer.min.js" type="text/javascript"></script>
+    <script src="../common/layer/layerLoading.js" type="text/javascript"></script>
+    <script src="../common/bootstrap/bootstrap.js" type="text/javascript"></script>
+    <script src="../common/bootstrap/bootstrap-tab.js" type="text/javascript"></script>
+    <script src="../common/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+    <script src="../common/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
+    <script src="../common/bootstrapSelect/bootstrap-select.js" type="text/javascript"></script>
+    <script src="../common/js/waitProcess.js" type="text/javascript"></script>
+    <script src="../common/js/tableStyle.js" type="text/javascript"></script>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <form id="formAssetsList" class="form-horizontal" method="post">
+                    <div class="row-fluid navbar" style="vertical-align:middle">
+                        <h2>修改资产盘到地址</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">盘点计划</label>
+                                <div class="col-sm-3">
+                                    <select id="sel_StockPlan" name="sel_StockPlan" class="selectpicker" data-width="100%" data-live-search="true"></select>
+                                </div>
+                                <label class="col-sm-1 control-label">应管理部门</label>
+                                <div class="col-sm-3">
+                                    <select id="sel_HoldDeptNative" name="sel_HoldDeptNative" class="selectpicker" data-style="btn-info" data-width="100%" data-live-search="true"></select>
+                                </div>
+                                <label class="col-sm-1 control-label">资产编码</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_SACODE" name="txt_SACODE" class="form-control" />
+                                </div>
+                                <div class="col-sm-4">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">本次盘到部门</label>
+                                <div class="col-sm-3">
+                                    <select id="sel_DeptStocked" name="sel_DeptStocked" class="selectpicker" data-style="btn-warning" data-width="100%" data-live-search="true"></select>
+                                </div>
+                                <label class="col-sm-1 control-label">应使用部门</label>
+                                <div class="col-sm-3">
+                                    <select id="sel_UseDeptNative" name="sel_UseDeptNative" class="selectpicker" data-style="btn-info" data-width="100%" data-live-search="true"></select>
+                                </div>
+                                <label class="col-sm-1 control-label">资产名称</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_SANAME" name="txt_SANAME" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-1 control-label">本次盘到地址</label>
+                                <div class="col-sm-3">
+                                    <select id="sel_LocationStocked" name="sel_LocationStocked" class="selectpicker" data-style="btn-warning" data-width="100%" data-live-search="true"></select>
+                                </div>
+                                <label class="col-sm-1 control-label">应存放地址</label>
+                                <div class="col-sm-3">
+                                    <select id="sel_LocationNative" name="sel_LocationNative" class="selectpicker" data-style="btn-info" data-width="100%" data-live-search="true"></select>
+                                </div>
+                                <label class="col-sm-1 control-label">标签ID</label>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txt_BARCODE" name="txt_BARCODE" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div id="divCustomToolbar" class="text-center">
+                            <button id="aClose" type="button" class="btn" onclick="javascript: window.close();">关闭</button>
+                            <button id="aReset" type="button" class="btn btn-danger">重置查询条件</button>
+                            <button id="aSearch" type="button" class="btn btn-primary">查询地址差异记录</button>
+                            <button id="aChangeLocation" type="button" class="btn btn-success" style="display:">设置盘到地址为应存放地址</button>
+                            <label id="lb_NoticeMsg" class="text-danger"></label>
+                            <input type="text" id="txt_SelectedPlanCode" name="txt_SelectedPlanCode" style="display:none" />
+                            <input type="text" id="txt_SelectedBarCodes" name="txt_SelectedBarCodes" style="display:none"/>
+                        </div>
+                        <div id="divListTableNeedUpdate" class="row-fluid">
+                            <table id="tbAssetsList"
+                                   data-toolbar="#divCustomToolbar"
+                                   data-classes="table table-bordered table-striped table-hover"
+                                   data-toggle="table"
+                                   data-show-columns="true"
+                                   data-show-toggle="false"
+                                   data-pagination="true"
+                                   data-height="650"
+                                   data-cache="false"
+                                   data-search="true"
+                                   data-sortable="true"
+                                   data-page-size = "100"
+                                   data-page-list="[10, 50, 100,500]">
+                                <thead>
+                                    <tr>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            ///加载盘点计划下拉框
+            LoadStockPlanList();
+            ///加载部门下拉框
+            LoadDeptList();
+            ///加载存放地址下拉框
+            LoadLocationList();
+            
+            ///加载结果列表
+            $('#aSearch').click(function () {
+                GetAndSetListResult();
+            });
+
+            ///重置查询条件
+            $('#aReset').click(function () {
+                $("#sel_StockPlan").val("");
+                $("#sel_HoldDeptNative").val("");                
+                $("#sel_UseDeptNative").val("");
+                $("#sel_DeptStocked").val("");
+                $("#txt_BARCODE").val("");
+                $("#sel_LocationNative").val("");
+                $("#sel_LocationStocked").val("");
+                $("#txt_SACODE").val("");
+                $("#txt_SANAME").val("");
+                $("#txt_SelectedPlanCode").val("");
+                $("#txt_SelectedBarCodes").val("");
+                $('.selectpicker').selectpicker('val', "");
+            });
+
+            ///保存变更
+            $('#aChangeLocation').click(function () {
+                $('#aChangeLocation').attr("disabled", "disabled");
+                $("#txt_SelectedPlanCode").val($("#sel_StockPlan").val());
+                $("#txt_SelectedBarCodes").val("");
+                var getSelectRows = JSON.stringify($("#tbAssetsList").bootstrapTable('getSelections'));
+                getSelectRows = JSON.parse(getSelectRows);
+                if (getSelectRows.length <= 0) {
+                    $("#lb_NoticeMsg").text('请选择任意资产后再重试！');
+                    $('#aChangeLocation').removeAttr("disabled");
+                } else {
+                    if (confirm("是否确定将选中资产的本次盘到地址修改为应存放地址?")) {
+                        for (var i = 0; i < getSelectRows.length; i++) {
+                            var RowData = getSelectRows[i];
+                            $("#txt_SelectedBarCodes").val($("#txt_SelectedBarCodes").val() + RowData.标签ID + ";");
+                        }
+
+                        var urlQuery = escape("M=" + Math.random() + "&param=submit");
+                        var url = "ChangeStockLocation.ashx?" + urlQuery;
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: url,
+                            async: false,
+                            data: $('#formAssetsList').serialize(), // 你的formid
+                            success: function (data) {
+                                //alert(data);
+                                if (parseInt(data) > 0) {
+                                    GetAndSetListResult();
+                                    $("#lb_NoticeMsg").text('修改选中项(数量' + data + ')并修改盘点地址成功！');
+                                } else {
+                                    $("#lb_NoticeMsg").text('修改选中项的盘点地址失败！');
+                                }
+                                $('#aChangeLocation').removeAttr("disabled");
+                            }
+                        });
+                    }
+                }
+            });
+            $('#aChangeLocation').removeAttr("disabled");
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        ///加载盘点计划下拉框
+        function LoadStockPlanList() {
+            var urlStockPlanQuery = escape("M=" + Math.random() + "&param=getStockPlan");
+            var urlStockPlan = "AssetsCommon.ashx?" + urlStockPlanQuery;
+            $.ajax({
+                cache: false,
+                url: urlStockPlan,
+                async: false,
+                error: function (request) {
+                },
+                success: function (data) {
+                    //                                alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_StockPlan
+                    $("#sel_StockPlan").empty();
+                    $("#sel_StockPlan").append("<option value=''>" + "请选择盘点计划" + "</option>");
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        $("#sel_StockPlan").append("<option value='" + item.CID + "'>" + unescape(item.CDESCCHS) + "</option>");
+                    });
+
+                }
+            });
+        }
+
+        ///加载部门下拉框
+        function LoadDeptList() {
+            var urlDeptQuery = escape("M=" + Math.random() + "&param=getAllDept");
+            var urlDept = "AssetsCommon.ashx?" + urlDeptQuery;
+            $.ajax({
+                cache: false,
+                url: urlDept,
+                async: false,
+                error: function (request) {
+                },
+                success: function (data) {
+                    //                                alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_StockPlan
+                    $("#sel_UseDeptNative").empty();
+                    $("#sel_UseDeptNative").append("<option value=''>" + "请选择应使用部门" + "</option>");
+                    $("#sel_DeptStocked").empty();
+                    $("#sel_DeptStocked").append("<option value=''>" + "请选择本次盘到部门" + "</option>");
+                    $("#sel_HoldDeptNative").empty();
+                    $("#sel_HoldDeptNative").append("<option value=''>" + "请选择应管理部门" + "</option>");
+                    
+
+                    //加载下拉列表sel_UseDeptNative
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        $("#sel_UseDeptNative").append("<option value='" + item.CID + "'>" + unescape(item.CDESCCHS) + "</option>");
+                        $("#sel_DeptStocked").append("<option value='" + item.CID + "'>" + unescape(item.CDESCCHS) + "</option>");
+                        $("#sel_HoldDeptNative").append("<option value='" + item.CID + "'>" + unescape(item.CDESCCHS) + "</option>");
+                    });
+
+                    IsBuildList = true;
+                }
+            });
+        }
+
+        ///加载存放地址下拉框
+        function LoadLocationList(){
+            var urlLocationQuery = escape("M=" + Math.random() + "&param=getAllLocation");
+            var urlLocation = "AssetsCommon.ashx?" + urlLocationQuery;
+            $.ajax({
+                cache: false,
+                url: urlLocation,
+                async: false,
+                error: function (request) {
+                },
+                success: function (data) {
+                    //                                alert(data);
+                    if (data == "") return false;
+                    var dataobj = eval("(" + data + ")");
+                    //alert(dataobj.root.length); //输出root的子对象数量
+                    //                alert(dataobj.ResultData);
+                    if (dataobj.ResultData == "") return false;
+
+                    //加载下拉列表sel_StockPlan
+                    $("#sel_LocationNative").empty();
+                    $("#sel_LocationNative").append("<option value=''>" + "请选择应存放地址" + "</option>");
+                    $("#sel_LocationStocked").empty();
+                    $("#sel_LocationStocked").append("<option value=''>" + "请选择本次存放地址" + "</option>");
+
+                    //加载下拉列表sel_LocationNative
+                    $.each(dataobj.ResultData, function (idx, item) {
+                        $("#sel_LocationNative").append("<option value='" + item.CID + "'>" + unescape(item.CDESCCHS) + "</option>");
+                        $("#sel_LocationStocked").append("<option value='" + item.CID + "'>" + unescape(item.CDESCCHS) + "</option>");
+                    });
+
+                }
+            });
+        }
+        
+        ///加载结果列表
+        function GetAndSetListResult() {
+            $('#aSearch').attr("disabled","disabled");
+            $("#lb_NoticeMsg").text('');
+            if ($("#sel_StockPlan").val() == '') {
+                $("#lb_NoticeMsg").text('请选择一个盘点计划！');
+                $('#aSearch').removeAttr("disabled");
+                $("#sel_StockPlan").focus();
+            }else {
+                var urlQuery = escape("M=" + Math.random() + "&param=getlist");
+                var url = "ChangeStockLocation.ashx?" + urlQuery;
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: url,
+                    async: false,
+                    data: $('#formAssetsList').serialize(), // 你的formid
+                    error: function (request) {
+                        $('#aSearch').removeAttr("disabled");
+                        $("#lb_NoticeMsg").text('查询出现错误，请更正查询条件后重试！');
+                    },
+                    success: function (data) {
+                        //alert(data);
+                        if ((data == "") || (data == "")) {
+                            $("#lb_NoticeMsg").text('查询出现错误，请更正查询条件后重试！');
+                            $('#aSearch').removeAttr("disabled");
+                            return false;
+                        }
+                        var dataobj = eval("(" + data + ")");
+                        //alert(dataobj);
+                        //alert(dataobj.ResultData.length); //输出ResultData的子对象数量// 
+                        var item = dataobj.ResultData[0];
+                        var rows = dataobj.ResultData.length;
+                        //构建表格####### Start
+                        var i, j, row, columns = [], data = [];
+
+                        columns.push({
+                            field: "check",
+                            checkbox: true,
+                            visible: true,
+                            order: "desc"
+                        });
+                        for (var key in dataobj.colNames[0]) {
+                            columns.push({
+                                field: key,
+                                title: dataobj.colNames[0][key],
+                                sortable: true,
+                                visible: true,
+                                order: "desc"
+                            });
+                        }
+
+                        for (i = 0; i < rows; i++) {
+                            row = {};
+                            for (var key in dataobj.ResultData[i]) {
+                                //对值进行编码处理特殊字符，如引号等// 
+                                row[key] = unescape(dataobj.ResultData[i][key]);
+                            }
+                            data.push(row);
+                        }
+
+                        $('#tbAssetsList').bootstrapTable('destroy').bootstrapTable({
+                            columns: columns,
+                            data: data
+                        });
+                        $('#tbAssetsList').bootstrapTable('resetView');
+                        //构建表格####### End
+                        $('#aSearch').removeAttr("disabled");
+                    }
+                });
+            }
+            $('#aSearch').removeAttr("disabled");
+        }
+    </script>
+
+</body>
+</html>

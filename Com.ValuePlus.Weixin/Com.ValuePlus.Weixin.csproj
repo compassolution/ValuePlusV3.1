@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A2E63764-B860-4D83-AF54-D3DCFA146A88}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Com.ValuePlus.Weixin</RootNamespace>
+    <AssemblyName>Com.ValuePlus.Weixin</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\UI\Bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccessTokenGetter.cs" />
+    <Compile Include="Const.cs" />
+    <Compile Include="ErrorMessage.cs" />
+    <Compile Include="GetSysParams.cs" />
+    <Compile Include="HttpRequestHelper.cs" />
+    <Compile Include="JsonHelper.cs" />
+    <Compile Include="MassMessage\MassMessage.cs" />
+    <Compile Include="ProjectWXAuth.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublicHelper.cs" />
+    <Compile Include="EntityToken.cs" />
+    <Compile Include="WXUser.cs" />
+    <Compile Include="EntityWXUser.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Com.ValuePlus.DAL\Com.ValuePlus.DAL.csproj">
+      <Project>{B20476F5-B0D8-4386-907D-1E06B270638F}</Project>
+      <Name>Com.ValuePlus.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Log\Com.ValuePlus.Log.csproj">
+      <Project>{eba12249-1413-4354-a324-0b6ed7b33b30}</Project>
+      <Name>Com.ValuePlus.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.SysParams\Com.ValuePlus.SysParams.csproj">
+      <Project>{db7a54ce-a851-41c0-beb3-5e126e6cf9b9}</Project>
+      <Name>Com.ValuePlus.SysParams</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

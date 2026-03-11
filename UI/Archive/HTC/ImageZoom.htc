@@ -1,0 +1,128 @@
+﻿<script language=jscript>
+var savetop;
+var saveleft;
+var objWidth;
+var objHeight;
+var objTop;
+var objLeft;
+var objBackColor;
+var aElement;
+if (element.tagName.toLowerCase() == 'img')
+{
+	element.attachEvent('ondblclick', dblclick);
+	element.attachEvent('onmouseout', mouseout);
+	element.attachEvent('onmouseover', mouseover);
+}
+else
+{
+	alert("Error: ImageZoom not attached to a img element");
+}
+function mouseover()
+{
+	srcElem = window.event.srcElement;
+	if(srcElem.tagName.toLowerCase() == 'img')
+	{
+		savetop=srcElem.style.top;
+		saveleft=srcElem.style.left;
+        objWidth=srcElem.style.width;
+        objHeight=srcElem.style.height;
+		objTop=getAbsoluteTop(srcElem);
+		objLeft=getAbsoluteLeft(srcElem); 
+		objBackColor=srcElem.style.backgroundColor;
+        srcElem.style.backgroundColor="#DBDBDB";
+        srcElem.style.cursor = "hand";
+        
+        doZoom(350,500);
+    }
+    
+}
+function mouseout()
+{
+    srcElem = window.event.srcElement;
+	if(srcElem.tagName.toLowerCase() == 'img')
+	{
+		srcElem.style.zIndex="";
+//		srcElem.style.width=155;
+//		srcElem.style.height=22;
+		srcElem.style.width=objWidth;
+		srcElem.style.height=objHeight;
+		srcElem.style.backgroundColor=objBackColor;
+		srcElem.style.position="relative"; 
+		if(savetop)
+		{
+		srcElem.style.top=savetop;
+		srcElem.style.left=saveleft;
+		}
+		else
+		{
+		srcElem.style.top=0;
+		srcElem.style.left=0;
+		}
+		srcElem.title = "";
+//		if(aElement!=null)
+//		{
+//			aElement.style.display = "none";
+//		}
+    }
+}
+function dblclick()
+{
+//    doZoom(450,600);
+    
+}
+
+function doZoom(setWidth,setHeight)
+{
+	srcElem = window.event.srcElement;
+    var curX = event.clientX;//获取鼠标x坐标
+    var curY = event.clientY;//获取鼠标y坐标
+    var bodyWidth = window.document.body.scrollWidth;//获取窗体宽度
+    var bodyHeight = window.document.body.scrollHeight;//获取窗体高度
+    var setTop = objTop;
+    var setLeft = objLeft;
+    srcElem.style.zIndex=10;
+	srcElem.style.width=setWidth;
+    srcElem.style.height=setHeight;
+    if((objTop+setHeight)>bodyHeight){
+        setTop = bodyHeight-setHeight;
+    }
+    if((objLeft+setWidth)>bodyWidth){
+        setLeft = bodyWidth-setWidth;
+    }
+    
+//	srcElem.style.width=eval(window.document.body.clientWidth)-200;
+//    srcElem.style.height=eval(window.document.body.clientHeight)-150;
+    srcElem.style.top=setTop;
+    srcElem.style.left=setLeft;
+    srcElem.style.backgroundColor="#DBDBDB";
+    srcElem.style.position="absolute"; 
+    srcElem.title = "";
+    
+}
+
+//获取控件左绝对位置
+
+function getAbsoluteLeft(o) {
+//    o = document.getElementById(objectId)
+    oLeft = o.offsetLeft
+    while(o.offsetParent!=null) { 
+        oParent = o.offsetParent    
+        oLeft += oParent.offsetLeft 
+        o = oParent
+    }
+    return oLeft
+}
+//获取控件上绝对位置
+function getAbsoluteTop(o) {
+//    o = document.getElementById(objectId);
+    oTop = o.offsetTop;
+    while(o.offsetParent!=null)
+    {  
+        oParent = o.offsetParent 
+        oTop += oParent.offsetTop  // Add parent top position
+        o = oParent
+    }
+    return oTop
+}
+
+</script>

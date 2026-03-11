@@ -1,0 +1,154 @@
+﻿<html style="height:100%">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>功能树</title>
+<link rel="STYLESHEET" type="text/css" href="common/codebase/dhtmlxtree.css">
+<link rel="STYLESHEET" type="text/css" href="common/codebase/dhtmlxtabbar.css">
+<link rel="STYLESHEET" type="text/css" href="common/css/blueSkin.css">
+
+<script  src="common/codebase/dhtmlxcommon.js"></script>
+<script  src="common/codebase/dhtmlxtabbar.js"></script>
+<script  src="common/codebase/dhtmlxtree.js"></script>
+<script  src="common/codebase/dhtmlxtabbar_start.js"></script>
+
+<script  src="common/js/biuldTree.js"></script>
+<script  src="common/js/changeSkin.js"></script>
+
+</head>
+
+<body onLoad="loadTree();" style="padding: 0; margin: 0;overflow:hidden;height:100%;">
+<script>
+    function getMenuId(){
+        //首先取html页面链接的参数menuId
+        var url=window.location.href;
+        var menuId;
+        var aa=url.indexOf('=');
+
+        if (aa == -1){
+            return "";
+        }else{
+            menuId=url.substring(aa+1);
+            return menuId;
+        }
+    }
+  
+	function switchSysBar(){ 
+		if (document.all("frmTitle").style.display=="")
+		{ 
+			document.all("img1").src="common/images/unfold.gif";
+			document.all("frmTitle").style.display="none";
+		} 
+		else
+		{ 
+			document.all("img1").src="common/images/fold.gif";
+			document.all("frmTitle").style.display="";
+		} 
+	} 
+	
+	function switchSysBar2(){ 
+		if (document.all("frmRight").style.display=="")
+		{ 
+			document.all("img2").src="common/images/fold.gif";
+			document.all("frmRight").style.display="none" 
+		} 
+		else
+		{ 
+			document.all("img2").src="common/images/unfold.gif";
+			document.all("frmRight").style.display="" 
+		} 
+	} 
+	
+	/* init tree */
+	var tree_menu;
+	var tree_smpl
+	function loadTree(){
+		tree_menu=new dhtmlXTreeObject("doctree_box","100%","100%",0);
+		tree_menu.setImagePath("common/images/treeIcon/");
+		tree_menu.setOnClickHandler(function(id){openPathDocs(id);});
+		tree_menu.attachEvent("onOpenEnd",updateTreeSize);
+		tree_menu.enableCheckBoxes(false);
+		tree_menu.loadXML("HandleData/UserTreeHandle.ashx?nu=1&menuId="+getMenuId(),autoselectNode);
+	}	
+	
+</script>
+	
+<!--- <a href="javascript:void(0)" onclick="updateTreeSize()">update Size</a> --->
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="table-layout:fixed; height:100%">
+<tr>
+	<td width="100%" height="100%" colspan="3">
+		<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+			
+			<tr>
+				<td valign="top" width="200" id="frmTitle">
+						<div id="a_tabbar" 
+							tabstyle="scbr"
+							tabheight="0"
+							imgpath="common/codebase/imgs/" 
+							style="width: 100%; height: 100%; border:0px solid;overflow:auto;scrollbar-face-color: #FFFFFF; scrollbar-shadow-color: #D2E5F4; scrollbar-highlight-color: #D2E5F4; scrollbar-3dlight-color: #FFFFFF; scrollbar-darkshadow-color: #FFFFFF; scrollbar-track-color: #FFFFFF; scrollbar-arrow-color: #D2E5F4"
+							skinColors="#FFFFFF,#F4F3EE"
+							mode="left"
+							offset="3"
+							oninit="a_tabbar.setTabActive(type01+'tab')"
+							select="doctree_box">
+								
+							<div id="doctree_box" style="width: 95%; height: 95%; "></div>							
+						</div>
+				
+				</td>
+				<td id="tdSwitchPoint" class="navTd" onclick="switchSysBar()">
+					<SPAN class="navPoint" id="switchPoint" title=open/close><img src="common/images/fold.gif" name="img1" width=6 height=45 id=img1>
+					</SPAN>
+				</td>
+				<td align="center">
+				    <table width="100%" style="height:100%">
+				        <tr width="100%" height="25px">
+				            <td>
+				                <iframe id="topContentFrame" name="topContentFrame" width="100%" height="2" frameborder="0" src="" style="border: 0px solid #cecece;" scrolling="auto" onload="javascript:SetFrameHeight(this);"></iframe>
+				            </td>
+				        </tr>
+				        <tr width="100%" height="95%">
+				            <td>
+					            <iframe id="contentFrame" name="contentFrame" width="100%" height="100%" frameborder="0" src="" style="border: 1px solid #cecece;" scrolling="auto"></iframe>
+					        </td>
+					    </tr>
+					</table>
+				</td>
+				
+				<!--<td class=navTd onclick=switchSysBar2()>
+					<SPAN class=navPoint id=switchPoint2 title=open/close><img src="common/images/fold.gif" name="img2" width=8 height=45 id=img2>
+					</SPAN>
+				</td>
+				<td align="right" id=frmRight style="display:none">
+					<iframe id="rightFrame" name="rightFrame" width="30" height="99%" frameborder="0" src="Welcome.aspx" style="border: 0px solid #cecece;"></iframe>
+				</td>-->
+			    
+			</tr>
+		</table>
+	</td>
+</tr>
+</table>
+</body>
+<script language="javascript">    
+    function SetFrameHeight(obj) 
+    { 
+        var win=obj; 
+        if (document.getElementById) 
+        { 
+            if (win && !window.opera) 
+            { 
+                if (win.contentDocument && win.contentDocument.body.offsetHeight) 
+                    win.height = win.contentDocument.body.offsetHeight; 
+                else if(win.Document && win.Document.body.scrollHeight) 
+                    win.height = win.Document.body.scrollHeight; 
+            } 
+        } 
+    }
+</script>
+<script language="javascript">
+    window.frames.topContentFrame.location.href= "actionPath.aspx?menuId="+getMenuId();
+    window.frames.contentFrame.location.href= "FunctionList.aspx?sCode="+getMenuId();
+    document.getElementById('tdSwitchPoint').click();//默认收起功能树
+</script>
+</html>
+

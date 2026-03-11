@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <!-- 设置浏览器在兼容模式下运行-->
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>ValuePlus</title>
+</head>
+
+<script src="common/JQuery/jquery-1.10.2.js" type="text/javascript"></script>
+<script src="common/js/MainUtil.js" type="text/javascript"></script>
+<script type="text/javascript">
+    window.moveTo(0, 0);
+    window.resizeTo(screen.availWidth, screen.availHeight);
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (myBrowser() != 'IE') {
+            $("#frameSet").attr("rows", "*,0");
+            $("#topFrame").attr("src", "EdgeIndex.aspx");
+            $("#bottomFrame").attr("src", "");
+        } else {
+            $("#topFrame").attr("src", "topFrame.aspx");
+        }
+    });
+</script>
+
+<frameset id="frameSet" rows="*,36" frameborder="no" border="0" framespacing="0">
+    <body>
+        <frame src="" name="topFrame" scrolling="auto" noresize="noresize" id="topFrame" />
+        <frame src="bottomFrame.html" name="bottomFrame" scrolling="No" noresize="noresize" id="bottomFrame" />
+    </body>
+</frameset>
+
+</html>

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+***********************************************************************************************
+website.publishproj
+
+警告: 请勿修改此文件，它将用于 Web 发布过程。
+
+版权所有 (C) Microsoft Corporation。保留所有权利。
+
+***********************************************************************************************
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.30319</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0e12b86b-a9bb-44f6-bd4c-7c710592874d}</ProjectGuid>
+    <SourceWebPhysicalPath>$(MSBuildThisFileDirectory)</SourceWebPhysicalPath>
+    <SourceWebVirtualPath>/UI</SourceWebVirtualPath>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SourceWebProject>
+    </SourceWebProject>
+    <SourceWebMetabasePath>
+    </SourceWebMetabasePath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <!-- for VS2010 we need to use 10.5 but for VS2012+ we should use VisualStudioVersion -->
+    <WebPublishTargetsVersion Condition=" '$(WebPublishTargetsVersion)' =='' and '$(VisualStudioVersion)' == 10.0 ">10.5</WebPublishTargetsVersion>
+    <WebPublishTargetsVersion Condition=" '$(WebPublishTargetsVersion)'=='' ">$(VisualStudioVersion)</WebPublishTargetsVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(WebPublishTargetsVersion)</VSToolsPath>
+    <_WebPublishTargetsPath Condition=" '$(_WebPublishTargetsPath)'=='' ">$(VSToolsPath)</_WebPublishTargetsPath>
+    <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">1.0.0.0</AssemblyFileVersion>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">1.0.0.0</AssemblyVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AssemblyAttributes Include="AssemblyFileVersion">
+      <Value>$(AssemblyFileVersion)</Value>
+    </AssemblyAttributes>
+    <AssemblyAttributes Include="AssemblyVersion">
+      <Value>$(AssemblyVersion)</Value>
+    </AssemblyAttributes>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Com.ValuePlus.Archive\Com.ValuePlus.Archive.csproj">
+      <Project>{732356D8-57AA-43C6-BD5F-3105F27FC317}</Project>
+      <Name>Com.ValuePlus.Archive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.BLL\Com.ValuePlus.BLL.csproj">
+      <Project>{B461499A-CBF3-4FA0-90EA-B0B3ACA656DF}</Project>
+      <Name>Com.ValuePlus.BLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Common\Com.ValuePlus.Common.csproj">
+      <Project>{AB169A8B-104A-4ED5-9B75-871CF2C9A654}</Project>
+      <Name>Com.ValuePlus.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Config\Com.ValuePlus.Config.csproj">
+      <Project>{B7C73649-C462-453B-84AA-6FE1389F015A}</Project>
+      <Name>Com.ValuePlus.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.DAL\Com.ValuePlus.DAL.csproj">
+      <Project>{B20476F5-B0D8-4386-907D-1E06B270638F}</Project>
+      <Name>Com.ValuePlus.DAL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Database\Com.ValuePlus.Database.csproj">
+      <Project>{7358970A-8BF6-4182-B9F9-68DBF921C6E7}</Project>
+      <Name>Com.ValuePlus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.DataLog\Com.ValuePlus.DataLog.csproj">
+      <Project>{FEB19881-B8C9-4B8C-B84E-923A4B220C08}</Project>
+      <Name>Com.ValuePlus.DataLog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Entity\Com.ValuePlus.Entity.csproj">
+      <Project>{1D6C17CF-7C93-4980-9637-9635498E23BE}</Project>
+      <Name>Com.ValuePlus.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.FileAttach\Com.ValuePlus.FileAttach.csproj">
+      <Project>{6D3C6759-0618-40CC-90A1-71C2A3A61D72}</Project>
+      <Name>Com.ValuePlus.FileAttach</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Flow\Com.ValuePlus.Flow.csproj">
+      <Project>{76D34675-4DBF-4246-9577-1D825313128E}</Project>
+      <Name>Com.ValuePlus.Flow</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Labor\Com.ValuePlus.Labor.csproj">
+      <Project>{211F7AF8-E54E-4FE0-A520-5468A5945BA9}</Project>
+      <Name>Com.ValuePlus.Labor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Log\Com.ValuePlus.Log.csproj">
+      <Project>{EBA12249-1413-4354-A324-0B6ED7B33B30}</Project>
+      <Name>Com.ValuePlus.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.OrgChart\Com.ValuePlus.OrgChart.csproj">
+      <Project>{3750F447-2B4D-41D1-A2B4-1D02E2E89D54}</Project>
+      <Name>Com.ValuePlus.OrgChart</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.SysParams\Com.ValuePlus.SysParams.csproj">
+      <Project>{DB7A54CE-A851-41C0-BEB3-5E126E6CF9B9}</Project>
+      <Name>Com.ValuePlus.SysParams</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.SysTask\Com.ValuePlus.SysTask.csproj">
+      <Project>{D2F516FD-99F3-4583-9394-D53EAA381C70}</Project>
+      <Name>Com.ValuePlus.SysTask</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Utils\Com.ValuePlus.Utils.csproj">
+      <Project>{D7DEB6B8-77CF-45C7-8172-30B728E17733}</Project>
+      <Name>Com.ValuePlus.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Web\Com.ValuePlus.Web.csproj">
+      <Project>{F81E2007-4A06-4274-866B-96C98861D78D}</Project>
+      <Name>Com.ValuePlus.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Com.ValuePlus.Weixin\Com.ValuePlus.Weixin.csproj">
+      <Project>{A2E63764-B860-4D83-AF54-D3DCFA146A88}</Project>
+      <Name>Com.ValuePlus.Weixin</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(_WebPublishTargetsPath)\Web\Microsoft.WebSite.Publishing.targets" />
+</Project>
